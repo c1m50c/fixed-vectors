@@ -2,6 +2,7 @@ use std::ops::{Add, AddAssign};
 use std::ops::{Sub, SubAssign};
 use std::ops::{Mul, MulAssign};
 use std::ops::{Div, DivAssign};
+use std::ops::{Rem, RemAssign};
 
 use std::ops::{Index, IndexMut};
 
@@ -185,6 +186,28 @@ impl<T: Div<Output = T> + Copy> DivAssign for Vector2<T> {
         *self = Self {
             x: self.x / other.x,
             y: self.y / other.y,
+        };
+    }
+}
+
+
+impl<T: Rem<Output = T>> Rem for Vector2<T> {
+    type Output = Self;
+
+    fn rem(self, other: Self) -> Self::Output {
+        return Self {
+            x: self.x % other.x,
+            y: self.y % other.y,
+        };
+    }
+}
+
+
+impl<T: Rem<Output = T> + Copy> RemAssign for Vector2<T> {
+    fn rem_assign(&mut self, other: Self) {
+        *self = Self {
+            x: self.x % other.x,
+            y: self.y % other.y,
         };
     }
 }
