@@ -14,6 +14,7 @@ use std::clone::Clone;
 use std::fmt;
 
 
+/// A fixed-length struct for holding a two-dimensional value.
 pub struct Vector2<T> {
     pub x: T,
     pub y: T,
@@ -220,7 +221,7 @@ impl<T> Index<usize> for Vector2<T> {
         match index {
             0 => &self.x,
             1 => &self.y,
-            _ => panic!("Index out of bounds."),
+            _ => panic!("Cannot index into Vector2, Index '{}' is out of bounds.", index),
         }
     }
 }
@@ -231,7 +232,7 @@ impl<T> IndexMut<usize> for Vector2<T> {
         match index {
             0 => &mut self.x,
             1 => &mut self.y,
-            _ => panic!("Index out of bounds."),
+            _ => panic!("Cannot index into Vector2, Index '{}' is out of bounds.", index),
         }
     }
 }
@@ -243,6 +244,26 @@ impl<T: Copy> Copy for Vector2<T> {  }
 impl<T: Copy> Clone for Vector2<T> {
     fn clone(&self) -> Self {
         return *self;
+    }
+}
+
+
+impl<T> From<(T, T)> for Vector2<T> {
+    fn from(tup: (T, T)) -> Self {
+        return Self {
+            x: tup.0,
+            y: tup.1,
+        };
+    }
+}
+
+
+impl<T: Copy> From<[T; 2]> for Vector2<T> {
+    fn from(arr: [T; 2]) -> Self {
+        return Self {
+            x: arr[0],
+            y: arr[1],
+        };
     }
 }
 
@@ -310,5 +331,33 @@ mod tests {
         let mut v = Vector2::new(32, 50);
         v /= Vector2::new(4, 25);
         assert_eq!(v, Vector2::new(8, 2));
+    }
+
+    #[test]
+    fn rem() {
+        let v = Vector2::new(12, 6) % Vector2::new(2, 2);
+        assert_eq!(v, Vector2::new(0, 0));
+
+        let mut v = Vector2::new(32, 50);
+        v %= Vector2::new(5, 9);
+        assert_eq!(v, Vector2::new(2, 5));
+    }
+
+    #[test]
+    fn from() {
+        assert_eq!(Vector2::from((5, 3)), Vector2::new(5, 3));
+        assert_eq!(Vector2::from([4, 2]), Vector2::new(4, 2));
+    }
+
+    #[test]
+    fn index() {
+        let mut vec: Vector2<&str> = Vector2::new("vector", "2");
+        assert_eq!(vec[0], "vector");
+        assert_eq!(vec[1], "2");
+        
+        vec[0] = "new";
+        vec[1] = "values";
+        assert_eq!(vec[0], "new");
+        assert_eq!(vec[1], "values");
     }
 }
