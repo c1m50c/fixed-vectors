@@ -63,6 +63,20 @@ impl<T> Vector2<T> {
 }
 
 
+#[allow(dead_code)]
+impl<T: Copy> Vector2<T> {
+    #[inline(always)]
+    pub fn as_tuple(&self) -> (T, T) {
+        return (self.x, self.y);
+    }
+
+    #[inline(always)]
+    pub fn as_array(&self) -> [T; 2] {
+        return [self.x, self.y];
+    }
+}
+
+
 impl<T: Default> Default for Vector2<T> {
     fn default() -> Self {
         return Self {
@@ -347,6 +361,16 @@ mod tests {
     fn from() {
         assert_eq!(Vector2::from((5, 3)), Vector2::new(5, 3));
         assert_eq!(Vector2::from([4, 2]), Vector2::new(4, 2));
+    }
+
+    #[test]
+    fn as_tuple() {
+        assert_eq!(Vector2::new(13, 37).as_tuple(), (13, 37));
+    }
+
+    #[test]
+    fn as_array() {
+        assert_eq!(Vector2::new(13, 37).as_array(), [13, 37]);
     }
 
     #[test]
