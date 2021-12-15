@@ -21,6 +21,36 @@ impl<T> Vector2<T> {
             y,
         };
     }
+
+    #[inline(always)]
+    pub fn get_x(&self) -> &T {
+        return &self.x;
+    }
+
+    #[inline(always)]
+    pub fn get_y(&self) -> &T {
+        return &self.y;
+    }
+
+    #[inline(always)]
+    pub fn get_x_mut(&mut self) -> &mut T {
+        return &mut self.x;
+    }
+
+    #[inline(always)]
+    pub fn get_y_mut(&mut self) -> &mut T {
+        return &mut self.y;
+    }
+
+    #[inline(always)]
+    pub fn set_x(&mut self, value: T) {
+        self.x = value;
+    }
+
+    #[inline(always)]
+    pub fn set_y(&mut self, value: T) {
+        self.y = value;
+    }
 }
 
 
