@@ -2,7 +2,14 @@ use std::ops::{Add, AddAssign};
 use std::ops::{Sub, SubAssign};
 use std::ops::{Mul, MulAssign};
 use std::ops::{Div, DivAssign};
+
+use std::ops::{Index, IndexMut};
+
 use std::cmp::{PartialEq, Eq};
+
+use std::marker::Copy;
+use std::clone::Clone;
+
 use std::fmt;
 
 
@@ -179,6 +186,40 @@ impl<T: Div<Output = T> + Copy> DivAssign for Vector2<T> {
             x: self.x / other.x,
             y: self.y / other.y,
         };
+    }
+}
+
+
+impl<T> Index<usize> for Vector2<T> {
+    type Output = T;
+    
+    fn index(&self, index: usize) -> &Self::Output {
+        match index {
+            0 => &self.x,
+            1 => &self.y,
+            _ => panic!("Index out of bounds."),
+        }
+    }
+}
+
+
+impl<T> IndexMut<usize> for Vector2<T> {
+    fn index_mut(&mut self, index: usize) -> &mut Self::Output {
+        match index {
+            0 => &mut self.x,
+            1 => &mut self.y,
+            _ => panic!("Index out of bounds."),
+        }
+    }
+}
+
+
+impl<T: Copy> Copy for Vector2<T> {  }
+
+
+impl<T: Copy> Clone for Vector2<T> {
+    fn clone(&self) -> Self {
+        return *self;
     }
 }
 
