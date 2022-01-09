@@ -45,6 +45,7 @@ macro_rules! impl_vector {
         impl<T: Add<Output = T>> Add for $Vector<T> {
             type Output = Self;
 
+            #[inline]
             fn add(self, other: Self) -> Self::Output {
                 return Self {
                     $($field: self.$field + other.$field), +
@@ -53,6 +54,7 @@ macro_rules! impl_vector {
         }
 
         impl<T: Add<Output = T> + Copy> AddAssign for $Vector<T> {
+            #[inline]
             fn add_assign(&mut self, other: Self) {
                 *self = Self {
                     $($field: self.$field + other.$field), +
@@ -63,6 +65,7 @@ macro_rules! impl_vector {
         impl<T: Sub<Output = T>> Sub for $Vector<T> {
             type Output = Self;
 
+            #[inline]
             fn sub(self, other: Self) -> Self::Output {
                 return Self {
                     $($field: self.$field - other.$field), +
@@ -71,6 +74,7 @@ macro_rules! impl_vector {
         }
 
         impl<T: Sub<Output = T> + Copy> SubAssign for $Vector<T> {
+            #[inline]
             fn sub_assign(&mut self, other: Self) {
                 *self = Self {
                     $($field: self.$field - other.$field), +
@@ -81,6 +85,7 @@ macro_rules! impl_vector {
         impl<T: Mul<Output = T>> Mul for $Vector<T> {
             type Output = Self;
 
+            #[inline]
             fn mul(self, other: Self) -> Self::Output {
                 return Self {
                     $($field: self.$field * other.$field), +
@@ -89,6 +94,7 @@ macro_rules! impl_vector {
         }
 
         impl<T: Mul<Output = T> + Copy> MulAssign for $Vector<T> {
+            #[inline]
             fn mul_assign(&mut self, other: Self) {
                 *self = Self {
                     $($field: self.$field * other.$field), +
@@ -99,6 +105,7 @@ macro_rules! impl_vector {
         impl<T: Div<Output = T>> Div for $Vector<T> {
             type Output = Self;
 
+            #[inline]
             fn div(self, other: Self) -> Self::Output {
                 return Self {
                     $($field: self.$field / other.$field), +
@@ -107,6 +114,7 @@ macro_rules! impl_vector {
         }
 
         impl<T: Div<Output = T> + Copy> DivAssign for $Vector<T> {
+            #[inline]
             fn div_assign(&mut self, other: Self) {
                 *self = Self {
                     $($field: self.$field / other.$field), +
@@ -115,6 +123,7 @@ macro_rules! impl_vector {
         }
 
         impl<T: PartialEq> PartialEq for $Vector<T> {
+            #[inline]
             fn eq(&self, other: &Self) -> bool {
                 return $(self.$field == other.$field) && +
             }
@@ -122,8 +131,8 @@ macro_rules! impl_vector {
 
         impl<T: Eq> Eq for $Vector<T> {  }
 
-
         impl<T: fmt::Debug> fmt::Debug for $Vector<T> {
+            #[inline]
             fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
                 return f.debug_struct(stringify!($Vector))
                     $(.field(stringify!($field), &self.$field)) +
