@@ -6,6 +6,8 @@ use core::ops::{Add, AddAssign};
 use core::ops::{Sub, SubAssign};
 use core::ops::{Mul, MulAssign};
 use core::ops::{Div, DivAssign};
+use core::ops::{Rem, RemAssign};
+use core::ops::Neg;
 
 use core::cmp::PartialEq;
 
@@ -118,6 +120,37 @@ macro_rules! impl_vector {
             fn div_assign(&mut self, other: Self) {
                 *self = Self {
                     $($field: self.$field / other.$field), +
+                };
+            }
+        }
+
+        impl<T: Rem<Output = T>> Rem for $Vector<T> {
+            type Output = Self;
+
+            #[inline]
+            fn rem(self, other: Self) -> Self::Output {
+                return Self {
+                    $($field: self.$field % other.$field), +
+                };
+            }
+        }
+
+        impl<T: Rem<Output = T> + Copy> RemAssign for $Vector<T> {
+            #[inline]
+            fn rem_assign(&mut self, other: Self) {
+                *self = Self {
+                    $($field: self.$field % other.$field), +
+                };
+            }
+        }
+
+        impl<T: Neg<Output = T>> Neg for $Vector<T> {
+            type Output = Self;
+
+            #[inline]
+            fn neg(self) -> Self::Output {
+                return Self {
+                    $($field: -self.$field), +
                 };
             }
         }
