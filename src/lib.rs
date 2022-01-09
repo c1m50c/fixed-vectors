@@ -30,11 +30,14 @@ use core::fmt;
 /// 
 /// // Now the struct has generic Vector methods.
 /// let vector = Vector5::new(1, 2, 3, 4, 5);
+/// assert_eq!(vector::LEN, 5);
 /// ```
 #[macro_export]
 macro_rules! impl_vector {
     ($Vector:ident { $($field:ident), + }, $size:expr) => {
         impl<T> $Vector<T> {
+            pub const LEN: usize = $size;
+
             #[inline]
             pub const fn new($($field: T), +) -> $Vector<T> {
                 return Self {

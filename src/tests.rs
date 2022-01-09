@@ -172,3 +172,23 @@ fn ne() {
     assert_ne!(Vector3::new(0, 1, 2), Vector3::new(2, 1, 0));
     assert_ne!(Vector4::new(0, 1, 2, 3), Vector4::new(3, 2, 1, 0));
 }
+
+
+#[test]
+fn len() {
+    assert_eq!(Vector2::<()>::LEN, 2);
+    assert_eq!(Vector3::<()>::LEN, 3);
+    assert_eq!(Vector4::<()>::LEN, 4);
+}
+
+
+#[test]
+fn debug() {
+    let vec2 = Vector2::new(0, 1);
+    let vec3 = Vector3::new(0, 1, 2);
+    let vec4 = Vector4::new(0, 1, 2, 3);
+
+    assert_eq!(format!("{:?}", vec2), "Vector2 { x: 0, y: 1 }");
+    assert_eq!(format!("{:?}", vec3), "Vector3 { x: 0, y: 1, z: 2 }");
+    assert_eq!(format!("{:?}", vec4), "Vector4 { x: 0, y: 1, z: 2, w: 3 }");
+}
