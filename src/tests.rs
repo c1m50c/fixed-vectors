@@ -192,3 +192,15 @@ fn debug() {
     assert_eq!(format!("{:?}", vec3), "Vector3 { x: 0, y: 1, z: 2 }");
     assert_eq!(format!("{:?}", vec4), "Vector4 { x: 0, y: 1, z: 2, w: 3 }");
 }
+
+
+#[test]
+fn display() {
+    let vec2 = Vector2::new(4, 2);
+    let vec3 = Vector3::new(7, 7, 7);
+    let vec4 = Vector4::new(1, 3, 3, 7);
+
+    assert_eq!(format!("{}", vec2), "(4, 2)");
+    assert_eq!(format!("{}", vec3), "(7, 7, 7)");
+    assert_eq!(format!("{}", vec4), "(1, 3, 3, 7)");
+}
