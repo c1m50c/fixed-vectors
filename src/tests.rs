@@ -155,3 +155,19 @@ fn div() {
     assert_eq!(vec4.z, 0);
     assert_eq!(vec4.w, 0);
 }
+
+
+#[test]
+fn eq() {
+    assert_eq!(Vector2::new(0, 1), Vector2::new(0, 1));
+    assert_eq!(Vector3::new(0, 1, 2), Vector3::new(0, 1, 2));
+    assert_eq!(Vector4::new(0, 1, 2, 3), Vector4::new(0, 1, 2, 3));
+}
+
+
+#[test]
+fn ne() {
+    assert_ne!(Vector2::new(0, 1), Vector2::new(1, 0));
+    assert_ne!(Vector3::new(0, 1, 2), Vector3::new(2, 1, 0));
+    assert_ne!(Vector4::new(0, 1, 2, 3), Vector4::new(3, 2, 1, 0));
+}

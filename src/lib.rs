@@ -7,6 +7,10 @@ use core::ops::{Sub, SubAssign};
 use core::ops::{Mul, MulAssign};
 use core::ops::{Div, DivAssign};
 
+use core::cmp::PartialEq;
+
+use core::fmt;
+
 
 #[macro_export]
 macro_rules! impl_vector {
@@ -107,6 +111,23 @@ macro_rules! impl_vector {
                 *self = Self {
                     $($field: self.$field / other.$field), +
                 };
+            }
+        }
+
+        impl<T: PartialEq> PartialEq for $Vector<T> {
+            fn eq(&self, other: &Self) -> bool {
+                return $(self.$field == other.$field) && +
+            }
+        }
+
+        impl<T: Eq> Eq for $Vector<T> {  }
+
+
+        impl<T: fmt::Debug> fmt::Debug for $Vector<T> {
+            fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+                return f.debug_struct(stringify!($Vector))
+                    $(.field(stringify!($field), &self.$field)) +
+                    .finish();
             }
         }
     }
