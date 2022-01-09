@@ -47,11 +47,33 @@ macro_rules! impl_vector {
             /// Length of the Vector Struct as a `usize`.
             pub const LEN: usize = $size;
 
+            /// Creates a new `Vector` with the specified values for the fields.
+            /// 
+            /// ## Example
+            /// ```rust
+            /// let vector = Vector2::new("Vector", "2");
+            /// assert_eq!(vector.x, "Vector");
+            /// assert_eq!(vector.y, "2");
+            /// ```
             #[inline]
             pub const fn new($($field: T), +) -> $Vector<T> {
                 return Self {
                     $($field: $field), +
                 };
+            }
+
+            /// Converts the given `Vector` into an array coresponding to the size of the `Vector`.
+            /// 
+            /// ## Example
+            /// ```rust
+            /// let vector = Vector3::new(1, 2, 3);
+            /// assert_eq!(vector.to_array(), [1, 2, 3]);
+            /// ```
+            #[inline]
+            pub fn to_array(self) -> [T; $size] {
+                return [
+                    $(self.$field), +
+                ];
             }
         }
 
