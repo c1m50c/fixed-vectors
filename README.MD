@@ -2,7 +2,7 @@
 
 [![Build](https://github.com/c1m50c/fixed-vectors/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/c1m50c/fixed-vectors/actions/workflows/build.yml)
 
-Library implementing fixed length vectors in Rust.
+Library implementing fixed-length Vectors meant for representing dimensional values.
 
 ---
 
