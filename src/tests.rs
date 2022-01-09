@@ -239,3 +239,15 @@ fn to_array() {
     assert_eq!(vec3.to_array(), [1, 2, 3]);
     assert_eq!(vec4.to_array(), [1, 2, 3, 4]);
 }
+
+
+#[test]
+fn to_vec() {
+    let vec2 = Vector2::new(1, 2);
+    let vec3 = Vector3::new(1, 2, 3);
+    let vec4 = Vector4::new(1, 2, 3, 4);
+
+    assert_eq!(vec2.to_vec(), vec![1, 2]);
+    assert_eq!(vec3.to_vec(), vec![1, 2, 3]);
+    assert_eq!(vec4.to_vec(), vec![1, 2, 3, 4]);
+}

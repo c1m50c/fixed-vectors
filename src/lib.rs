@@ -75,6 +75,20 @@ macro_rules! impl_vector {
                     $(self.$field), +
                 ];
             }
+
+            /// Converts the given `Vector` into a `Vec` coresponding to the size of the `Vector`.
+            /// 
+            /// ## Example
+            /// ```rust
+            /// let vector = Vector3::new(1, 2, 3);
+            /// assert_eq!(vector.to_vec(), vec![1, 2, 3]);
+            /// ```
+            #[inline]
+            pub fn to_vec(self) -> std::vec::Vec<T> {
+                let mut vec = std::vec::Vec::with_capacity(Self::LEN);
+                $( vec.push(self.$field); ) +
+                return vec;
+            }
         }
 
         impl<T: Default> Default for $Vector<T> {
@@ -216,6 +230,7 @@ macro_rules! impl_vector {
         impl<T: Eq> Eq for $Vector<T> {  }
 
         impl<T: Hash> Hash for $Vector<T> {
+            #[inline]
             fn hash<H: Hasher>(&self, state: &mut H) {
                 $( self.$field.hash(state); ) +
             }
@@ -231,6 +246,7 @@ macro_rules! impl_vector {
         }
 
         impl<T: fmt::Display> fmt::Display for $Vector<T> {
+            #[inline]
             fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
                 // SAFETY: Provided safety for the unwrapping in return.
                 if Self::LEN == 0 { return write!(f, "()"); }
