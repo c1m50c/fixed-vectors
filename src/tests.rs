@@ -175,10 +175,13 @@ fn ne() {
 
 
 #[test]
-fn len() {
+fn constants() {
     assert_eq!(Vector2::<()>::LEN, 2);
     assert_eq!(Vector3::<()>::LEN, 3);
     assert_eq!(Vector4::<()>::LEN, 4);
+    assert_eq!(Vector2::<()>::NAME, "Vector2");
+    assert_eq!(Vector3::<()>::NAME, "Vector3");
+    assert_eq!(Vector4::<()>::NAME, "Vector4");
 }
 
 

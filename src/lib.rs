@@ -38,6 +38,10 @@ use core::fmt;
 macro_rules! impl_vector {
     ($Vector:ident { $($field:ident), + }, $size:expr) => {
         impl<T> $Vector<T> {
+            /// Name of the Vector Struct as a `static str`.
+            pub const NAME: &'static str = stringify!($Vector);
+
+            /// Length of the Vector Struct as a `usize`.
             pub const LEN: usize = $size;
 
             #[inline]
