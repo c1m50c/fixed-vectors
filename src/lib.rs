@@ -32,7 +32,10 @@ use core::fmt;
 /// 
 /// // Now the struct has generic Vector methods.
 /// let vector = Vector5::new(1, 2, 3, 4, 5);
-/// assert_eq!(vector::LEN, 5);
+/// assert_eq!(format!("{}", vector), "(1, 2, 3, 4, 5)");
+/// 
+/// assert_eq!(Vector5::NAME, "Vector5");
+/// assert_eq!(Vector5::LEN, 5);
 /// ```
 #[macro_export]
 macro_rules! impl_vector {
