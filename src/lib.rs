@@ -14,6 +14,23 @@ use core::cmp::PartialEq;
 use core::fmt;
 
 
+/// Macros for implementing various functions within Vector-like structs.
+/// 
+/// ## Example
+/// ```rust
+/// struct Vector5<T> {
+///     pub x: T,
+///     pub y: T,
+///     pub z: T,
+///     pub w: T,
+///     pub v: T,
+/// }
+/// 
+/// impl_vector!(Vector5 { x, y, z, w, v }, 5);
+/// 
+/// // Now the struct has generic Vector methods.
+/// let vector = Vector5::new(1, 2, 3, 4, 5);
+/// ```
 #[macro_export]
 macro_rules! impl_vector {
     ($Vector:ident { $($field:ident), + }, $size:expr) => {
