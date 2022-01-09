@@ -56,17 +56,9 @@ fn add() {
     vec3 += Vector3::new(1, 2, 3);
     vec4 += Vector4::new(1, 2, 3, 4);
 
-    assert_eq!(vec2.x, 2);
-    assert_eq!(vec2.y, 4);
-
-    assert_eq!(vec3.x, 2);
-    assert_eq!(vec3.y, 4);
-    assert_eq!(vec3.z, 6);
-
-    assert_eq!(vec4.x, 2);
-    assert_eq!(vec4.y, 4);
-    assert_eq!(vec4.z, 6);
-    assert_eq!(vec4.w, 8);
+    assert_eq!(vec2, Vector2::new(2, 4));
+    assert_eq!(vec3, Vector3::new(2, 4, 6));
+    assert_eq!(vec4, Vector4::new(2, 4, 6, 8));
 }
 
 
@@ -85,17 +77,9 @@ fn sub() {
     vec3 -= Vector3::new(1, 2, 3);
     vec4 -= Vector4::new(1, 2, 3, 4);
 
-    assert_eq!(vec2.x, -2);
-    assert_eq!(vec2.y, -4);
-
-    assert_eq!(vec3.x, -2);
-    assert_eq!(vec3.y, -4);
-    assert_eq!(vec3.z, -6);
-
-    assert_eq!(vec4.x, -2);
-    assert_eq!(vec4.y, -4);
-    assert_eq!(vec4.z, -6);
-    assert_eq!(vec4.w, -8);
+    assert_eq!(vec2, Vector2::new(-2, -4));
+    assert_eq!(vec3, Vector3::new(-2, -4, -6));
+    assert_eq!(vec4, Vector4::new(-2, -4, -6, -8));
 }
 
 
@@ -114,17 +98,9 @@ fn mul() {
     vec3 *= Vector3::new(1, 2, 3);
     vec4 *= Vector4::new(1, 2, 3, 4);
 
-    assert_eq!(vec2.x, 0);
-    assert_eq!(vec2.y, 0);
-
-    assert_eq!(vec3.x, 0);
-    assert_eq!(vec3.y, 0);
-    assert_eq!(vec3.z, 0);
-
-    assert_eq!(vec4.x, 0);
-    assert_eq!(vec4.y, 0);
-    assert_eq!(vec4.z, 0);
-    assert_eq!(vec4.w, 0);
+    assert_eq!(vec2, Vector2::new(0, 0));
+    assert_eq!(vec3, Vector3::new(0, 0, 0));
+    assert_eq!(vec4, Vector4::new(0, 0, 0, 0));
 }
 
 
@@ -143,17 +119,9 @@ fn div() {
     vec3 /= Vector3::new(1, 2, 3);
     vec4 /= Vector4::new(1, 2, 3, 4);
 
-    assert_eq!(vec2.x, 0);
-    assert_eq!(vec2.y, 0);
-
-    assert_eq!(vec3.x, 0);
-    assert_eq!(vec3.y, 0);
-    assert_eq!(vec3.z, 0);
-
-    assert_eq!(vec4.x, 0);
-    assert_eq!(vec4.y, 0);
-    assert_eq!(vec4.z, 0);
-    assert_eq!(vec4.w, 0);
+    assert_eq!(vec2, Vector2::new(0, 0));
+    assert_eq!(vec3, Vector3::new(0, 0, 0));
+    assert_eq!(vec4, Vector4::new(0, 0, 0, 0));
 }
 
 
