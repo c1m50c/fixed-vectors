@@ -183,6 +183,26 @@ fn len() {
 
 
 #[test]
+fn hash() {
+    // NOTE: No assertions in this test, just making sure the `Hash` trait does not panic.
+    let vec2 = Vector2::new(7, 2);
+    let vec3 = Vector3::new(7, 2, 0);
+    let vec4 = Vector4::new(7, 2, 0, 4);
+
+    let mut hasher = std::collections::hash_map::DefaultHasher::new();
+
+    vec2.hash(&mut hasher);
+    println!("{:x}", hasher.finish());
+
+    vec3.hash(&mut hasher);
+    println!("{:x}", hasher.finish());
+
+    vec4.hash(&mut hasher);
+    println!("{:x}", hasher.finish());
+}
+
+
+#[test]
 fn debug() {
     let vec2 = Vector2::new(0, 1);
     let vec3 = Vector3::new(0, 1, 2);

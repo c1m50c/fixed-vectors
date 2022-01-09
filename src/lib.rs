@@ -11,6 +11,8 @@ use core::ops::Neg;
 
 use core::cmp::PartialEq;
 
+use core::hash::{Hash, Hasher};
+
 use core::fmt;
 
 
@@ -183,6 +185,12 @@ macro_rules! impl_vector {
         }
 
         impl<T: Eq> Eq for $Vector<T> {  }
+
+        impl<T: Hash> Hash for $Vector<T> {
+            fn hash<H: Hasher>(&self, state: &mut H) {
+                $( self.$field.hash(state); ) +
+            }
+        }
 
         impl<T: fmt::Debug> fmt::Debug for $Vector<T> {
             #[inline]
