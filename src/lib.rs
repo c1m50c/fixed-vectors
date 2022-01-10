@@ -14,6 +14,7 @@ use core::cmp::PartialEq;
 use core::hash::{Hash, Hasher};
 
 use core::fmt;
+use std::mem::size_of;
 
 
 /// Macros for implementing various functions within Vector-like structs.
@@ -39,13 +40,16 @@ use core::fmt;
 /// ```
 #[macro_export]
 macro_rules! impl_vector {
-    ($Vector:ident { $($field:ident), + }, $size:expr) => {
+    ($Vector:ident { $($field:ident), + }, $len:expr) => {
         impl<T> $Vector<T> {
-            /// Name of the Vector Struct as a `static str`.
+            /// Name of the `Vector` Struct as a `static str`.
             pub const NAME: &'static str = stringify!($Vector);
 
-            /// Length of the Vector Struct as a `usize`.
-            pub const LEN: usize = $size;
+            /// Size of the `Vector<T>` in Bytes, calculated based of `size_of::<T>()` * `Vector::LEN`.
+            pub const SIZE: usize = size_of::<T>() * $len;
+
+            /// Length of the `Vector` Struct as a `usize`.
+            pub const LEN: usize = $len;
 
             /// Creates a new `Vector` with the specified values for the fields.
             /// 
@@ -70,7 +74,7 @@ macro_rules! impl_vector {
             /// assert_eq!(vector.to_array(), [1, 2, 3]);
             /// ```
             #[inline]
-            pub fn to_array(self) -> [T; $size] {
+            pub fn to_array(self) -> [T; $len] {
                 return [
                     $(self.$field), +
                 ];

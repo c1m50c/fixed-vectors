@@ -171,9 +171,14 @@ fn constants() {
     assert_eq!(Vector2::<()>::LEN, 2);
     assert_eq!(Vector3::<()>::LEN, 3);
     assert_eq!(Vector4::<()>::LEN, 4);
+    
     assert_eq!(Vector2::<()>::NAME, "Vector2");
     assert_eq!(Vector3::<()>::NAME, "Vector3");
     assert_eq!(Vector4::<()>::NAME, "Vector4");
+
+    assert_eq!(Vector2::<u16>::SIZE, 4);
+    assert_eq!(Vector3::<u16>::SIZE, 6);
+    assert_eq!(Vector4::<u16>::SIZE, 8);
 }
 
 
