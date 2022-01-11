@@ -1,7 +1,3 @@
-#[cfg(test)]
-mod tests;
-
-
 use core::ops::{Add, AddAssign};
 use core::ops::{Sub, SubAssign};
 use core::ops::{Mul, MulAssign};
@@ -14,7 +10,11 @@ use core::cmp::PartialEq;
 use core::hash::{Hash, Hasher};
 
 use core::fmt;
-use std::mem::size_of;
+
+use core::mem::size_of;
+
+#[cfg(test)]
+mod tests;
 
 
 /// Macros for implementing various functions within Vector-like structs.
