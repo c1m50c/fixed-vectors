@@ -40,7 +40,7 @@ mod tests;
 /// ```
 #[macro_export]
 macro_rules! impl_vector {
-    ($Vector:ident { $($field:ident), + }, $len:expr) => {
+    ($Vector: ident { $($field: ident), + }, $len: expr) => {
         impl<T> $Vector<T> {
             /// Name of the `Vector` Struct as a `static str`.
             pub const NAME: &'static str = stringify!($Vector);
@@ -60,9 +60,9 @@ macro_rules! impl_vector {
             /// assert_eq!(vector.y, "2");
             /// ```
             #[inline]
-            pub const fn new($($field: T), +) -> $Vector<T> {
+            pub const fn new($( $field: T ), +) -> $Vector<T> {
                 return Self {
-                    $($field: $field), +
+                    $( $field: $field ), +
                 };
             }
 
@@ -99,7 +99,7 @@ macro_rules! impl_vector {
             #[inline]
             fn default() -> $Vector<T> {
                 return Self {
-                    $($field: T::default()), +
+                    $( $field: T::default() ), +
                 };
             }
         }
@@ -119,7 +119,7 @@ macro_rules! impl_vector {
             #[inline]
             fn add(self, other: Self) -> Self::Output {
                 return Self {
-                    $($field: self.$field + other.$field), +
+                    $( $field: self.$field + other.$field ), +
                 };
             }
         }
@@ -128,7 +128,7 @@ macro_rules! impl_vector {
             #[inline]
             fn add_assign(&mut self, other: Self) {
                 *self = Self {
-                    $($field: self.$field + other.$field), +
+                    $( $field: self.$field + other.$field ), +
                 };
             }
         }
@@ -139,7 +139,7 @@ macro_rules! impl_vector {
             #[inline]
             fn sub(self, other: Self) -> Self::Output {
                 return Self {
-                    $($field: self.$field - other.$field), +
+                    $( $field: self.$field - other.$field ), +
                 };
             }
         }
@@ -148,7 +148,7 @@ macro_rules! impl_vector {
             #[inline]
             fn sub_assign(&mut self, other: Self) {
                 *self = Self {
-                    $($field: self.$field - other.$field), +
+                    $( $field: self.$field - other.$field ), +
                 };
             }
         }
@@ -159,7 +159,7 @@ macro_rules! impl_vector {
             #[inline]
             fn mul(self, other: Self) -> Self::Output {
                 return Self {
-                    $($field: self.$field * other.$field), +
+                    $( $field: self.$field * other.$field ), +
                 };
             }
         }
@@ -168,7 +168,7 @@ macro_rules! impl_vector {
             #[inline]
             fn mul_assign(&mut self, other: Self) {
                 *self = Self {
-                    $($field: self.$field * other.$field), +
+                    $( $field: self.$field * other.$field ), +
                 };
             }
         }
@@ -179,7 +179,7 @@ macro_rules! impl_vector {
             #[inline]
             fn div(self, other: Self) -> Self::Output {
                 return Self {
-                    $($field: self.$field / other.$field), +
+                    $( $field: self.$field / other.$field ), +
                 };
             }
         }
@@ -188,7 +188,7 @@ macro_rules! impl_vector {
             #[inline]
             fn div_assign(&mut self, other: Self) {
                 *self = Self {
-                    $($field: self.$field / other.$field), +
+                    $( $field: self.$field / other.$field ), +
                 };
             }
         }
@@ -199,7 +199,7 @@ macro_rules! impl_vector {
             #[inline]
             fn rem(self, other: Self) -> Self::Output {
                 return Self {
-                    $($field: self.$field % other.$field), +
+                    $( $field: self.$field % other.$field ), +
                 };
             }
         }
@@ -208,7 +208,7 @@ macro_rules! impl_vector {
             #[inline]
             fn rem_assign(&mut self, other: Self) {
                 *self = Self {
-                    $($field: self.$field % other.$field), +
+                    $( $field: self.$field % other.$field ), +
                 };
             }
         }
@@ -219,7 +219,7 @@ macro_rules! impl_vector {
             #[inline]
             fn neg(self) -> Self::Output {
                 return Self {
-                    $($field: -self.$field), +
+                    $( $field: -self.$field ), +
                 };
             }
         }
@@ -227,7 +227,7 @@ macro_rules! impl_vector {
         impl<T: PartialEq> PartialEq for $Vector<T> {
             #[inline]
             fn eq(&self, other: &Self) -> bool {
-                return $(self.$field == other.$field) && +
+                return $( self.$field == other.$field ) && +
             }
         }
 
@@ -244,7 +244,7 @@ macro_rules! impl_vector {
             #[inline]
             fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
                 return f.debug_struct(stringify!($Vector))
-                    $(.field(stringify!($field), &self.$field)) +
+                    $( .field(stringify!($field), &self.$field) ) +
                     .finish();
             }
         }
@@ -272,6 +272,13 @@ macro_rules! impl_vector {
 /// pub x: T
 /// pub y: T
 /// ```
+/// 
+/// ## Constants
+/// ```rust
+/// LEN == 2
+/// SIZE == size_of::<T>() * LEN
+/// NAME == "Vector2"
+/// ```
 pub struct Vector2<T> {
     pub x: T,
     pub y: T,
@@ -285,6 +292,13 @@ pub struct Vector2<T> {
 /// pub x: T
 /// pub y: T
 /// pub z: T
+/// ```
+/// 
+/// ## Constants
+/// ```rust
+/// LEN == 3
+/// SIZE == size_of::<T>() * LEN
+/// NAME == "Vector3"
 /// ```
 pub struct Vector3<T> {
     pub x: T,
@@ -301,6 +315,13 @@ pub struct Vector3<T> {
 /// pub y: T
 /// pub z: T
 /// pub w: T
+/// ```
+/// 
+/// ## Constants
+/// ```rust
+/// LEN == 4
+/// SIZE == size_of::<T>() * LEN
+/// NAME == "Vector4"
 /// ```
 pub struct Vector4<T> {
     pub x: T,
