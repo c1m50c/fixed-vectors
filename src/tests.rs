@@ -325,3 +325,31 @@ fn min_max() {
     assert_eq!(vec4.min(), 1);
     assert_eq!(vec4.max(), 4);
 }
+
+
+#[test]
+fn pow() {
+    let vec2 = Vector2::new(2.0, 4.0).powi(2);
+    let vec3 = Vector3::new(2.0, 4.0, 6.0).powi(2);
+    let vec4 = Vector4::new(2.0, 4.0, 6.0, 8.0).powi(2);
+
+    assert_eq!(vec2, Vector2::new(4.0, 16.0));
+    assert_eq!(vec3, Vector3::new(4.0, 16.0, 36.0));
+    assert_eq!(vec4, Vector4::new(4.0, 16.0, 36.0, 64.0));
+
+    let vec2 = Vector2::new(2.0, 4.0).powf(2.0);
+    let vec3 = Vector3::new(2.0, 4.0, 6.0).powf(2.0);
+    let vec4 = Vector4::new(2.0, 4.0, 6.0, 8.0).powf(2.0);
+
+    assert_eq!(vec2, Vector2::new(4.0, 16.0));
+    assert_eq!(vec3, Vector3::new(4.0, 16.0, 36.0));
+    assert_eq!(vec4, Vector4::new(4.0, 16.0, 36.0, 64.0));
+
+    let vec2 = Vector2::new(2, 4).pow(2);
+    let vec3 = Vector3::new(2, 4, 6).pow(2);
+    let vec4 = Vector4::new(2, 4, 6, 8).pow(2);
+
+    assert_eq!(vec2, Vector2::new(4, 16));
+    assert_eq!(vec3, Vector3::new(4, 16, 36));
+    assert_eq!(vec4, Vector4::new(4, 16, 36, 64));
+}

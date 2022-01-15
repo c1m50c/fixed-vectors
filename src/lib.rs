@@ -1,3 +1,5 @@
+use num_traits::{Float, PrimInt};
+
 use core::hash::{Hash, Hasher};
 use core::iter::{Iterator, IntoIterator};
 use core::ops::{Add, AddAssign};
@@ -9,8 +11,6 @@ use core::ops::Neg;
 use core::cmp::PartialEq;
 use core::mem::size_of;
 use core::fmt;
-
-use num_traits::Float;
 
 #[cfg(test)]
 mod tests;
@@ -204,6 +204,50 @@ macro_rules! impl_vector {
             pub fn abs(self) -> Self {
                 return Self {
                     $( $field: self.$field.abs() ), +
+                };
+            }
+
+            /// Raises all numbers within the [`Vector`] to an integer power.
+            /// 
+            /// ## Example
+            /// ```rust
+            /// let vector = Vector2::new(2.0, 4.0).powi(2);
+            /// assert_eq!(vector, Vector2::new(4, 16));
+            /// ```
+            #[inline]
+            pub fn powi(self, n: i32) -> Self {
+                return Self {
+                    $( $field: self.$field.powi(n) ), +
+                };
+            }
+
+            /// Raises all numbers within the [`Vector`] to a floating point power.
+            /// 
+            /// ## Example
+            /// ```rust
+            /// let vector = Vector2::new(2.0, 4.0).powf(2.0);
+            /// assert_eq!(vector, Vector2::new(4.0, 16.0));
+            /// ```
+            #[inline]
+            pub fn powf(self, n: T) -> Self {
+                return Self {
+                    $( $field: self.$field.powf(n) ), +
+                };
+            }
+        }
+
+        impl<T: PrimInt> $Vector<T> {
+            /// Raises all numbers within the [`Vector`] to the specified power.
+            /// 
+            /// ## Example
+            /// ```rust
+            /// let vector = Vector3::new(2, 4, 6).pow(2);
+            /// assert_eq!(vector, Vector3::new(4, 16, 36));
+            /// ```
+            #[inline]
+            pub fn pow(self, exp: u32) -> Self {
+                return Self {
+                    $( $field: self.$field.pow(exp) ), +
                 };
             }
         }
