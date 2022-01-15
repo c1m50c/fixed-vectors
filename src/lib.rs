@@ -423,8 +423,33 @@ macro_rules! impl_vector {
             type Item = T;
             type IntoIter = IntoIter<T>;
         
+            #[inline]
             fn into_iter(self) -> Self::IntoIter {
                 return Self::IntoIter { vec: self.to_vec() };
+            }
+        }
+
+        impl<T: Copy> From<[T; $len]> for $Vector<T> {
+            #[inline]
+            fn from(arr: [T; $len]) -> Self {
+                let mut iter = arr.iter();
+                return Self {
+                    $( $field: *iter.next().unwrap() ), +
+                };
+            }
+        }
+
+        /*
+            SAFETY: Checks the [`Vec`]'s length to ensure it is greater than or equal to the [`Vector`]'s length
+        */
+        impl<T: Copy> From<std::vec::Vec<T>> for $Vector<T> {
+            #[inline]
+            fn from(vec: std::vec::Vec<T>) -> Self {
+                assert!(vec.len() >= $len, "Vec's length is less than the Vector's length.");
+                let mut iter = vec.iter();
+                return Self {
+                    $( $field: *iter.next().unwrap() ), +
+                };
             }
         }
     }

@@ -353,3 +353,27 @@ fn pow() {
     assert_eq!(vec3, Vector3::new(4, 16, 36));
     assert_eq!(vec4, Vector4::new(4, 16, 36, 64));
 }
+
+
+#[test]
+fn from_array() {
+    let vec2 = Vector2::from([1, 2]);
+    let vec3 = Vector3::from([1, 2, 3]);
+    let vec4 = Vector4::from([1, 2, 3, 4]);
+
+    assert_eq!(vec2, Vector2::new(1, 2));
+    assert_eq!(vec3, Vector3::new(1, 2, 3));
+    assert_eq!(vec4, Vector4::new(1, 2, 3, 4));
+}
+
+
+#[test]
+fn from_vec() {
+    let vec2 = Vector2::from(vec![1, 2]);
+    let vec3 = Vector3::from(vec![1, 2, 3]);
+    let vec4 = Vector4::from(vec![1, 2, 3, 4]);
+
+    assert_eq!(vec2, Vector2::new(1, 2));
+    assert_eq!(vec3, Vector3::new(1, 2, 3));
+    assert_eq!(vec4, Vector4::new(1, 2, 3, 4));
+}
