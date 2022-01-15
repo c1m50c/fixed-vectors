@@ -115,12 +115,11 @@ macro_rules! impl_vector {
             /// 
             /// ## Example
             /// ```rust
-            /// let mut vector = Vector2::new(4.25, 5.9);
-            /// vector.floor();
+            /// let vector = Vector2::new(4.25, 5.9).floor();
             /// assert_eq!(vector, Vector2::new(4.0, 5.0));
             /// ```
-            pub fn floor(&mut self) {
-                *self = Self {
+            pub fn floor(self) -> Self {
+                return Self {
                     $( $field: self.$field.floor() ), +
                 };
             }
@@ -129,12 +128,11 @@ macro_rules! impl_vector {
             /// 
             /// ## Example
             /// ```rust
-            /// let mut vector = Vector2::new(4.25, 5.9);
-            /// vector.ceil();
+            /// let vector = Vector2::new(4.25, 5.9).ceil();
             /// assert_eq!(vector, Vector2::new(5.0, 6.0));
             /// ```
-            pub fn ceil(&mut self) {
-                *self = Self {
+            pub fn ceil(self) -> Self {
+                return Self {
                     $( $field: self.$field.ceil() ), +
                 }
             }
@@ -143,12 +141,11 @@ macro_rules! impl_vector {
             /// 
             /// ## Example
             /// ```rust
-            /// let mut vector = Vector2::new(4.25, 5.9);
-            /// vector.round();
+            /// let vector = Vector2::new(4.25, 5.9).round();
             /// assert_eq!(vector, Vector2::new(4.0, 6.0));
             /// ```
-            pub fn round(&mut self) {
-                *self = Self {
+            pub fn round(self) -> Self {
+                return Self {
                     $( $field: self.$field.round() ), +
                 }
             }

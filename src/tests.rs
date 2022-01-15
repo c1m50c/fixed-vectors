@@ -272,37 +272,25 @@ fn iterator() {
 
 #[test]
 fn round() {
-    let mut vec2 = Vector2::new(5.9, 4.3);
-    let mut vec3 = Vector3::new(5.9, 4.3, 0.1);
-    let mut vec4 = Vector4::new(5.9, 4.3, 0.1, 1.2);
-
-    vec2.floor();
-    vec3.floor();
-    vec4.floor();
+    let vec2 = Vector2::new(5.9, 4.3).floor();
+    let vec3 = Vector3::new(5.9, 4.3, 0.1).floor();
+    let vec4 = Vector4::new(5.9, 4.3, 0.1, 1.2).floor();
 
     assert_eq!(vec2, Vector2::new(5.0, 4.0));
     assert_eq!(vec3, Vector3::new(5.0, 4.0, 0.0));
     assert_eq!(vec4, Vector4::new(5.0, 4.0, 0.0, 1.0));
 
-    let mut vec2 = Vector2::new(5.9, 4.3);
-    let mut vec3 = Vector3::new(5.9, 4.3, 0.1);
-    let mut vec4 = Vector4::new(5.9, 4.3, 0.1, 1.2);
-
-    vec2.ceil();
-    vec3.ceil();
-    vec4.ceil();
+    let vec2 = Vector2::new(5.9, 4.3).ceil();
+    let vec3 = Vector3::new(5.9, 4.3, 0.1).ceil();
+    let vec4 = Vector4::new(5.9, 4.3, 0.1, 1.2).ceil();
 
     assert_eq!(vec2, Vector2::new(6.0, 5.0));
     assert_eq!(vec3, Vector3::new(6.0, 5.0, 1.0));
     assert_eq!(vec4, Vector4::new(6.0, 5.0, 1.0, 2.0));
 
-    let mut vec2 = Vector2::new(5.9, 4.3);
-    let mut vec3 = Vector3::new(5.9, 4.3, 0.1);
-    let mut vec4 = Vector4::new(5.9, 4.3, 0.1, 1.2);
-
-    vec2.round();
-    vec3.round();
-    vec4.round();
+    let vec2 = Vector2::new(5.9, 4.3).round();
+    let vec3 = Vector3::new(5.9, 4.3, 0.1).round();
+    let vec4 = Vector4::new(5.9, 4.3, 0.1, 1.2).round();
 
     assert_eq!(vec2, Vector2::new(6.0, 4.0));
     assert_eq!(vec3, Vector3::new(6.0, 4.0, 0.0));
