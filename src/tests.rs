@@ -248,3 +248,23 @@ fn to_vec() {
     assert_eq!(vec3.to_vec(), vec![1, 2, 3]);
     assert_eq!(vec4.to_vec(), vec![1, 2, 3, 4]);
 }
+
+
+#[test]
+fn iterator() {
+    let vec2 = Vector2::new(1, 2);
+    let vec3 = Vector3::new(1, 2, 3);
+    let vec4 = Vector4::new(1, 2, 3, 4);
+
+    let mut sum_of_vec2 = 0;
+    let mut sum_of_vec3 = 0;
+    let mut sum_of_vec4 = 0;
+    
+    for i in vec2 { sum_of_vec2 += i; }
+    for i in vec3 { sum_of_vec3 += i; }
+    for i in vec4 { sum_of_vec4 += i; }
+
+    assert_eq!(sum_of_vec2, 3);
+    assert_eq!(sum_of_vec3, 6);
+    assert_eq!(sum_of_vec4, 10);
+}

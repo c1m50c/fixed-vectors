@@ -9,12 +9,30 @@ use core::cmp::PartialEq;
 
 use core::hash::{Hash, Hasher};
 
+use core::iter::{Iterator, IntoIterator};
+
 use core::fmt;
 
 use core::mem::size_of;
 
 #[cfg(test)]
 mod tests;
+
+
+pub struct IntoIter<T> {
+    vec: std::vec::Vec<T>,
+}
+
+
+impl<T> Iterator for IntoIter<T> {
+    type Item = T;
+    
+    #[inline]
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.vec.len() == 0 { return None; }
+        return Some(self.vec.remove(0));
+    }
+}
 
 
 /// Macros for implementing various functions within Vector-like structs.
@@ -259,6 +277,15 @@ macro_rules! impl_vector {
                 $( result.push_str(format!("{}, ", &self.$field).as_str()); ) +
                 
                 return write!(f, "{}", result.strip_suffix(", ").unwrap().to_string() + ")");
+            }
+        }
+
+        impl<T> IntoIterator for $Vector<T> {
+            type Item = T;
+            type IntoIter = IntoIter<T>;
+        
+            fn into_iter(self) -> Self::IntoIter {
+                return Self::IntoIter { vec: self.to_vec() };
             }
         }
     }
