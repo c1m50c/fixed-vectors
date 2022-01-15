@@ -1,19 +1,16 @@
+use core::hash::{Hash, Hasher};
+use core::iter::{Iterator, IntoIterator};
 use core::ops::{Add, AddAssign};
 use core::ops::{Sub, SubAssign};
 use core::ops::{Mul, MulAssign};
 use core::ops::{Div, DivAssign};
 use core::ops::{Rem, RemAssign};
 use core::ops::Neg;
-
 use core::cmp::PartialEq;
-
-use core::hash::{Hash, Hasher};
-
-use core::iter::{Iterator, IntoIterator};
-
+use core::mem::size_of;
 use core::fmt;
 
-use core::mem::size_of;
+use num_traits::Float;
 
 #[cfg(test)]
 mod tests;
@@ -110,6 +107,50 @@ macro_rules! impl_vector {
                 let mut vec = std::vec::Vec::with_capacity(Self::LEN);
                 $( vec.push(self.$field); ) +
                 return vec;
+            }
+        }
+
+        impl<T: Float> $Vector<T> {
+            /// Converts all numbers within the vector to the largest integer less than or equal to the value.
+            /// 
+            /// ## Example
+            /// ```rust
+            /// let mut vector = Vector2::new(4.25, 5.9);
+            /// vector.floor();
+            /// assert_eq!(vector, Vector2::new(4.0, 5.0));
+            /// ```
+            pub fn floor(&mut self) {
+                *self = Self {
+                    $( $field: self.$field.floor() ), +
+                };
+            }
+
+            /// Converts all numbers within the vector to the largest integer greater than or equal to the value.
+            /// 
+            /// ## Example
+            /// ```rust
+            /// let mut vector = Vector2::new(4.25, 5.9);
+            /// vector.ceil();
+            /// assert_eq!(vector, Vector2::new(5.0, 6.0));
+            /// ```
+            pub fn ceil(&mut self) {
+                *self = Self {
+                    $( $field: self.$field.ceil() ), +
+                }
+            }
+
+            /// Converts all numbers within the vector to the nearest integer.
+            /// 
+            /// ## Example
+            /// ```rust
+            /// let mut vector = Vector2::new(4.25, 5.9);
+            /// vector.round();
+            /// assert_eq!(vector, Vector2::new(4.0, 6.0));
+            /// ```
+            pub fn round(&mut self) {
+                *self = Self {
+                    $( $field: self.$field.round() ), +
+                }
             }
         }
 

@@ -268,3 +268,43 @@ fn iterator() {
     assert_eq!(sum_of_vec3, 6);
     assert_eq!(sum_of_vec4, 10);
 }
+
+
+#[test]
+fn round() {
+    let mut vec2 = Vector2::new(5.9, 4.3);
+    let mut vec3 = Vector3::new(5.9, 4.3, 0.1);
+    let mut vec4 = Vector4::new(5.9, 4.3, 0.1, 1.2);
+
+    vec2.floor();
+    vec3.floor();
+    vec4.floor();
+
+    assert_eq!(vec2, Vector2::new(5.0, 4.0));
+    assert_eq!(vec3, Vector3::new(5.0, 4.0, 0.0));
+    assert_eq!(vec4, Vector4::new(5.0, 4.0, 0.0, 1.0));
+
+    let mut vec2 = Vector2::new(5.9, 4.3);
+    let mut vec3 = Vector3::new(5.9, 4.3, 0.1);
+    let mut vec4 = Vector4::new(5.9, 4.3, 0.1, 1.2);
+
+    vec2.ceil();
+    vec3.ceil();
+    vec4.ceil();
+
+    assert_eq!(vec2, Vector2::new(6.0, 5.0));
+    assert_eq!(vec3, Vector3::new(6.0, 5.0, 1.0));
+    assert_eq!(vec4, Vector4::new(6.0, 5.0, 1.0, 2.0));
+
+    let mut vec2 = Vector2::new(5.9, 4.3);
+    let mut vec3 = Vector3::new(5.9, 4.3, 0.1);
+    let mut vec4 = Vector4::new(5.9, 4.3, 0.1, 1.2);
+
+    vec2.round();
+    vec3.round();
+    vec4.round();
+
+    assert_eq!(vec2, Vector2::new(6.0, 4.0));
+    assert_eq!(vec3, Vector3::new(6.0, 4.0, 0.0));
+    assert_eq!(vec4, Vector4::new(6.0, 4.0, 0.0, 1.0));
+}
