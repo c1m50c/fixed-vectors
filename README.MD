@@ -30,7 +30,7 @@ use fixed_vectors::Vector3;
 
 pub struct Voxel {
     /// Represents the positional value in 3D Space of the [`Voxel`]
-    pub position: Vector<i32>,
+    pub position: Vector3<i32>,
 }
 ```
 </details>
