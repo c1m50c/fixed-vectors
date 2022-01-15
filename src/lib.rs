@@ -57,16 +57,16 @@ impl<T> Iterator for IntoIter<T> {
 macro_rules! impl_vector {
     ($Vector: ident { $($field: ident), + }, $len: expr) => {
         impl<T> $Vector<T> {
-            /// Name of the `Vector` Struct as a `static str`.
+            /// Name of the [`Vector`] Struct as a `static str`.
             pub const NAME: &'static str = stringify!($Vector);
 
-            /// Size of the `Vector<T>` in Bytes, calculated based of `size_of::<T>()` * `Vector::LEN`.
+            /// Size of the [`Vector`] in Bytes, calculated based of `size_of::<T>()` * `Vector::LEN`.
             pub const SIZE: usize = size_of::<T>() * $len;
 
-            /// Length of the `Vector` Struct as a `usize`.
+            /// Length of the [`Vector`] Struct as a `usize`.
             pub const LEN: usize = $len;
 
-            /// Creates a new `Vector` with the specified values for the fields.
+            /// Creates a new [`Vector`] with the specified values for the fields.
             /// 
             /// ## Example
             /// ```rust
@@ -81,7 +81,7 @@ macro_rules! impl_vector {
                 };
             }
 
-            /// Converts the given `Vector` into an array coresponding to the size of the `Vector`.
+            /// Converts the given [`Vector`] into an array coresponding to the size of the [`Vector`].
             /// 
             /// ## Example
             /// ```rust
@@ -95,7 +95,7 @@ macro_rules! impl_vector {
                 ];
             }
 
-            /// Converts the given `Vector` into a `Vec` coresponding to the size of the `Vector`.
+            /// Converts the given [`Vector`] into a [`Vec`] coresponding to the size of the [`Vector`].
             /// 
             /// ## Example
             /// ```rust
@@ -111,7 +111,7 @@ macro_rules! impl_vector {
         }
 
         impl<T: Float> $Vector<T> {
-            /// Converts all numbers within the vector to the largest integer less than or equal to the value.
+            /// Converts all numbers within the [`Vector`] to the largest integer less than or equal to the value.
             /// 
             /// ## Example
             /// ```rust
@@ -124,7 +124,7 @@ macro_rules! impl_vector {
                 };
             }
 
-            /// Converts all numbers within the vector to the largest integer greater than or equal to the value.
+            /// Converts all numbers within the [`Vector`] to the largest integer greater than or equal to the value.
             /// 
             /// ## Example
             /// ```rust
@@ -137,7 +137,7 @@ macro_rules! impl_vector {
                 }
             }
 
-            /// Converts all numbers within the vector to the nearest integer.
+            /// Converts all numbers within the [`Vector`] to the nearest integer.
             /// 
             /// ## Example
             /// ```rust
@@ -148,6 +148,19 @@ macro_rules! impl_vector {
                 return Self {
                     $( $field: self.$field.round() ), +
                 }
+            }
+
+            /// Converts all numbers within the [`Vector`] to their absolute value.
+            /// 
+            /// ## Example
+            /// ```rust
+            /// let vector = Vector4::new(-3.0, 4.0, 5.3, -9.87).abs();
+            /// assert_eq!(vector, Vector4::new(3.0, 4.0, 5.3, 9.87));
+            /// ```
+            pub fn abs(self) -> Self {
+                return Self {
+                    $( $field: self.$field.abs() ), +
+                };
             }
         }
 
@@ -330,7 +343,7 @@ macro_rules! impl_vector {
 }
 
 
-/// Struct for representing a two-dimensional value.
+/// [`Vector`] Struct for representing a two-dimensional value.
 /// 
 /// ## Fields
 /// ```rust
@@ -350,7 +363,7 @@ pub struct Vector2<T> {
 }
 
 
-/// Struct for representing a three-dimensional value.
+/// [`Vector`] Struct for representing a three-dimensional value.
 /// 
 /// ## Fields
 /// ```rust
@@ -372,7 +385,7 @@ pub struct Vector3<T> {
 }
 
 
-/// Struct for representing a four-dimensional value.
+/// [`Vector`] Struct for representing a four-dimensional value.
 /// 
 /// ## Fields
 /// ```rust
