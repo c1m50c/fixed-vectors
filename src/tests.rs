@@ -308,3 +308,20 @@ fn abs() {
     assert_eq!(vec3, Vector3::new(3.0, 4.0, 5.3));
     assert_eq!(vec4, Vector4::new(3.0, 4.0, 5.3, 9.87));
 }
+
+
+#[test]
+fn min_max() {
+    let vec2 = Vector2::new(1, 2);
+    let vec3 = Vector3::new(1, 2, 3);
+    let vec4 = Vector4::new(1, 2, 3, 4);
+
+    assert_eq!(vec2.min(), 1);
+    assert_eq!(vec2.max(), 2);
+
+    assert_eq!(vec3.min(), 1);
+    assert_eq!(vec3.max(), 3);
+
+    assert_eq!(vec4.min(), 1);
+    assert_eq!(vec4.max(), 4);
+}

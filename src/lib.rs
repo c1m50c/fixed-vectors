@@ -110,6 +110,46 @@ macro_rules! impl_vector {
             }
         }
 
+        impl<T: PartialOrd + Copy> $Vector<T> {
+            /// Returns the maximum value contained within the [`Vector`].
+            /// 
+            /// ## Example
+            /// ```rust
+            /// let vector = Vector3::new(1, 0, 2);
+            /// assert_eq!(vector.max(), 2);
+            /// ```
+            #[inline]
+            pub fn max(&self) -> T {
+                let mut iter = self.into_iter();
+                let mut result = iter.next().expect("Cannot retrieve max value on zero-lengthed Vector.");
+        
+                for v in iter {
+                    if v > result { result = v; }
+                }
+        
+                return result;
+            }
+
+            /// Returns the minimum value contained within the [`Vector`].
+            /// 
+            /// ## Example
+            /// ```rust
+            /// let vector = Vector3::new(1, 0, 2);
+            /// assert_eq!(vector.min(), 0);
+            /// ```
+            #[inline]
+            pub fn min(&self) -> T {
+                let mut iter = self.into_iter();
+                let mut result = iter.next().expect("Cannot retrieve min value on zero-lengthed Vector.");
+        
+                for v in iter {
+                    if v < result { result = v; }
+                }
+        
+                return result;
+            }
+        }
+
         impl<T: Float> $Vector<T> {
             /// Converts all numbers within the [`Vector`] to the largest integer less than or equal to the value.
             /// 
@@ -118,6 +158,7 @@ macro_rules! impl_vector {
             /// let vector = Vector2::new(4.25, 5.9).floor();
             /// assert_eq!(vector, Vector2::new(4.0, 5.0));
             /// ```
+            #[inline]
             pub fn floor(self) -> Self {
                 return Self {
                     $( $field: self.$field.floor() ), +
@@ -131,6 +172,7 @@ macro_rules! impl_vector {
             /// let vector = Vector2::new(4.25, 5.9).ceil();
             /// assert_eq!(vector, Vector2::new(5.0, 6.0));
             /// ```
+            #[inline]
             pub fn ceil(self) -> Self {
                 return Self {
                     $( $field: self.$field.ceil() ), +
@@ -144,6 +186,7 @@ macro_rules! impl_vector {
             /// let vector = Vector2::new(4.25, 5.9).round();
             /// assert_eq!(vector, Vector2::new(4.0, 6.0));
             /// ```
+            #[inline]
             pub fn round(self) -> Self {
                 return Self {
                     $( $field: self.$field.round() ), +
@@ -157,6 +200,7 @@ macro_rules! impl_vector {
             /// let vector = Vector4::new(-3.0, 4.0, 5.3, -9.87).abs();
             /// assert_eq!(vector, Vector4::new(3.0, 4.0, 5.3, 9.87));
             /// ```
+            #[inline]
             pub fn abs(self) -> Self {
                 return Self {
                     $( $field: self.$field.abs() ), +
