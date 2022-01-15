@@ -2,6 +2,13 @@
 name = "fixed-vectors"
 version = "1.0.0"
 edition = "2018"
+readme = "README.MD"
+repository = "https://github.com/c1m50c/fixed-vectors"
+license = "MIT"
+description = "Library implementing fixed-length Vectors meant for representing dimensional values."
+keywords = [
+    "math", "vector", "fixed-length", "fixed-vectors",
+]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
