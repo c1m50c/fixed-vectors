@@ -75,6 +75,29 @@ impl<T> FusedIterator for IntoIter<T> {  }
 /// assert_eq!(Vector5::NAME, "Vector5");
 /// assert_eq!(Vector5::LEN, 5);
 /// ```
+/// 
+/// ## Parameters
+/// ```rust
+/// $Vector: ident // Name of the Vector Struct
+/// { $($field: ident), + } // Fields within the Vector Struct
+/// $len: expr // The amount of fields within the Vector Struct
+/// ```
+/// 
+/// ## `Impl` Constants
+/// ```rust
+/// pub const NAME: &'static str = stringify!($Vector)
+/// pub const SIZE: usize = core::mem::size_of::<T>() * $len
+/// pub const LEN: usize = $len
+/// ```
+/// 
+/// ## `Impl` Functions
+/// ```rust
+/// pub const fn new() -> Vector<T>
+/// pub fn to_array(self) -> [T; $len]
+/// pub fn to_vec(self) -> Vec<T>
+/// ```
+/// 
+/// To see more implemented traits & functions, see the source code.
 #[macro_export]
 macro_rules! impl_vector {
     ($Vector: ident { $($field: ident), + }, $len: expr) => {
@@ -550,7 +573,7 @@ impl_vector!(Vector4 { x, y, z, w }, 4);
 
 
 impl<T> Vector2<T> {
-    /// Converts the [`Vector`] into a tuple representing its values.
+    /// Converts the [`Vector2`] into a tuple representing its values.
     /// 
     /// ## Example:
     /// ```rust
@@ -566,7 +589,7 @@ impl<T> Vector2<T> {
 
 
 impl<T> Vector3<T> {
-    /// Converts the [`Vector`] into a tuple representing its values.
+    /// Converts the [`Vector3`] into a tuple representing its values.
     /// 
     /// ## Example:
     /// ```rust
@@ -582,7 +605,7 @@ impl<T> Vector3<T> {
 
 
 impl<T> Vector4<T> {
-    /// Converts the [`Vector`] into a tuple representing its values.
+    /// Converts the [`Vector4`] into a tuple representing its values.
     /// 
     /// ## Example:
     /// ```rust
