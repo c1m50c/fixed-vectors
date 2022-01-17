@@ -130,12 +130,6 @@ macro_rules! impl_vector {
             fn name(&self) -> &'static str { return Self::NAME; }
 
             #[inline]
-            fn size(&self) -> usize { return Self::SIZE; }
-
-            #[inline]
-            fn len(&self) -> usize { return Self::LEN; }
-
-            #[inline]
             fn to_array(self) -> [T; $len] {
                 return [ $(self.$field), + ];
             }
@@ -188,105 +182,42 @@ macro_rules! impl_vector {
             }
         }
 
-        impl<T: num_traits::Float> $Vector<T> {
-            /// Converts all numbers within the [`Vector`] to the largest integer less than or equal to the value.
-            /// 
-            /// ## Example
-            /// ```rust
-            /// let vector = Vector2::new(4.25, 5.9).floor();
-            /// assert_eq!(vector, Vector2::new(4.0, 5.0));
-            /// ```
+        impl<T: num_traits::PrimInt> $crate::IntegerVector<T, $len> for $Vector<T> {
             #[inline]
-            pub fn floor(self) -> Self {
-                return Self {
-                    $( $field: self.$field.floor() ), +
-                };
-            }
-
-            /// Converts all numbers within the [`Vector`] to the largest integer greater than or equal to the value.
-            /// 
-            /// ## Example
-            /// ```rust
-            /// let vector = Vector2::new(4.25, 5.9).ceil();
-            /// assert_eq!(vector, Vector2::new(5.0, 6.0));
-            /// ```
-            #[inline]
-            pub fn ceil(self) -> Self {
-                return Self {
-                    $( $field: self.$field.ceil() ), +
-                }
-            }
-
-            /// Converts all numbers within the [`Vector`] to the nearest integer.
-            /// 
-            /// ## Example
-            /// ```rust
-            /// let vector = Vector2::new(4.25, 5.9).round();
-            /// assert_eq!(vector, Vector2::new(4.0, 6.0));
-            /// ```
-            #[inline]
-            pub fn round(self) -> Self {
-                return Self {
-                    $( $field: self.$field.round() ), +
-                }
-            }
-
-            /// Converts all numbers within the [`Vector`] to their absolute value.
-            /// 
-            /// ## Example
-            /// ```rust
-            /// let vector = Vector4::new(-3.0, 4.0, 5.3, -9.87).abs();
-            /// assert_eq!(vector, Vector4::new(3.0, 4.0, 5.3, 9.87));
-            /// ```
-            #[inline]
-            pub fn abs(self) -> Self {
-                return Self {
-                    $( $field: self.$field.abs() ), +
-                };
-            }
-
-            /// Raises all numbers within the [`Vector`] to an integer power.
-            /// 
-            /// ## Example
-            /// ```rust
-            /// let vector = Vector2::new(2.0, 4.0).powi(2);
-            /// assert_eq!(vector, Vector2::new(4, 16));
-            /// ```
-            #[inline]
-            pub fn powi(self, n: i32) -> Self {
-                return Self {
-                    $( $field: self.$field.powi(n) ), +
-                };
-            }
-
-            /// Raises all numbers within the [`Vector`] to a floating point power.
-            /// 
-            /// ## Example
-            /// ```rust
-            /// let vector = Vector2::new(2.0, 4.0).powf(2.0);
-            /// assert_eq!(vector, Vector2::new(4.0, 16.0));
-            /// ```
-            #[inline]
-            pub fn powf(self, n: T) -> Self {
-                return Self {
-                    $( $field: self.$field.powf(n) ), +
-                };
+            fn pow(self, n: u32) -> Self {
+                return Self { $( $field: self.$field.pow(n) ), + };
             }
         }
 
-        impl<T: num_traits::PrimInt> $Vector<T> {
-            /// Raises all numbers within the [`Vector`] to the specified power.
-            /// 
-            /// ## Example
-            /// ```rust
-            /// let vector = Vector3::new(2, 4, 6).pow(2);
-            /// assert_eq!(vector, Vector3::new(4, 16, 36));
-            /// ```
+        impl<T: num_traits::Float> $crate::FloatingPointVector<T, $len> for $Vector<T> {
             #[inline]
-            pub fn pow(self, exp: u32) -> Self {
-                return Self {
-                    $( $field: self.$field.pow(exp) ), +
-                };
+            fn floor(self) -> Self {
+                return Self { $( $field: self.$field.floor() ), + };
+            }
+
+            #[inline]
+            fn ceil(self) -> Self {
+                return Self { $( $field: self.$field.ceil() ), + }
+            }
+
+            #[inline]
+            fn round(self) -> Self {
+                return Self { $( $field: self.$field.round() ), + }
+            }
+
+            #[inline]
+            fn abs(self) -> Self {
+                return Self { $( $field: self.$field.abs() ), + };
+            }
+
+            #[inline]
+            fn powi(self, n: i32) -> Self {
+                return Self { $( $field: self.$field.powi(n) ), + };
+            }
+
+            #[inline]
+            fn powf(self, n: T) -> Self {
+                return Self { $( $field: self.$field.powf(n) ), + };
             }
         }
 
@@ -546,48 +477,33 @@ impl_vector!(Vector3 { x, y, z }, 3);
 impl_vector!(Vector4 { x, y, z, w }, 4);
 
 
-impl<T> Vector2<T> {
-    /// Converts the [`Vector2`] into a tuple representing its values.
-    /// 
-    /// ## Example:
-    /// ```rust
-    /// let tuple = Vector2::new(1, 2).to_tuple();
-    /// assert_eq!(tuple, (1, 2));
-    /// ```
+impl<T> TuplableVector<T, { Vector2::<()>::LEN }> for Vector2<T> {
+    type Output = (T, T);
+
     #[inline]
-    pub fn to_tuple(self) -> (T, T) {
+    fn to_tuple(self) -> Self::Output {
         // TODO: Find a way to do this in `impl_vector` macro, this is repetitive.
         return (self.x, self.y);
     }
 }
 
 
-impl<T> Vector3<T> {
-    /// Converts the [`Vector3`] into a tuple representing its values.
-    /// 
-    /// ## Example:
-    /// ```rust
-    /// let tuple = Vector2::new(1, 2).to_tuple();
-    /// assert_eq!(tuple, (1, 2));
-    /// ```
+impl<T> TuplableVector<T, { Vector3::<()>::LEN }> for Vector3<T> {
+    type Output = (T, T, T);
+
     #[inline]
-    pub fn to_tuple(self) -> (T, T, T) {
+    fn to_tuple(self) -> Self::Output {
         // TODO: Find a way to do this in `impl_vector` macro, this is repetitive.
         return (self.x, self.y, self.z);
     }
 }
 
 
-impl<T> Vector4<T> {
-    /// Converts the [`Vector4`] into a tuple representing its values.
-    /// 
-    /// ## Example:
-    /// ```rust
-    /// let tuple = Vector2::new(1, 2).to_tuple();
-    /// assert_eq!(tuple, (1, 2));
-    /// ```
+impl<T> TuplableVector<T, { Vector4::<()>::LEN }> for Vector4<T> {
+    type Output = (T, T, T, T);
+
     #[inline]
-    pub fn to_tuple(self) -> (T, T, T, T) {
+    fn to_tuple(self) -> Self::Output {
         // TODO: Find a way to do this in `impl_vector` macro, this is repetitive.
         return (self.x, self.y, self.z, self.w);
     }
