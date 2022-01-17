@@ -48,16 +48,16 @@ impl<T> Iterator for IntoIter<T> {
 }
 
 
-/// Macros for implementing various functions within Vector-like structs.
+/// Macros for implementing [`Vector`] functions & constants in `struct`s.
 /// 
 /// ## Example
 /// ```rust
 /// struct Vector5<T> {
-///     pub x: T,
-///     pub y: T,
-///     pub z: T,
-///     pub w: T,
-///     pub v: T,
+///     x: T,
+///     y: T,
+///     z: T,
+///     w: T,
+///     v: T,
 /// }
 /// 
 /// impl_vector!(Vector5 { x, y, z, w, v }, 5);
