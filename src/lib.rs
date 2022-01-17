@@ -1,16 +1,5 @@
-use num_traits::{Float, PrimInt};
-
 use core::iter::{Iterator, IntoIterator, FusedIterator, DoubleEndedIterator, ExactSizeIterator};
-use core::hash::{Hash, Hasher};
-use core::ops::{Add, AddAssign};
-use core::ops::{Sub, SubAssign};
-use core::ops::{Mul, MulAssign};
-use core::ops::{Div, DivAssign};
-use core::ops::{Rem, RemAssign};
-use core::ops::Neg;
 use core::cmp::PartialEq;
-use core::mem::size_of;
-use core::fmt;
 
 #[cfg(test)]
 mod tests;
@@ -30,10 +19,10 @@ mod tests;
 /// 
 /// ## Fields
 /// ```rust
-/// vec: std::vec::Vec<T>
+/// pub vec: std::vec::Vec<T>
 /// ```
 pub struct IntoIter<T> {
-    vec: std::vec::Vec<T>,
+    pub vec: std::vec::Vec<T>,
 }
 
 
@@ -94,7 +83,7 @@ macro_rules! impl_vector {
             pub const NAME: &'static str = stringify!($Vector);
 
             /// Size of the [`Vector`] in Bytes, calculated based of `size_of::<T>()` * `Vector::LEN`.
-            pub const SIZE: usize = size_of::<T>() * $len;
+            pub const SIZE: usize = core::mem::size_of::<T>() * $len;
 
             /// Length of the [`Vector`] Struct as a `usize`.
             pub const LEN: usize = $len;
@@ -183,7 +172,7 @@ macro_rules! impl_vector {
             }
         }
 
-        impl<T: Float> $Vector<T> {
+        impl<T: num_traits::Float> $Vector<T> {
             /// Converts all numbers within the [`Vector`] to the largest integer less than or equal to the value.
             /// 
             /// ## Example
@@ -269,7 +258,7 @@ macro_rules! impl_vector {
             }
         }
 
-        impl<T: PrimInt> $Vector<T> {
+        impl<T: num_traits::PrimInt> $Vector<T> {
             /// Raises all numbers within the [`Vector`] to the specified power.
             /// 
             /// ## Example
@@ -303,7 +292,7 @@ macro_rules! impl_vector {
             }
         }
 
-        impl<T: Add<Output = T>> Add for $Vector<T> {
+        impl<T: core::ops::Add<Output = T>> core::ops::Add for $Vector<T> {
             type Output = Self;
 
             #[inline]
@@ -314,7 +303,7 @@ macro_rules! impl_vector {
             }
         }
 
-        impl<T: Add<Output = T> + Copy> AddAssign for $Vector<T> {
+        impl<T: core::ops::Add<Output = T> + Copy> core::ops::AddAssign for $Vector<T> {
             #[inline]
             fn add_assign(&mut self, other: Self) {
                 *self = Self {
@@ -323,7 +312,7 @@ macro_rules! impl_vector {
             }
         }
 
-        impl<T: Sub<Output = T>> Sub for $Vector<T> {
+        impl<T: core::ops::Sub<Output = T>> core::ops::Sub for $Vector<T> {
             type Output = Self;
 
             #[inline]
@@ -334,7 +323,7 @@ macro_rules! impl_vector {
             }
         }
 
-        impl<T: Sub<Output = T> + Copy> SubAssign for $Vector<T> {
+        impl<T: core::ops::Sub<Output = T> + Copy> core::ops::SubAssign for $Vector<T> {
             #[inline]
             fn sub_assign(&mut self, other: Self) {
                 *self = Self {
@@ -343,7 +332,7 @@ macro_rules! impl_vector {
             }
         }
 
-        impl<T: Mul<Output = T>> Mul for $Vector<T> {
+        impl<T: core::ops::Mul<Output = T>> core::ops::Mul for $Vector<T> {
             type Output = Self;
 
             #[inline]
@@ -354,7 +343,7 @@ macro_rules! impl_vector {
             }
         }
 
-        impl<T: Mul<Output = T> + Copy> MulAssign for $Vector<T> {
+        impl<T: core::ops::Mul<Output = T> + Copy> core::ops::MulAssign for $Vector<T> {
             #[inline]
             fn mul_assign(&mut self, other: Self) {
                 *self = Self {
@@ -363,7 +352,7 @@ macro_rules! impl_vector {
             }
         }
 
-        impl<T: Div<Output = T>> Div for $Vector<T> {
+        impl<T: core::ops::Div<Output = T>> core::ops::Div for $Vector<T> {
             type Output = Self;
 
             #[inline]
@@ -374,7 +363,7 @@ macro_rules! impl_vector {
             }
         }
 
-        impl<T: Div<Output = T> + Copy> DivAssign for $Vector<T> {
+        impl<T: core::ops::Div<Output = T> + Copy> core::ops::DivAssign for $Vector<T> {
             #[inline]
             fn div_assign(&mut self, other: Self) {
                 *self = Self {
@@ -383,7 +372,7 @@ macro_rules! impl_vector {
             }
         }
 
-        impl<T: Rem<Output = T>> Rem for $Vector<T> {
+        impl<T: core::ops::Rem<Output = T>> core::ops::Rem for $Vector<T> {
             type Output = Self;
 
             #[inline]
@@ -394,7 +383,7 @@ macro_rules! impl_vector {
             }
         }
 
-        impl<T: Rem<Output = T> + Copy> RemAssign for $Vector<T> {
+        impl<T: core::ops::Rem<Output = T> + Copy> core::ops::RemAssign for $Vector<T> {
             #[inline]
             fn rem_assign(&mut self, other: Self) {
                 *self = Self {
@@ -403,7 +392,7 @@ macro_rules! impl_vector {
             }
         }
 
-        impl<T: Neg<Output = T>> Neg for $Vector<T> {
+        impl<T: core::ops::Neg<Output = T>> core::ops::Neg for $Vector<T> {
             type Output = Self;
 
             #[inline]
@@ -423,25 +412,25 @@ macro_rules! impl_vector {
 
         impl<T: Eq> Eq for $Vector<T> {  }
 
-        impl<T: Hash> Hash for $Vector<T> {
+        impl<T: core::hash::Hash> core::hash::Hash for $Vector<T> {
             #[inline]
-            fn hash<H: Hasher>(&self, state: &mut H) {
+            fn hash<H: core::hash::Hasher>(&self, state: &mut H) {
                 $( self.$field.hash(state); ) +
             }
         }
 
-        impl<T: fmt::Debug> fmt::Debug for $Vector<T> {
+        impl<T: core::fmt::Debug> core::fmt::Debug for $Vector<T> {
             #[inline]
-            fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
                 return f.debug_struct(stringify!($Vector))
                     $( .field(stringify!($field), &self.$field) ) +
                     .finish();
             }
         }
 
-        impl<T: fmt::Display> fmt::Display for $Vector<T> {
+        impl<T: core::fmt::Display> core::fmt::Display for $Vector<T> {
             #[inline]
-            fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
                 // SAFETY: Provided safety for the unwrapping in return.
                 if Self::LEN == 0 { return write!(f, "()"); }
         
@@ -454,7 +443,7 @@ macro_rules! impl_vector {
 
         impl<T> IntoIterator for $Vector<T> {
             type Item = T;
-            type IntoIter = IntoIter<T>;
+            type IntoIter = $crate::IntoIter<T>;
         
             #[inline]
             fn into_iter(self) -> Self::IntoIter {
