@@ -1,6 +1,5 @@
 use fixed_vectors::{Vector, impl_vector};
 
-
 struct Vector5<T> {
     x: T,
     y: T,
@@ -9,9 +8,7 @@ struct Vector5<T> {
     v: T,
 }
 
-
 impl_vector!(Vector5 { x, y, z, w, v }, 5);
-
 
 fn main() {
     println!("Vector5 Name: {}", Vector5::<()>::NAME);

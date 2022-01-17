@@ -40,7 +40,7 @@ pub struct Voxel {
 Example below shows how you would create a custom <strong>Vector</strong> Struct.
 
 ```rust
-use fixed_vectors::impl_vector;
+use fixed_vectors::{Vector, impl_vector};
 
 struct Vector5<T> {
     x: T,
@@ -67,6 +67,37 @@ fn main() {
     let mut sum = 0;
     for i in vector { sum += i; }
     println!("Vector Sum: {}", sum);
+}
+```
+</details>
+
+<details>
+<summary><strong>Tuplable Vector</strong></summary>
+Example below shows how you would implemented the <strong>TuplableVector</strong> Trait in a
+<strong>Vector</strong>, as it's not currently implemented automatically with the <strong>impl_vector!</strong> Macro.
+
+```rust
+use fixed_vectors::{TuplableVector, impl_vector};
+
+struct Vector2<T> {
+    x: T,
+    y: T,
+}
+
+impl_vector!(Vector2 { x, y }, 2);
+
+impl<T> TuplableVector<T, { Vector2::<()>::LEN }> for Vector2<T> {
+    type Output = (T, T);
+
+    fn to_tuple(self) -> Self::Output {
+        return (self.x, self.y);
+    }
+}
+
+fn main() {
+    let tuple = Vector2::new("Vector", "2").to_tuple();
+    println!("Vector as Tuple: {:?}", tuple);
+    assert_eq!(tuple, ("Vector", "2"));
 }
 ```
 </details>
