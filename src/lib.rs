@@ -1,8 +1,11 @@
-use core::iter::{Iterator, IntoIterator, FusedIterator, DoubleEndedIterator, ExactSizeIterator};
-use core::cmp::PartialEq;
-
 #[cfg(test)]
 mod tests;
+
+pub(crate) mod traits;
+
+use core::iter::{Iterator, IntoIterator, FusedIterator, DoubleEndedIterator, ExactSizeIterator};
+use core::cmp::PartialEq;
+pub use traits::*;
 
 
 /// Struct for the [`IntoIter`] trait used by [`Vector`]s.
@@ -15,11 +18,6 @@ mod tests;
 /// assert_eq!(iter.next(), Some("3"));
 /// assert_eq!(iter.next(), Some("Iterator"));
 /// assert_eq!(iter.next(), None);
-/// ```
-/// 
-/// ## Fields
-/// ```rust
-/// pub vec: std::vec::Vec<T>
 /// ```
 pub struct IntoIter<T> {
     pub vec: std::vec::Vec<T>,
@@ -92,7 +90,7 @@ impl<T> FusedIterator for IntoIter<T> {  }
 /// 
 /// ## `Impl` Functions
 /// ```rust
-/// pub const fn new() -> Vector<T>
+/// pub const fn new( $($field: T), + ) -> Vector<T>
 /// pub fn to_array(self) -> [T; $len]
 /// pub fn to_vec(self) -> Vec<T>
 /// ```
@@ -125,30 +123,25 @@ macro_rules! impl_vector {
                     $( $field: $field ), +
                 };
             }
+        }
 
-            /// Converts the given [`Vector`] into an array coresponding to the size of the [`Vector`].
-            /// 
-            /// ## Example
-            /// ```rust
-            /// let vector = Vector3::new(1, 2, 3);
-            /// assert_eq!(vector.to_array(), [1, 2, 3]);
-            /// ```
+        impl<T> $crate::Vector<T, $len> for $Vector<T> {
             #[inline]
-            pub fn to_array(self) -> [T; $len] {
-                return [
-                    $(self.$field), +
-                ];
+            fn name(&self) -> &'static str { return Self::NAME; }
+
+            #[inline]
+            fn size(&self) -> usize { return Self::SIZE; }
+
+            #[inline]
+            fn len(&self) -> usize { return Self::LEN; }
+
+            #[inline]
+            fn to_array(self) -> [T; $len] {
+                return [ $(self.$field), + ];
             }
 
-            /// Converts the given [`Vector`] into a [`Vec`] coresponding to the size of the [`Vector`].
-            /// 
-            /// ## Example
-            /// ```rust
-            /// let vector = Vector3::new(1, 2, 3);
-            /// assert_eq!(vector.to_vec(), vec![1, 2, 3]);
-            /// ```
             #[inline]
-            pub fn to_vec(self) -> std::vec::Vec<T> {
+            fn to_vec(self) -> std::vec::Vec<T> {
                 let mut vec = std::vec::Vec::with_capacity(Self::LEN);
                 $( vec.push(self.$field); ) +
                 return vec;
@@ -470,7 +463,9 @@ macro_rules! impl_vector {
         
             #[inline]
             fn into_iter(self) -> Self::IntoIter {
-                return Self::IntoIter { vec: self.to_vec() };
+                let mut vec = std::vec::Vec::with_capacity(Self::LEN);
+                $( vec.push(self.$field); ) +
+                return Self::IntoIter { vec };
             }
         }
 
@@ -503,12 +498,6 @@ macro_rules! impl_vector {
 
 /// [`Vector`] Struct for representing a two-dimensional value.
 /// 
-/// ## Fields
-/// ```rust
-/// pub x: T
-/// pub y: T
-/// ```
-/// 
 /// ## Constants
 /// ```rust
 /// LEN == 2
@@ -522,13 +511,6 @@ pub struct Vector2<T> {
 
 
 /// [`Vector`] Struct for representing a three-dimensional value.
-/// 
-/// ## Fields
-/// ```rust
-/// pub x: T
-/// pub y: T
-/// pub z: T
-/// ```
 /// 
 /// ## Constants
 /// ```rust
@@ -544,14 +526,6 @@ pub struct Vector3<T> {
 
 
 /// [`Vector`] Struct for representing a four-dimensional value.
-/// 
-/// ## Fields
-/// ```rust
-/// pub x: T
-/// pub y: T
-/// pub z: T
-/// pub w: T
-/// ```
 /// 
 /// ## Constants
 /// ```rust

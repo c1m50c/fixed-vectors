@@ -1,4 +1,4 @@
-use fixed_vectors::impl_vector;
+use fixed_vectors::{Vector, impl_vector};
 
 
 struct Vector5<T> {
