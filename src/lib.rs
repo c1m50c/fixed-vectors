@@ -1,7 +1,7 @@
 use num_traits::{Float, PrimInt};
 
+use core::iter::{Iterator, IntoIterator, FusedIterator, DoubleEndedIterator, ExactSizeIterator};
 use core::hash::{Hash, Hasher};
-use core::iter::{Iterator, IntoIterator};
 use core::ops::{Add, AddAssign};
 use core::ops::{Sub, SubAssign};
 use core::ops::{Mul, MulAssign};
@@ -45,7 +45,24 @@ impl<T> Iterator for IntoIter<T> {
         if self.vec.len() == 0 { return None; }
         return Some(self.vec.remove(0));
     }
+
+    #[inline]
+    fn size_hint(&self) -> (usize, Option<usize>) {
+        return self.vec.iter().size_hint();
+    }
 }
+
+
+impl<T> DoubleEndedIterator for IntoIter<T> {
+    #[inline]
+    fn next_back(&mut self) -> Option<Self::Item> {
+        return self.vec.pop();
+    }
+}
+
+
+impl<T> ExactSizeIterator for IntoIter<T> {  }
+impl<T> FusedIterator for IntoIter<T> {  }
 
 
 /// Macros for implementing [`Vector`] functions & constants in `struct`s.

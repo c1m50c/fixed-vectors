@@ -286,6 +286,25 @@ fn iterator() {
     assert_eq!(iter4.next(), Some(3));
     assert_eq!(iter4.next(), Some(4));
     assert_eq!(iter4.next(), None);
+
+    let mut iter2 = vec2.into_iter();
+    let mut iter3 = vec3.into_iter();
+    let mut iter4 = vec4.into_iter();
+
+    assert_eq!(iter2.next_back(), Some(2));
+    assert_eq!(iter2.next_back(), Some(1));
+    assert_eq!(iter2.next_back(), None);
+
+    assert_eq!(iter3.next_back(), Some(3));
+    assert_eq!(iter3.next_back(), Some(2));
+    assert_eq!(iter3.next_back(), Some(1));
+    assert_eq!(iter3.next_back(), None);
+
+    assert_eq!(iter4.next_back(), Some(4));
+    assert_eq!(iter4.next_back(), Some(3));
+    assert_eq!(iter4.next_back(), Some(2));
+    assert_eq!(iter4.next_back(), Some(1));
+    assert_eq!(iter4.next_back(), None);
 }
 
 
