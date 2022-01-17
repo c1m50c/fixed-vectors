@@ -17,7 +17,13 @@ $ cargo test
 ---
 
 ## **Examples**
+There are various examples implemented within the `examples` directory to look at for getting started. If you would like to run an example within the `examples` directory you can run the following commands.
+```bash
+$ cd fixed-vectors
+$ cargo run --example [EXAMPLE_NAME]
+```
 
+### **Written Examples**
 <details>
 <summary><strong>Voxel Struct</strong></summary>
 Example below shows how a 
