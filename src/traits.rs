@@ -128,6 +128,24 @@ pub trait FloatingPointVector<T: num_traits::Float, const LEN: usize>: Vector<T,
 
 
 /// Trait for structs that represent a [`Vector`] and that can be converted into tuples.
+/// 
+/// ## Example
+/// ```rust
+/// pub struct Vector1<T> {
+///     pub x: T,
+/// }
+/// 
+/// // Implement [`Vector`] Trait for `Vector1`
+/// impl_vector!(Vector1 { x }, 1);
+/// 
+/// impl<T> TuplableVector<T, { Vector1::<()>::LEN }> for Vector1<T> {
+///     type Output = (T);
+///     
+///     fn to_tuple(self) -> Self::Output {
+///         return (self.x);
+///     }
+/// }
+/// ```
 pub trait TuplableVector<T, const LEN: usize>: Vector<T, LEN> {
     type Output;
     

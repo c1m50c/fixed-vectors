@@ -90,9 +90,16 @@ impl<T> FusedIterator for IntoIter<T> {  }
 /// 
 /// ## `Impl` Functions
 /// ```rust
-/// pub const fn new( $($field: T), + ) -> Vector<T>
+/// pub const fn new( $($field: T), + ) -> $Vector<T>
 /// pub fn to_array(self) -> [T; $len]
 /// pub fn to_vec(self) -> Vec<T>
+/// ```
+/// 
+/// ## `Impl` Traits
+/// ```rust
+/// impl<T> Vector<T, $len> for $Vector<T>
+/// impl<T: PrimInt> IntegerVector<T, $len> for $Vector<T>
+/// impl<T: Float> FloatingPointVector<T, $len> for $Vector<T>
 /// ```
 /// 
 /// To see more implemented traits & functions, see the source code.
