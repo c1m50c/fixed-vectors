@@ -16,6 +16,22 @@ use core::fmt;
 mod tests;
 
 
+/// Struct for the [`IntoIter`] trait used by [`Vector`]s.
+/// Iterator works based off going from the `x` field to the remaining fields.
+/// 
+/// ## Example
+/// ```rust
+/// let mut iter = Vector3::new("Vector", "3", "Iterator").into_iter();
+/// assert_eq!(iter.next(), Some("Vector"));
+/// assert_eq!(iter.next(), Some("3"));
+/// assert_eq!(iter.next(), Some("Iterator"));
+/// assert_eq!(iter.next(), None);
+/// ```
+/// 
+/// ## Fields
+/// ```rust
+/// vec: std::vec::Vec<T>
+/// ```
 pub struct IntoIter<T> {
     vec: std::vec::Vec<T>,
 }
@@ -525,3 +541,51 @@ pub struct Vector4<T> {
 impl_vector!(Vector2 { x, y }, 2);
 impl_vector!(Vector3 { x, y, z }, 3);
 impl_vector!(Vector4 { x, y, z, w }, 4);
+
+
+impl<T> Vector2<T> {
+    /// Converts the [`Vector`] into a tuple representing its values.
+    /// 
+    /// ## Example:
+    /// ```rust
+    /// let tuple = Vector2::new(1, 2).to_tuple();
+    /// assert_eq!(tuple, (1, 2));
+    /// ```
+    #[inline]
+    pub fn to_tuple(self) -> (T, T) {
+        // TODO: Find a way to do this in `impl_vector` macro, this is repetitive.
+        return (self.x, self.y);
+    }
+}
+
+
+impl<T> Vector3<T> {
+    /// Converts the [`Vector`] into a tuple representing its values.
+    /// 
+    /// ## Example:
+    /// ```rust
+    /// let tuple = Vector2::new(1, 2).to_tuple();
+    /// assert_eq!(tuple, (1, 2));
+    /// ```
+    #[inline]
+    pub fn to_tuple(self) -> (T, T, T) {
+        // TODO: Find a way to do this in `impl_vector` macro, this is repetitive.
+        return (self.x, self.y, self.z);
+    }
+}
+
+
+impl<T> Vector4<T> {
+    /// Converts the [`Vector`] into a tuple representing its values.
+    /// 
+    /// ## Example:
+    /// ```rust
+    /// let tuple = Vector2::new(1, 2).to_tuple();
+    /// assert_eq!(tuple, (1, 2));
+    /// ```
+    #[inline]
+    pub fn to_tuple(self) -> (T, T, T, T) {
+        // TODO: Find a way to do this in `impl_vector` macro, this is repetitive.
+        return (self.x, self.y, self.z, self.w);
+    }
+}

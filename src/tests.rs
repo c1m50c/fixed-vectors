@@ -377,3 +377,15 @@ fn from_vec() {
     assert_eq!(vec3, Vector3::new(1, 2, 3));
     assert_eq!(vec4, Vector4::new(1, 2, 3, 4));
 }
+
+
+#[test]
+fn to_tuple() {
+    let tup2 = Vector2::new(1, 2).to_tuple();
+    let tup3 = Vector3::new(1, 2, 3).to_tuple();
+    let tup4 = Vector4::new(1, 2, 3, 4).to_tuple();
+
+    assert_eq!(tup2, (1, 2));
+    assert_eq!(tup3, (1, 2, 3));
+    assert_eq!(tup4, (1, 2, 3, 4));
+}
