@@ -260,13 +260,32 @@ fn iterator() {
     let mut sum_of_vec3 = 0;
     let mut sum_of_vec4 = 0;
     
-    for i in vec2 { sum_of_vec2 += i; }
-    for i in vec3 { sum_of_vec3 += i; }
-    for i in vec4 { sum_of_vec4 += i; }
+    for i in vec2.into_iter() { sum_of_vec2 += i; }
+    for i in vec3.into_iter() { sum_of_vec3 += i; }
+    for i in vec4.into_iter() { sum_of_vec4 += i; }
 
     assert_eq!(sum_of_vec2, 3);
     assert_eq!(sum_of_vec3, 6);
     assert_eq!(sum_of_vec4, 10);
+
+    let mut iter2 = vec2.into_iter();
+    let mut iter3 = vec3.into_iter();
+    let mut iter4 = vec4.into_iter();
+
+    assert_eq!(iter2.next(), Some(1));
+    assert_eq!(iter2.next(), Some(2));
+    assert_eq!(iter2.next(), None);
+
+    assert_eq!(iter3.next(), Some(1));
+    assert_eq!(iter3.next(), Some(2));
+    assert_eq!(iter3.next(), Some(3));
+    assert_eq!(iter3.next(), None);
+
+    assert_eq!(iter4.next(), Some(1));
+    assert_eq!(iter4.next(), Some(2));
+    assert_eq!(iter4.next(), Some(3));
+    assert_eq!(iter4.next(), Some(4));
+    assert_eq!(iter4.next(), None);
 }
 
 
