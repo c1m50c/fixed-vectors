@@ -58,7 +58,7 @@ pub trait Vector<T, const LEN: usize>: IntoIterator {
 
 /// Trait for structs that represent a [`Vector`] that contains primitive integer data types.
 pub trait IntegerVector<T: num_traits::PrimInt, const LEN: usize>: Vector<T, LEN> {
-    /// Raises all numbers within the [`Vector`] to the specified power.
+    /// Raises all numbers within the [`IntegerVector`] to the specified power.
     /// 
     /// ## Example
     /// ```rust
@@ -71,7 +71,7 @@ pub trait IntegerVector<T: num_traits::PrimInt, const LEN: usize>: Vector<T, LEN
 
 /// Trait for structs that represent a [`Vector`] that contains floating-point data types.
 pub trait FloatingPointVector<T: num_traits::Float, const LEN: usize>: Vector<T, LEN> {
-    /// Converts all numbers within the [`Vector`] to the largest integer less than or equal to the value.
+    /// Converts all numbers within the [`FloatingPointVector`] to the largest integer less than or equal to the value.
     /// 
     /// ## Example
     /// ```rust
@@ -80,7 +80,7 @@ pub trait FloatingPointVector<T: num_traits::Float, const LEN: usize>: Vector<T,
     /// ```
     fn floor(self) -> Self;
 
-    /// Converts all numbers within the [`Vector`] to the largest integer greater than or equal to the value.
+    /// Converts all numbers within the [`FloatingPointVector`] to the largest integer greater than or equal to the value.
     /// 
     /// ## Example
     /// ```rust
@@ -89,7 +89,7 @@ pub trait FloatingPointVector<T: num_traits::Float, const LEN: usize>: Vector<T,
     /// ```
     fn ceil(self) -> Self;
 
-    /// Converts all numbers within the [`Vector`] to the nearest integer.
+    /// Converts all numbers within the [`FloatingPointVector`] to the nearest integer.
     /// 
     /// ## Example
     /// ```rust
@@ -98,7 +98,7 @@ pub trait FloatingPointVector<T: num_traits::Float, const LEN: usize>: Vector<T,
     /// ```
     fn round(self) -> Self;
 
-    /// Converts all numbers within the [`Vector`] to their absolute value.
+    /// Converts all numbers within the [`FloatingPointVector`] to their absolute value.
     /// 
     /// ## Example
     /// ```rust
@@ -107,7 +107,7 @@ pub trait FloatingPointVector<T: num_traits::Float, const LEN: usize>: Vector<T,
     /// ```
     fn abs(self) -> Self;
 
-    /// Raises all numbers within the [`Vector`] to an integer power.
+    /// Raises all numbers within the [`FloatingPointVector`] to an integer power.
     /// 
     /// ## Example
     /// ```rust
@@ -116,7 +116,7 @@ pub trait FloatingPointVector<T: num_traits::Float, const LEN: usize>: Vector<T,
     /// ```
     fn powi(self, n: i32) -> Self;
 
-    /// Raises all numbers within the [`Vector`] to a floating point power.
+    /// Raises all numbers within the [`FloatingPointVector`] to a floating point power.
     /// 
     /// ## Example
     /// ```rust
@@ -124,6 +124,33 @@ pub trait FloatingPointVector<T: num_traits::Float, const LEN: usize>: Vector<T,
     /// assert_eq!(vector, Vector2::new(4.0, 16.0));
     /// ```
     fn powf(self, n: T) -> Self;
+
+    /// Sets all numbers within the [`FloatingPointVector`] to their integer parts.
+    /// 
+    /// ## Example
+    /// ```rust
+    /// let vector = Vector3::new(1.5, 2.34, 3.33).trunc();
+    /// assert_eq!(vector, Vector3::new(1.0, 2.0, 3.0));
+    /// ```
+    fn trunc(self) -> Self;
+
+    /// Sets all numbers within the [`FloatingPointVector`] to their fractional parts.
+    /// 
+    /// ## Example
+    /// ```rust
+    /// let vector = Vector3::new(1.5, 2.34, 3.33).fract();
+    /// assert_eq!(vector, Vector3::new(0.5, 0.34, 0.33));
+    /// ```
+    fn fract(self) -> Self;
+
+    /// Sets all numbers within the [`FloatingPointVector`] to their square-root.
+    /// 
+    /// ## Example
+    /// ```rust
+    /// let vector = Vector2::new(64.0, 25.0);
+    /// assert_eq!(vector, Vector2::new(8.0, 5.0));
+    /// ```
+    fn sqrt(self) -> Self;
 }
 
 
@@ -149,7 +176,7 @@ pub trait FloatingPointVector<T: num_traits::Float, const LEN: usize>: Vector<T,
 pub trait TuplableVector<T, const LEN: usize>: Vector<T, LEN> {
     type Output;
     
-    /// Converts the [`Vector`] into a tuple representing its values.
+    /// Converts the [`TuplableVector`] into a tuple representing its values.
     /// 
     /// ## Example:
     /// ```rust

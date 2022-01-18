@@ -226,6 +226,21 @@ macro_rules! impl_vector {
             fn powf(self, n: T) -> Self {
                 return Self { $( $field: self.$field.powf(n) ), + };
             }
+
+            #[inline]
+            fn trunc(self) -> Self {
+                return Self { $( $field: self.$field.trunc() ), + };
+            }
+
+            #[inline]
+            fn fract(self) -> Self {
+                return Self { $( $field: self.$field.fract() ), + };
+            }
+
+            #[inline]
+            fn sqrt(self) -> Self {
+                return Self { $( $field: self.$field.sqrt() ), + };
+            }
         }
 
         impl<T: Default> Default for $Vector<T> {

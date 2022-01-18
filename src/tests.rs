@@ -428,3 +428,50 @@ fn to_tuple() {
     assert_eq!(tup3, (1, 2, 3));
     assert_eq!(tup4, (1, 2, 3, 4));
 }
+
+
+#[test]
+fn trunc() {
+    let vec2 = Vector2::new(1.33, 9.65).trunc();
+    let vec3 = Vector3::new(1.33, 9.65, 3.33).trunc();
+    let vec4 = Vector4::new(1.33, 9.65, 3.33, 7.87).trunc();
+
+    assert_eq!(vec2, Vector2::new(1.0, 9.0));
+    assert_eq!(vec3, Vector3::new(1.0, 9.0, 3.0));
+    assert_eq!(vec4, Vector4::new(1.0, 9.0, 3.0, 7.0));
+}
+
+
+#[test]
+fn fract() {
+    /*
+        NOTE: I hate floating-point arithmetic.
+        Be careful what numbers you put in this test.
+    */
+    
+    let vec2 = Vector2::new(1.5, 9.75).fract();
+    let vec3 = Vector3::new(1.5, 9.75, 3.5).fract();
+    let vec4 = Vector4::new(1.5, 9.75, 3.5, 7.25).fract();
+
+    assert_eq!(vec2, Vector2::new(0.5, 0.75));
+    assert_eq!(vec3, Vector3::new(0.5, 0.75, 0.5));
+    assert_eq!(vec4, Vector4::new(0.5, 0.75, 0.5, 0.25));
+}
+
+
+#[test]
+fn sqrt() {
+    let vec2 = Vector2::new(64.0, 25.0).sqrt();
+    let vec3 = Vector3::new(64.0, 25.0, 36.0).sqrt();
+    let vec4 = Vector4::new(64.0, 25.0, 36.0, 49.0).sqrt();
+
+    assert_eq!(vec2, Vector2::new(8.0, 5.0));
+    assert_eq!(vec3, Vector3::new(8.0, 5.0, 6.0));
+    assert_eq!(vec4, Vector4::new(8.0, 5.0, 6.0, 7.0));
+}
+
+
+#[test]
+fn normalize() {
+    
+}
