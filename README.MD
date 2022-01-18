@@ -1,6 +1,7 @@
 # **fixed-vectors**
 
 [![Build](https://github.com/c1m50c/fixed-vectors/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/c1m50c/fixed-vectors/actions/workflows/build.yml)
+![Crates.io](https://img.shields.io/crates/v/fixed-vectors?color=orange)
 
 Library implementing fixed-length Vectors meant for representing dimensional values. Tested heavily to ensure safety during use.
 
