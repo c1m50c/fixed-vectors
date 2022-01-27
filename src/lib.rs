@@ -244,12 +244,8 @@ macro_rules! impl_vector {
 
             #[inline]
             fn normalize(self) -> Self {
-                assert_ne!(Self::LEN, 0, "Cannot normalize a zero-length Vector.");
-
-                let mut iter = Vec::with_capacity(Self::LEN);
-                $( iter.push(self.$field * self.$field); ) +
-                
-                let mut len_sq = iter.remove(0);
+                let mut iter = self.into_iter();
+                let mut len_sq = iter.next().expect("Cannot normalize a zero-length Vector.");
                 for f in iter { len_sq = len_sq + f; }
 
                 // NOTE: This `sqrt()` call is a bottleneck, should be replaced with a fast square-root algorithm
