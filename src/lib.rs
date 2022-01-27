@@ -241,6 +241,23 @@ macro_rules! impl_vector {
             fn sqrt(self) -> Self {
                 return Self { $( $field: self.$field.sqrt() ), + };
             }
+
+            #[inline]
+            fn normalize(self) -> Self {
+                assert_ne!(Self::LEN, 0, "Cannot normalize a zero-length Vector.");
+
+                let mut iter = Vec::with_capacity(Self::LEN);
+                $( iter.push(self.$field * self.$field); ) +
+                
+                let mut len_sq = iter.remove(0);
+                for f in iter { len_sq = len_sq + f; }
+
+                // NOTE: This `sqrt()` call is a bottleneck, should be replaced with a fast square-root algorithm
+                let len_inv = T::from(1.0).unwrap() / len_sq.sqrt();
+                return Self {
+                    $( $field: self.$field * len_inv ), +
+                };
+            }
         }
 
         impl<T: Default> Default for $Vector<T> {

@@ -151,6 +151,10 @@ pub trait FloatingPointVector<T: num_traits::Float, const LEN: usize>: Vector<T,
     /// assert_eq!(vector, Vector2::new(8.0, 5.0));
     /// ```
     fn sqrt(self) -> Self;
+
+
+    /// Normalizes the [`FloatingPointVector`].
+    fn normalize(self) -> Self;
 }
 
 
