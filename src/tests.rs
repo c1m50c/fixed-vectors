@@ -472,7 +472,48 @@ fn sqrt() {
 
 
 #[test]
-#[ignore] // TODO: Create Test
-fn normalize() {
-    
+fn zero() {
+    let vec2 = Vector2::new(1.0, 2.0).zero();
+    let vec3 = Vector3::new(1.0, 2.0, 3.0).zero();
+    let vec4 = Vector4::new(1.0, 2.0, 3.0, 4.0).zero();
+
+    assert_eq!(vec2, Vector2::new(0.0, 0.0));
+    assert_eq!(vec3, Vector3::new(0.0, 0.0, 0.0));
+    assert_eq!(vec4, Vector4::new(0.0, 0.0, 0.0, 0.0));
+}
+
+
+#[test]
+fn normalized() {
+    let vec2 = Vector2::new(14.3, 7.9).normalized();
+    let vec3 = Vector3::new(14.3, 7.9, 3.0).normalized();
+    let vec4 = Vector4::new(14.3, 7.9, 3.0, 5.12).normalized();
+
+    assert_eq!(vec2, Vector2::new(0.8753097187762677, 0.48356271177150456));
+    assert_eq!(vec3, Vector3::new(0.8609148265237697, 0.4756102887788658, 0.1806115020679237));
+    assert_eq!(vec4, Vector4::new(0.8227167217753062, 0.4545078393024419, 0.17259791365915514, 0.29456710597829144));
+}
+
+
+#[test]
+fn lerp() {
+    let vec2 = Vector2::new(1.0, 2.0).lerp(Vector2::new(2.0, 3.0), 1.0);
+    let vec3 = Vector3::new(1.0, 2.0, 3.0).lerp(Vector3::new(2.0, 3.0, 4.0), 1.0);
+    let vec4 = Vector4::new(1.0, 2.0, 3.0, 4.0).lerp(Vector4::new(2.0, 3.0, 4.0, 5.0), 1.0);
+
+    assert_eq!(vec2, Vector2::new(2.0, 3.0));
+    assert_eq!(vec3, Vector3::new(2.0, 3.0, 4.0));
+    assert_eq!(vec4, Vector4::new(2.0, 3.0, 4.0, 5.0));
+}
+
+
+#[test]
+fn dot() {
+    let dot1 = Vector2::new(1.0, 2.0).dot(Vector2::new(2.0, 4.0));
+    let dot2 = Vector3::new(1.0, 2.0, 3.0).dot(Vector3::new(2.0, 4.0, 6.0));
+    let dot3 = Vector4::new(1.0, 2.0, 3.0, 4.0).dot(Vector4::new(2.0, 4.0, 6.0, 8.0));
+
+    assert_eq!(dot1, 10.0);
+    assert_eq!(dot2, 28.0);
+    assert_eq!(dot3, 60.0);
 }

@@ -198,6 +198,11 @@ macro_rules! impl_vector {
 
         impl<T: num_traits::Float> $crate::FloatingPointVector<T, $len> for $Vector<T> {
             #[inline]
+            fn zero(self) -> Self {
+                return Self { $( $field: num_traits::zero::<T>() ), + };
+            }
+            
+            #[inline]
             fn floor(self) -> Self {
                 return Self { $( $field: self.$field.floor() ), + };
             }
@@ -243,16 +248,34 @@ macro_rules! impl_vector {
             }
 
             #[inline]
-            fn normalize(self) -> Self {
-                let mut iter = self.into_iter();
-                let mut len_sq = iter.next().expect("Cannot normalize a zero-length Vector.");
-                for f in iter { len_sq = len_sq + f; }
+            fn normalized(self) -> Self {
+                let mut iter = Self { $($field: self.$field * self.$field), + }.into_iter();
+                let mut m = iter.next().expect("Cannot normalize a zero-lengthed Vector.");
+                for f in iter { m = m + f; }
+
+                if m == num_traits::zero::<T>() { return self.zero(); }
 
                 // NOTE: This `sqrt()` call is a bottleneck, should be replaced with a fast square-root algorithm
-                let len_inv = T::from(1.0).unwrap() / len_sq.sqrt();
+                let m = m.sqrt();
+
                 return Self {
-                    $( $field: self.$field * len_inv ), +
+                    $( $field: self.$field / m ), +
                 };
+            }
+
+            #[inline]
+            fn lerp(self, to: Self, weight: T) -> Self {
+                return Self {
+                    $( $field: self.$field + (weight * (to.$field - self.$field)) ), +
+                };
+            }
+
+            #[inline]
+            fn dot(self, b: Self) -> T {
+                let mut iter = Self { $( $field: self.$field * b.$field ), + }.into_iter();
+                let mut dot = iter.next().expect("Cannot retrieve the dot product of a zero-lengthed Vector.");
+                for f in iter { dot = dot + f; }
+                return dot;
             }
         }
 

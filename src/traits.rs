@@ -71,6 +71,15 @@ pub trait IntegerVector<T: num_traits::PrimInt, const LEN: usize>: Vector<T, LEN
 
 /// Trait for structs that represent a [`Vector`] that contains floating-point data types.
 pub trait FloatingPointVector<T: num_traits::Float, const LEN: usize>: Vector<T, LEN> {
+    /// Converts all numbers within the [`FloatingPointVector`] to zero.
+    /// 
+    /// ## Example
+    /// ```rust
+    /// let vector = Vector4::new(1.0, 2.0, 3.0, 4.0).zero();
+    /// assert_eq!(vector, Vector4::new(0.0, 0.0, 0.0, 0.0));
+    /// ```
+    fn zero(self) -> Self;
+
     /// Converts all numbers within the [`FloatingPointVector`] to the largest integer less than or equal to the value.
     /// 
     /// ## Example
@@ -152,9 +161,33 @@ pub trait FloatingPointVector<T: num_traits::Float, const LEN: usize>: Vector<T,
     /// ```
     fn sqrt(self) -> Self;
 
-
     /// Normalizes the [`FloatingPointVector`].
-    fn normalize(self) -> Self;
+    /// 
+    /// ## Example
+    /// ```rust
+    /// let vector = Vector2::new(14.3, 7.9).normalized();
+    /// assert_eq!(vector, Vector2::new(0.8753097187762677, 0.48356271177150456));
+    /// ```
+    fn normalized(self) -> Self;
+
+    /// Linearly interpolates between two [`FloatingPointVector`]s by a normalized `weight`.
+    /// 
+    /// ## Example
+    /// ```rust
+    /// let vector = Vector2::new(1.0, 2.0).lerp(Vector2::new(2.0, 3.0), 1.0);
+    /// assert_eq!(vector, Vector2::new(2.0, 3.0));
+    /// ```
+    fn lerp(self, to: Self, weight: T) -> Self;
+
+    /// Returns the dot product of two [`FloatingPointVector`]s,
+    /// this can be used to compare the angle between two [`FloatingPointVector`]s.
+    /// 
+    /// ## Example
+    /// ```rust
+    /// let dot = Vector2::new(1.0, 2.0).dot(Vector2::new(2.0, 4.0));
+    /// assert_eq!(dot, 10.0);
+    /// ```
+    fn dot(self, b: Self) -> T;
 }
 
 
