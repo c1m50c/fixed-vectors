@@ -1,3 +1,15 @@
+//! Traits for [`Vector`]s that implement very handy and convient functions.
+//! [`FloatingPointVector`] for example implements `normalized()`, which is used heavily in game development.
+//! 
+//! ## Traits
+//! ```rust
+//! pub trait Vector<T, const LEN: usize>: IntoIterator { .. } // For representing a basic [`Vector`].
+//! pub trait IntegerVector<T, const LEN: usize>: Vector { .. } // For representing a [`Vector`] with Integers as its generic.
+//! pub trait FloatingPointVector<T, const LEN: usize>: Vector { .. } // For representing a [`Vector`] with Floating-point Numbers as its generic.
+//! pub trait TuplableVector<T, const LEN: usize>: Vector { .. } // For representing a [`Vector`] that can be converted into a tuple.
+//! ```
+
+
 /// Trait for structs that represent a [`Vector`], will be implemented by default when using the [`impl_vector`] Macro.
 pub trait Vector<T, const LEN: usize>: IntoIterator {
     /// Returns the name of the [`Vector`] struct.

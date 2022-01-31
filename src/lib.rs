@@ -1,7 +1,20 @@
+//! Library implementing fixed-length Vectors meant for representing dimensional values.
+//! Tested heavily to ensure safety during use.
+//! Fixed Vectors are used heavily in game development for representing points in space,
+//! see the Godot Game Engine documentation on Vector math for written examples [here](https://docs.godotengine.org/en/stable/tutorials/math/vector_math.html).
+//! 
+//! ## Vectors
+//! ```rust
+//! pub struct Vector2<T> { .. } // Two-dimensional [`Vector`].
+//! pub struct Vector3<T> { .. } // Three-dimensional [`Vector`].
+//! pub struct Vector4<T> { .. } // Four-dimensional [`Vector`].
+//! ```
+
+
 #[cfg(test)]
 mod tests;
 
-pub(crate) mod traits;
+pub mod traits;
 
 use core::iter::{Iterator, IntoIterator, FusedIterator, DoubleEndedIterator, ExactSizeIterator};
 use core::cmp::PartialEq;
