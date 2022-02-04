@@ -1,4 +1,5 @@
 use core::hash::{Hash, Hasher};
+use core::convert::TryFrom;
 use super::*;
 
 
@@ -395,7 +396,15 @@ fn pow() {
 
 
 #[test]
-fn from_array() {
+fn from() {
+    let vec2 = Vector2::from((1, 2));
+    let vec3 = Vector3::from((1, 2, 3));
+    let vec4 = Vector4::from((1, 2, 3, 4));
+
+    assert_eq!(vec2, Vector2::new(1, 2));
+    assert_eq!(vec3, Vector3::new(1, 2, 3));
+    assert_eq!(vec4, Vector4::new(1, 2, 3, 4));
+
     let vec2 = Vector2::from([1, 2]);
     let vec3 = Vector3::from([1, 2, 3]);
     let vec4 = Vector4::from([1, 2, 3, 4]);
@@ -403,14 +412,10 @@ fn from_array() {
     assert_eq!(vec2, Vector2::new(1, 2));
     assert_eq!(vec3, Vector3::new(1, 2, 3));
     assert_eq!(vec4, Vector4::new(1, 2, 3, 4));
-}
 
-
-#[test]
-fn from_vec() {
-    let vec2 = Vector2::from(vec![1, 2]);
-    let vec3 = Vector3::from(vec![1, 2, 3]);
-    let vec4 = Vector4::from(vec![1, 2, 3, 4]);
+    let vec2 = Vector2::try_from(vec![1, 2]).unwrap();
+    let vec3 = Vector3::try_from(vec![1, 2, 3]).unwrap();
+    let vec4 = Vector4::try_from(vec![1, 2, 3, 4]).unwrap();
 
     assert_eq!(vec2, Vector2::new(1, 2));
     assert_eq!(vec3, Vector3::new(1, 2, 3));

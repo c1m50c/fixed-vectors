@@ -18,6 +18,7 @@ pub mod traits;
 
 use core::iter::{Iterator, IntoIterator, FusedIterator, DoubleEndedIterator, ExactSizeIterator};
 use core::cmp::PartialEq;
+use core::convert::From;
 pub use traits::*;
 
 
@@ -481,17 +482,19 @@ macro_rules! impl_vector {
             }
         }
 
-        /*
-            SAFETY: Checks the [`Vec`]'s length to ensure it is greater than or equal to the [`Vector`]'s length
-        */
-        impl<T: Copy> From<std::vec::Vec<T>> for $Vector<T> {
+        impl<T: Copy> core::convert::TryFrom<std::vec::Vec<T>> for $Vector<T> {
+            type Error = &'static str;
+            
             #[inline]
-            fn from(vec: std::vec::Vec<T>) -> Self {
-                assert!(vec.len() >= $len, "Vec's length is less than the Vector's length.");
+            fn try_from(vec: std::vec::Vec<T>) -> Result<Self, Self::Error> {
+                if vec.len() < Self::LEN {
+                    return Err("Vec's length is less than the Vector's length.");
+                }
+
                 let mut iter = vec.iter();
-                return Self {
+                return Ok(Self {
                     $( $field: *iter.next().unwrap() ), +
-                };
+                });
             }
         }
     }
@@ -499,46 +502,40 @@ macro_rules! impl_vector {
 
 
 /// [`Vector`] Struct for representing a two-dimensional value.
-/// 
-/// ## Constants
-/// ```rust
-/// LEN == 2
-/// SIZE == size_of::<T>() * LEN
-/// NAME == "Vector2"
-/// ```
 pub struct Vector2<T> {
+    /// Represents the first dimensional value.
     pub x: T,
+
+    /// Represents the second dimensional value.
     pub y: T,
 }
 
 
 /// [`Vector`] Struct for representing a three-dimensional value.
-/// 
-/// ## Constants
-/// ```rust
-/// LEN == 3
-/// SIZE == size_of::<T>() * LEN
-/// NAME == "Vector3"
-/// ```
 pub struct Vector3<T> {
+    /// Represents the first dimensional value.
     pub x: T,
+
+    /// Represents the second dimensional value.
     pub y: T,
+
+    /// Represents the third dimensional value.
     pub z: T,
 }
 
 
 /// [`Vector`] Struct for representing a four-dimensional value.
-/// 
-/// ## Constants
-/// ```rust
-/// LEN == 4
-/// SIZE == size_of::<T>() * LEN
-/// NAME == "Vector4"
-/// ```
 pub struct Vector4<T> {
+    /// Represents the first dimensional value.
     pub x: T,
+
+    /// Represents the second dimensional value.
     pub y: T,
+
+    /// Represents the third dimensional value.
     pub z: T,
+    
+    /// Represents the fourth dimensional value.
     pub w: T,
 }
 
@@ -548,34 +545,58 @@ impl_vector!(Vector3 { x, y, z }, 3);
 impl_vector!(Vector4 { x, y, z, w }, 4);
 
 
+// TODO: Find a way to do this in `impl_vector` macro, this is repetitive.
 impl<T> TuplableVector<T, { Vector2::<()>::LEN }> for Vector2<T> {
     type Output = (T, T);
 
     #[inline]
     fn to_tuple(self) -> Self::Output {
-        // TODO: Find a way to do this in `impl_vector` macro, this is repetitive.
         return (self.x, self.y);
     }
 }
 
 
+impl<T> From<(T, T)> for Vector2<T> {
+    #[inline]
+    fn from(tup: (T, T)) -> Self {
+        return Self::new(tup.0, tup.1);
+    }
+}
+
+
+// TODO: Find a way to do this in `impl_vector` macro, this is repetitive.
 impl<T> TuplableVector<T, { Vector3::<()>::LEN }> for Vector3<T> {
     type Output = (T, T, T);
 
     #[inline]
     fn to_tuple(self) -> Self::Output {
-        // TODO: Find a way to do this in `impl_vector` macro, this is repetitive.
         return (self.x, self.y, self.z);
     }
 }
 
 
+impl<T> From<(T, T, T)> for Vector3<T> {
+    #[inline]
+    fn from(tup: (T, T, T)) -> Self {
+        return Self::new(tup.0, tup.1, tup.2);
+    }
+}
+
+
+// TODO: Find a way to do this in `impl_vector` macro, this is repetitive.
 impl<T> TuplableVector<T, { Vector4::<()>::LEN }> for Vector4<T> {
     type Output = (T, T, T, T);
 
     #[inline]
     fn to_tuple(self) -> Self::Output {
-        // TODO: Find a way to do this in `impl_vector` macro, this is repetitive.
         return (self.x, self.y, self.z, self.w);
+    }
+}
+
+
+impl<T> From<(T, T, T, T)> for Vector4<T> {
+    #[inline]
+    fn from(tup: (T, T, T, T)) -> Self {
+        return Self::new(tup.0, tup.1, tup.2, tup.3);
     }
 }
