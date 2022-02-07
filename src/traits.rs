@@ -200,6 +200,24 @@ pub trait FloatingPointVector<T: num_traits::Float, const LEN: usize>: Vector<T,
     /// assert_eq!(dot, 10.0);
     /// ```
     fn dot(self, b: Self) -> T;
+
+    /// Returns a normalized [`FloatingPointVector`] pointing from it to `to`.
+    /// 
+    /// ## Example
+    /// ```rust
+    /// let from = Vector2::new(1.0, 2.0);
+    /// let to = Vector2::new(5.0, 6.0);
+    ///
+    /// let direction = from.direction(to);
+    ///
+    /// assert_eq!(direction, Vector2::new(0.7071067811865475, 0.7071067811865475));
+    /// ```
+    fn direction(self, to: Self) -> Self
+    where
+        Self: Sized + core::ops::Sub<Output = Self>
+    {
+        return (to - self).normalized();
+    }
 }
 
 

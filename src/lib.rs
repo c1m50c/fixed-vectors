@@ -422,6 +422,60 @@ macro_rules! impl_vector {
             }
         }
 
+        impl<T: core::ops::BitAnd<Output = T>> core::ops::BitAnd for $Vector<T> {
+            type Output = Self;
+        
+            fn bitand(self, other: Self) -> Self::Output {
+                return Self {
+                    $( $field: self.$field & other.$field ), +
+                };
+            }
+        }
+
+        impl<T: core::ops::BitAnd<Output = T> + Copy> core::ops::BitAndAssign for $Vector<T> {
+            fn bitand_assign(&mut self, other: Self) {
+                *self = Self {
+                    $( $field: self.$field & other.$field ), +
+                };
+            }
+        }
+
+        impl<T: core::ops::BitOr<Output = T>> core::ops::BitOr for $Vector<T> {
+            type Output = Self;
+        
+            fn bitor(self, other: Self) -> Self::Output {
+                return Self {
+                    $( $field: self.$field | other.$field ), +
+                };
+            }
+        }
+
+        impl<T: core::ops::BitOr<Output = T> + Copy> core::ops::BitOrAssign for $Vector<T> {
+            fn bitor_assign(&mut self, other: Self) {
+                *self = Self {
+                    $( $field: self.$field | other.$field ), +
+                };
+            }
+        }
+
+        impl<T: core::ops::BitXor<Output = T>> core::ops::BitXor for $Vector<T> {
+            type Output = Self;
+        
+            fn bitxor(self, other: Self) -> Self::Output {
+                return Self {
+                    $( $field: self.$field ^ other.$field ), +
+                };
+            }
+        }
+
+        impl<T: core::ops::BitXor<Output = T> + Copy> core::ops::BitXorAssign for $Vector<T> {
+            fn bitxor_assign(&mut self, other: Self) {
+                *self = Self {
+                    $( $field: self.$field ^ other.$field ), +
+                };
+            }
+        }
+
         impl<T: PartialEq> PartialEq for $Vector<T> {
             #[inline]
             fn eq(&self, other: &Self) -> bool {

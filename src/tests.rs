@@ -522,3 +522,30 @@ fn dot() {
     assert_eq!(dot2, 28.0);
     assert_eq!(dot3, 60.0);
 }
+
+
+#[test]
+fn direction() {
+    let from = Vector2::new(1.0, 2.0);
+    let to = Vector2::new(5.0, 6.0);
+
+    let direction = from.direction(to);
+
+    assert_eq!(direction, Vector2::new(0.7071067811865475, 0.7071067811865475));
+}
+
+
+#[test]
+fn bitwise() {
+    let mut vec_and = Vector2::new(1, 2) & Vector2::new(1, 2);
+    let mut vec_or = Vector2::new(1, 2) | Vector2::new(1, 2);
+    let mut vec_xor = Vector2::new(1, 2) ^ Vector2::new(1, 2);
+
+    vec_and &= Vector2::new(3, 4);
+    vec_or |= Vector2::new(3, 4);
+    vec_xor ^= Vector2::new(3, 4);
+
+    assert_eq!(vec_and, Vector2::new(1, 0));
+    assert_eq!(vec_or, Vector2::new(3, 6));
+    assert_eq!(vec_xor, Vector2::new(3, 4));
+}
