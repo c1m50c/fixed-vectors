@@ -19,8 +19,8 @@ fn main() {
 
     println!("Vector: {}", vector);
     println!("Vector Debug: {:?}", vector);
-    println!("Vector as Array: {:?}", vector.to_array());
-    println!("Vector as Vec: {:?}", vector.to_vec());
+    println!("Vector as Array: {:?}", vector.as_array());
+    println!("Vector as Vec: {:?}", vector.as_vec());
 
     let mut sum = 0;
     for i in vector { sum += i; }

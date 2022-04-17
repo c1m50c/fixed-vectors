@@ -229,10 +229,10 @@ fn display() {
 
 
 #[test]
-fn to_array() {
-    let arr2 = Vector2::new(1, 2).to_array();
-    let arr3 = Vector3::new(1, 2, 3).to_array();
-    let arr4 = Vector4::new(1, 2, 3, 4).to_array();
+fn as_array() {
+    let arr2 = Vector2::new(1, 2).as_array();
+    let arr3 = Vector3::new(1, 2, 3).as_array();
+    let arr4 = Vector4::new(1, 2, 3, 4).as_array();
 
     assert_eq!(arr2, [1, 2]);
     assert_eq!(arr3, [1, 2, 3]);
@@ -241,10 +241,10 @@ fn to_array() {
 
 
 #[test]
-fn to_vec() {
-    let vec2 = Vector2::new(1, 2).to_vec();
-    let vec3 = Vector3::new(1, 2, 3).to_vec();
-    let vec4 = Vector4::new(1, 2, 3, 4).to_vec();
+fn as_vec() {
+    let vec2 = Vector2::new(1, 2).as_vec();
+    let vec3 = Vector3::new(1, 2, 3).as_vec();
+    let vec4 = Vector4::new(1, 2, 3, 4).as_vec();
 
     assert_eq!(vec2, vec![1, 2]);
     assert_eq!(vec3, vec![1, 2, 3]);
@@ -425,9 +425,9 @@ fn from() {
 
 #[test]
 fn to_tuple() {
-    let tup2 = Vector2::new(1, 2).to_tuple();
-    let tup3 = Vector3::new(1, 2, 3).to_tuple();
-    let tup4 = Vector4::new(1, 2, 3, 4).to_tuple();
+    let tup2 = Vector2::new(1, 2).as_tuple();
+    let tup3 = Vector3::new(1, 2, 3).as_tuple();
+    let tup4 = Vector4::new(1, 2, 3, 4).as_tuple();
 
     assert_eq!(tup2, (1, 2));
     assert_eq!(tup3, (1, 2, 3));

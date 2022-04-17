@@ -53,18 +53,18 @@ pub trait Vector<T, const LEN: usize>: IntoIterator {
     /// # Example
     /// ```rust
     /// let vector = Vector3::new(1, 2, 3);
-    /// assert_eq!(vector.to_array(), [1, 2, 3]);
+    /// assert_eq!(vector.as_array(), [1, 2, 3]);
     /// ```
-    fn to_array(self) -> [T; LEN];
+    fn as_array(self) -> [T; LEN];
 
     /// Converts the given [`Vector`] into a [`Vec`] coresponding to the size of the [`Vector`].
     /// 
     /// # Example
     /// ```rust
     /// let vector = Vector3::new(1, 2, 3);
-    /// assert_eq!(vector.to_vec(), vec![1, 2, 3]);
+    /// assert_eq!(vector.as_vec(), vec![1, 2, 3]);
     /// ```
-    fn to_vec(self) -> std::vec::Vec<T>;
+    fn as_vec(self) -> std::vec::Vec<T>;
 }
 
 
@@ -259,7 +259,7 @@ pub trait FloatingPointVector<T: num_traits::Float, const LEN: usize>: Vector<T,
 /// impl<T> TuplableVector<T, { Vector1::<()>::LEN }> for Vector1<T> {
 ///     type Output = (T);
 ///     
-///     fn to_tuple(self) -> Self::Output {
+///     fn as_tuple(self) -> Self::Output {
 ///         return (self.x);
 ///     }
 /// }
@@ -271,8 +271,8 @@ pub trait TuplableVector<T, const LEN: usize>: Vector<T, LEN> {
     /// 
     /// # Example:
     /// ```rust
-    /// let tuple = Vector2::new(1, 2).to_tuple();
+    /// let tuple = Vector2::new(1, 2).as_tuple();
     /// assert_eq!(tuple, (1, 2));
     /// ```
-    fn to_tuple(self) -> Self::Output;
+    fn as_tuple(self) -> Self::Output;
 }
