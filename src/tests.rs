@@ -549,3 +549,14 @@ fn bitwise() {
     assert_eq!(vec_or, Vector2::new(3, 6));
     assert_eq!(vec_xor, Vector2::new(3, 4));
 }
+
+
+#[test]
+fn length() {
+    // NOTE: If this method's test passes, `length_squared` will also work.
+    let vec2_length = Vector2::new(3.33, 5.75).length();
+    let vec3_length = Vector3::new(1.5, 2.0, 3.33).length();
+
+    assert_eq!(vec2_length, 6.644651984867228);
+    assert_eq!(vec3_length, 4.16400048030737);
+}

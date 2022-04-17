@@ -3,7 +3,7 @@
 //! Fixed Vectors are used heavily in game development for representing points in space,
 //! see the Godot Game Engine documentation on Vector math for written examples [here](https://docs.godotengine.org/en/stable/tutorials/math/vector_math.html).
 //! 
-//! ## Vectors
+//! # Vectors
 //! ```rust
 //! pub struct Vector2<T> { .. } // Two-dimensional [`Vector`].
 //! pub struct Vector3<T> { .. } // Three-dimensional [`Vector`].
@@ -25,7 +25,7 @@ pub use traits::*;
 /// Struct for the [`IntoIter`] trait used by [`Vector`]s.
 /// Iterator works based off going from the `x` field to the remaining fields.
 /// 
-/// ## Example
+/// # Example
 /// ```rust
 /// let mut iter = Vector3::new("Vector", "3", "Iterator").into_iter();
 /// assert_eq!(iter.next(), Some("Vector"));
@@ -68,7 +68,7 @@ impl<T> FusedIterator for IntoIter<T> {  }
 
 /// Macros for implementing [`Vector`] functions & constants in `struct`s.
 /// 
-/// ## Example
+/// # Example
 /// ```rust
 /// struct Vector5<T> {
 ///     x: T,
@@ -88,28 +88,28 @@ impl<T> FusedIterator for IntoIter<T> {  }
 /// assert_eq!(Vector5::LEN, 5);
 /// ```
 /// 
-/// ## Parameters
+/// # Parameters
 /// ```rust
 /// $Vector: ident // Name of the Vector Struct
 /// { $($field: ident), + } // Fields within the Vector Struct
 /// $len: expr // The amount of fields within the Vector Struct
 /// ```
 /// 
-/// ## `Impl` Constants
+/// # `Impl` Constants
 /// ```rust
 /// pub const NAME: &'static str = stringify!($Vector)
 /// pub const SIZE: usize = core::mem::size_of::<T>() * $len
 /// pub const LEN: usize = $len
 /// ```
 /// 
-/// ## `Impl` Functions
+/// # `Impl` Functions
 /// ```rust
 /// pub const fn new( $($field: T), + ) -> $Vector<T>
 /// pub fn to_array(self) -> [T; $len]
 /// pub fn to_vec(self) -> Vec<T>
 /// ```
 /// 
-/// ## `Impl` Traits
+/// # `Impl` Traits
 /// ```rust
 /// impl<T> Vector<T, $len> for $Vector<T>
 /// impl<T: PrimInt> IntegerVector<T, $len> for $Vector<T>
@@ -127,12 +127,12 @@ macro_rules! impl_vector {
             /// Size of the [`Vector`] in Bytes, calculated based of `size_of::<T>()` * `Vector::LEN`.
             pub const SIZE: usize = core::mem::size_of::<T>() * $len;
 
-            /// Length of the [`Vector`] Struct as a `usize`.
+            /// Number of fields in the [`Vector`] Struct as a `usize`.
             pub const LEN: usize = $len;
 
             /// Creates a new [`Vector`] with the specified values for the fields.
             /// 
-            /// ## Example
+            /// # Example
             /// ```rust
             /// let vector = Vector2::new("Vector", "2");
             /// assert_eq!(vector.x, "Vector");
@@ -166,12 +166,11 @@ macro_rules! impl_vector {
         impl<T: PartialOrd + Copy> $Vector<T> {
             /// Returns the maximum value contained within the [`Vector`].
             /// 
-            /// ## Example
+            /// # Example
             /// ```rust
             /// let vector = Vector3::new(1, 0, 2);
             /// assert_eq!(vector.max(), 2);
             /// ```
-            #[inline]
             pub fn max(&self) -> T {
                 let mut iter = self.into_iter();
                 let mut result = iter.next().expect("Cannot retrieve max value on zero-lengthed Vector.");
@@ -185,12 +184,11 @@ macro_rules! impl_vector {
 
             /// Returns the minimum value contained within the [`Vector`].
             /// 
-            /// ## Example
+            /// # Example
             /// ```rust
             /// let vector = Vector3::new(1, 0, 2);
             /// assert_eq!(vector.min(), 0);
             /// ```
-            #[inline]
             pub fn min(&self) -> T {
                 let mut iter = self.into_iter();
                 let mut result = iter.next().expect("Cannot retrieve min value on zero-lengthed Vector.");
@@ -261,7 +259,6 @@ macro_rules! impl_vector {
                 return Self { $( $field: self.$field.sqrt() ), + };
             }
 
-            #[inline]
             fn normalized(self) -> Self {
                 let mut iter = Self { $($field: self.$field * self.$field), + }.into_iter();
                 let mut m = iter.next().expect("Cannot normalize a zero-lengthed Vector.");
@@ -277,19 +274,28 @@ macro_rules! impl_vector {
                 };
             }
 
-            #[inline]
             fn lerp(self, to: Self, weight: T) -> Self {
                 return Self {
                     $( $field: self.$field + (weight * (to.$field - self.$field)) ), +
                 };
             }
 
-            #[inline]
             fn dot(self, b: Self) -> T {
                 let mut iter = Self { $( $field: self.$field * b.$field ), + }.into_iter();
                 let mut dot = iter.next().expect("Cannot retrieve the dot product of a zero-lengthed Vector.");
                 for f in iter { dot = dot + f; }
                 return dot;
+            }
+            
+            fn length_squared(self) -> T {
+                let mut squared_iter = Self { $($field: self.$field * self.$field), + }.into_iter();
+
+                let mut added: T = squared_iter.next()
+                    .expect("Cannot obtain the length of a Vector with no fields.");
+
+                for f in squared_iter { added = added + f; }
+                
+                return added;
             }
         }
 

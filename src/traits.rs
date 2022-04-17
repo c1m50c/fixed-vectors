@@ -1,7 +1,7 @@
 //! Traits for [`Vector`]s that implement very handy and convient functions.
 //! [`FloatingPointVector`] for example implements `normalized()`, which is used heavily in game development.
 //! 
-//! ## Traits
+//! # Traits
 //! ```rust
 //! pub trait Vector<T, const LEN: usize>: IntoIterator { .. } // For representing a basic [`Vector`].
 //! pub trait IntegerVector<T, const LEN: usize>: Vector { .. } // For representing a [`Vector`] with Integers as its generic.
@@ -14,7 +14,7 @@
 pub trait Vector<T, const LEN: usize>: IntoIterator {
     /// Returns the name of the [`Vector`] struct.
     /// 
-    /// ## Example
+    /// # Example
     /// ```rust
     /// let vector = Vector4::new(0, 0, 0, 0);
     /// assert_eq!(vector.name(), "Vector4");
@@ -23,7 +23,7 @@ pub trait Vector<T, const LEN: usize>: IntoIterator {
 
     /// Returns the size of the [`Vector`] struct in bytes.
     /// 
-    /// ## Example
+    /// # Example
     /// ```rust
     /// let vector = Vector2::<u16>::new(0, 0);
     /// assert_eq!(vector.size(), 4);
@@ -32,9 +32,9 @@ pub trait Vector<T, const LEN: usize>: IntoIterator {
         return core::mem::size_of::<T>() * LEN;
     }
 
-    /// Returns the length of the [`Vector`] struct, length is equal to the number of fields within the struct.
+    /// Returns the number of fields in the [`Vector`] struct.
     /// 
-    /// ## Example
+    /// # Example
     /// ```rust
     /// let vec2 = Vector2::new(0, 0);
     /// let vec3 = Vector3::new(0, 0, 0);
@@ -44,13 +44,13 @@ pub trait Vector<T, const LEN: usize>: IntoIterator {
     /// assert_eq!(vec3.len(), 3);
     /// assert_eq!(vec4.len(), 4);
     /// ```
-    fn len(&self) -> usize {
+    fn fields(&self) -> usize {
         return LEN;
     }
 
     /// Converts the given [`Vector`] into an array coresponding to the size of the [`Vector`].
     /// 
-    /// ## Example
+    /// # Example
     /// ```rust
     /// let vector = Vector3::new(1, 2, 3);
     /// assert_eq!(vector.to_array(), [1, 2, 3]);
@@ -59,7 +59,7 @@ pub trait Vector<T, const LEN: usize>: IntoIterator {
 
     /// Converts the given [`Vector`] into a [`Vec`] coresponding to the size of the [`Vector`].
     /// 
-    /// ## Example
+    /// # Example
     /// ```rust
     /// let vector = Vector3::new(1, 2, 3);
     /// assert_eq!(vector.to_vec(), vec![1, 2, 3]);
@@ -72,7 +72,7 @@ pub trait Vector<T, const LEN: usize>: IntoIterator {
 pub trait IntegerVector<T: num_traits::PrimInt, const LEN: usize>: Vector<T, LEN> {
     /// Raises all numbers within the [`IntegerVector`] to the specified power.
     /// 
-    /// ## Example
+    /// # Example
     /// ```rust
     /// let vector = Vector3::new(2, 4, 6).pow(2);
     /// assert_eq!(vector, Vector3::new(4, 16, 36));
@@ -85,7 +85,7 @@ pub trait IntegerVector<T: num_traits::PrimInt, const LEN: usize>: Vector<T, LEN
 pub trait FloatingPointVector<T: num_traits::Float, const LEN: usize>: Vector<T, LEN> {
     /// Converts all numbers within the [`FloatingPointVector`] to zero.
     /// 
-    /// ## Example
+    /// # Example
     /// ```rust
     /// let vector = Vector4::new(1.0, 2.0, 3.0, 4.0).zero();
     /// assert_eq!(vector, Vector4::new(0.0, 0.0, 0.0, 0.0));
@@ -94,7 +94,7 @@ pub trait FloatingPointVector<T: num_traits::Float, const LEN: usize>: Vector<T,
 
     /// Converts all numbers within the [`FloatingPointVector`] to the largest integer less than or equal to the value.
     /// 
-    /// ## Example
+    /// # Example
     /// ```rust
     /// let vector = Vector2::new(4.25, 5.9).floor();
     /// assert_eq!(vector, Vector2::new(4.0, 5.0));
@@ -103,7 +103,7 @@ pub trait FloatingPointVector<T: num_traits::Float, const LEN: usize>: Vector<T,
 
     /// Converts all numbers within the [`FloatingPointVector`] to the largest integer greater than or equal to the value.
     /// 
-    /// ## Example
+    /// # Example
     /// ```rust
     /// let vector = Vector2::new(4.25, 5.9).ceil();
     /// assert_eq!(vector, Vector2::new(5.0, 6.0));
@@ -112,7 +112,7 @@ pub trait FloatingPointVector<T: num_traits::Float, const LEN: usize>: Vector<T,
 
     /// Converts all numbers within the [`FloatingPointVector`] to the nearest integer.
     /// 
-    /// ## Example
+    /// # Example
     /// ```rust
     /// let vector = Vector2::new(4.25, 5.9).round();
     /// assert_eq!(vector, Vector2::new(4.0, 6.0));
@@ -121,7 +121,7 @@ pub trait FloatingPointVector<T: num_traits::Float, const LEN: usize>: Vector<T,
 
     /// Converts all numbers within the [`FloatingPointVector`] to their absolute value.
     /// 
-    /// ## Example
+    /// # Example
     /// ```rust
     /// let vector = Vector4::new(-3.0, 4.0, 5.3, -9.87).abs();
     /// assert_eq!(vector, Vector4::new(3.0, 4.0, 5.3, 9.87));
@@ -130,7 +130,7 @@ pub trait FloatingPointVector<T: num_traits::Float, const LEN: usize>: Vector<T,
 
     /// Raises all numbers within the [`FloatingPointVector`] to an integer power.
     /// 
-    /// ## Example
+    /// # Example
     /// ```rust
     /// let vector = Vector2::new(2.0, 4.0).powi(2);
     /// assert_eq!(vector, Vector2::new(4, 16));
@@ -139,7 +139,7 @@ pub trait FloatingPointVector<T: num_traits::Float, const LEN: usize>: Vector<T,
 
     /// Raises all numbers within the [`FloatingPointVector`] to a floating point power.
     /// 
-    /// ## Example
+    /// # Example
     /// ```rust
     /// let vector = Vector2::new(2.0, 4.0).powf(2.0);
     /// assert_eq!(vector, Vector2::new(4.0, 16.0));
@@ -148,7 +148,7 @@ pub trait FloatingPointVector<T: num_traits::Float, const LEN: usize>: Vector<T,
 
     /// Sets all numbers within the [`FloatingPointVector`] to their integer parts.
     /// 
-    /// ## Example
+    /// # Example
     /// ```rust
     /// let vector = Vector3::new(1.5, 2.34, 3.33).trunc();
     /// assert_eq!(vector, Vector3::new(1.0, 2.0, 3.0));
@@ -157,7 +157,7 @@ pub trait FloatingPointVector<T: num_traits::Float, const LEN: usize>: Vector<T,
 
     /// Sets all numbers within the [`FloatingPointVector`] to their fractional parts.
     /// 
-    /// ## Example
+    /// # Example
     /// ```rust
     /// let vector = Vector3::new(1.5, 2.34, 3.33).fract();
     /// assert_eq!(vector, Vector3::new(0.5, 0.34, 0.33));
@@ -166,7 +166,7 @@ pub trait FloatingPointVector<T: num_traits::Float, const LEN: usize>: Vector<T,
 
     /// Sets all numbers within the [`FloatingPointVector`] to their square-root.
     /// 
-    /// ## Example
+    /// # Example
     /// ```rust
     /// let vector = Vector2::new(64.0, 25.0);
     /// assert_eq!(vector, Vector2::new(8.0, 5.0));
@@ -175,7 +175,7 @@ pub trait FloatingPointVector<T: num_traits::Float, const LEN: usize>: Vector<T,
 
     /// Normalizes the [`FloatingPointVector`].
     /// 
-    /// ## Example
+    /// # Example
     /// ```rust
     /// let vector = Vector2::new(14.3, 7.9).normalized();
     /// assert_eq!(vector, Vector2::new(0.8753097187762677, 0.48356271177150456));
@@ -184,7 +184,7 @@ pub trait FloatingPointVector<T: num_traits::Float, const LEN: usize>: Vector<T,
 
     /// Linearly interpolates between two [`FloatingPointVector`]s by a normalized `weight`.
     /// 
-    /// ## Example
+    /// # Example
     /// ```rust
     /// let vector = Vector2::new(1.0, 2.0).lerp(Vector2::new(2.0, 3.0), 1.0);
     /// assert_eq!(vector, Vector2::new(2.0, 3.0));
@@ -194,16 +194,40 @@ pub trait FloatingPointVector<T: num_traits::Float, const LEN: usize>: Vector<T,
     /// Returns the dot product of two [`FloatingPointVector`]s,
     /// this can be used to compare the angle between two [`FloatingPointVector`]s.
     /// 
-    /// ## Example
+    /// # Example
     /// ```rust
     /// let dot = Vector2::new(1.0, 2.0).dot(Vector2::new(2.0, 4.0));
     /// assert_eq!(dot, 10.0);
     /// ```
     fn dot(self, b: Self) -> T;
 
+    /// Returns the squared magnitude of the [`FloatingPointVector`].
+    /// This will always run faster than [`length`], this method should prefered over it if applicable.
+    /// 
+    /// # Example
+    /// ```rust
+    /// let length_sq = Vector3::new(3.33, 2.04, 1.337).length_squared();
+    /// assert_eq!(length_sq, 17.038069);
+    /// ```
+    fn length_squared(self) -> T;
+
+    /// Returns the magnitude of the [`FloatingPointVector`].
+    /// 
+    /// # Example
+    /// ```rust
+    /// let length = Vector3::new(1.5, 2.0, 3.33).length();
+    /// assert_eq!(length, 4.16400048030737);
+    /// ```
+    fn length(self) -> T
+    where
+        Self: Sized
+    {
+        return self.length_squared().sqrt();
+    }
+
     /// Returns a normalized [`FloatingPointVector`] pointing from it to `to`.
     /// 
-    /// ## Example
+    /// # Example
     /// ```rust
     /// let from = Vector2::new(1.0, 2.0);
     /// let to = Vector2::new(5.0, 6.0);
@@ -223,7 +247,7 @@ pub trait FloatingPointVector<T: num_traits::Float, const LEN: usize>: Vector<T,
 
 /// Trait for structs that represent a [`Vector`] and that can be converted into tuples.
 /// 
-/// ## Example
+/// # Example
 /// ```rust
 /// pub struct Vector1<T> {
 ///     pub x: T,
@@ -245,7 +269,7 @@ pub trait TuplableVector<T, const LEN: usize>: Vector<T, LEN> {
     
     /// Converts the [`TuplableVector`] into a tuple representing its values.
     /// 
-    /// ## Example:
+    /// # Example:
     /// ```rust
     /// let tuple = Vector2::new(1, 2).to_tuple();
     /// assert_eq!(tuple, (1, 2));
