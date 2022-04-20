@@ -151,11 +151,11 @@ macro_rules! impl_vector {
             fn name(&self) -> &'static str { return Self::NAME; }
 
             #[inline]
-            fn as_array(self) -> [T; $len] {
+            fn to_array(self) -> [T; $len] {
                 return [ $(self.$field), + ];
             }
 
-            fn as_vec(self) -> std::vec::Vec<T> {
+            fn to_vec(self) -> std::vec::Vec<T> {
                 let mut vec = std::vec::Vec::with_capacity(Self::LEN);
                 $( vec.push(self.$field); ) +
                 return vec;
@@ -265,7 +265,6 @@ macro_rules! impl_vector {
 
                 if m == num_traits::zero::<T>() { return self.zero(); }
 
-                // NOTE: This `sqrt()` call is a bottleneck, should be replaced with a fast square-root algorithm
                 let m = m.sqrt();
 
                 return Self {
@@ -609,7 +608,7 @@ impl<T> TuplableVector<T, { Vector2::<()>::LEN }> for Vector2<T> {
     type Output = (T, T);
 
     #[inline]
-    fn as_tuple(self) -> Self::Output {
+    fn to_tuple(self) -> Self::Output {
         return (self.x, self.y);
     }
 }
@@ -628,7 +627,7 @@ impl<T> TuplableVector<T, { Vector3::<()>::LEN }> for Vector3<T> {
     type Output = (T, T, T);
 
     #[inline]
-    fn as_tuple(self) -> Self::Output {
+    fn to_tuple(self) -> Self::Output {
         return (self.x, self.y, self.z);
     }
 }
@@ -647,7 +646,7 @@ impl<T> TuplableVector<T, { Vector4::<()>::LEN }> for Vector4<T> {
     type Output = (T, T, T, T);
 
     #[inline]
-    fn as_tuple(self) -> Self::Output {
+    fn to_tuple(self) -> Self::Output {
         return (self.x, self.y, self.z, self.w);
     }
 }

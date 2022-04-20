@@ -53,18 +53,46 @@ pub trait Vector<T, const LEN: usize>: IntoIterator {
     /// # Example
     /// ```rust
     /// let vector = Vector3::new(1, 2, 3);
+    /// assert_eq!(vector.to_array(), [1, 2, 3]);
+    /// ```
+    fn to_array(self) -> [T; LEN];
+
+    /// Converts a reference to a [`Vector`] into an array coresponding to the size of the [`Vector`].
+    /// 
+    /// # Example
+    /// ```rust
+    /// let vector = Vector3::new(1, 2, 3);
     /// assert_eq!(vector.as_array(), [1, 2, 3]);
     /// ```
-    fn as_array(self) -> [T; LEN];
+    fn as_array(&self) -> [T; LEN]
+    where
+        Self: Clone
+    {
+        return self.clone().to_array();
+    }
 
     /// Converts the given [`Vector`] into a [`Vec`] coresponding to the size of the [`Vector`].
     /// 
     /// # Example
     /// ```rust
     /// let vector = Vector3::new(1, 2, 3);
+    /// assert_eq!(vector.to_vec(), vec![1, 2, 3]);
+    /// ```
+    fn to_vec(self) -> std::vec::Vec<T>;
+
+    /// Converts a reference to a [`Vector`] into a [`Vec`] coresponding to the size of the [`Vector`].
+    /// 
+    /// # Example
+    /// ```rust
+    /// let vector = Vector3::new(1, 2, 3);
     /// assert_eq!(vector.as_vec(), vec![1, 2, 3]);
     /// ```
-    fn as_vec(self) -> std::vec::Vec<T>;
+    fn as_vec(&self) -> std::vec::Vec<T>
+    where
+        Self: Clone
+    {
+        return self.clone().to_vec();
+    }
 }
 
 
@@ -259,7 +287,7 @@ pub trait FloatingPointVector<T: num_traits::Float, const LEN: usize>: Vector<T,
 /// impl<T> TuplableVector<T, { Vector1::<()>::LEN }> for Vector1<T> {
 ///     type Output = (T);
 ///     
-///     fn as_tuple(self) -> Self::Output {
+///     fn to_tuple(self) -> Self::Output {
 ///         return (self.x);
 ///     }
 /// }
@@ -271,8 +299,22 @@ pub trait TuplableVector<T, const LEN: usize>: Vector<T, LEN> {
     /// 
     /// # Example:
     /// ```rust
-    /// let tuple = Vector2::new(1, 2).as_tuple();
+    /// let tuple = Vector2::new(1, 2).to_tuple();
     /// assert_eq!(tuple, (1, 2));
     /// ```
-    fn as_tuple(self) -> Self::Output;
+    fn to_tuple(self) -> Self::Output;
+
+    /// Converts a reference to a [`TuplableVector`] into a tuple representing its values.
+    /// 
+    /// # Example:
+    /// ```rust
+    /// let vector = Vector2::new(1, 2);
+    /// assert_eq!(vector.as_tuple(), (1, 2));
+    /// ```
+    fn as_tuple(&self) -> Self::Output
+    where
+        Self: Clone
+    {
+        return self.clone().to_tuple();
+    }
 }
