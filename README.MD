@@ -54,8 +54,8 @@ fn main() {
 
     println!("Vector: {}", vector);
     println!("Vector Debug: {:?}", vector);
-    println!("Vector as Array: {:?}", vector.as_array());
-    println!("Vector as Vec: {:?}", vector.as_vec());
+    println!("Vector as Array: {:?}", vector.to_array());
+    println!("Vector as Vec: {:?}", vector.to_vec());
 
     let mut sum = 0;
     for i in vector { sum += i; }
@@ -82,7 +82,7 @@ impl_vector!(Vector2 { x, y }, 2);
 impl<T> TuplableVector<T, { Vector2::<()>::LEN }> for Vector2<T> {
     type Output = (T, T);
 
-    fn as_tuple(self) -> Self::Output {
+    fn to_tuple(self) -> Self::Output {
         return (self.x, self.y);
     }
 }
@@ -97,7 +97,7 @@ impl<T> From<(T, T)> for Vector2<T> {
 }
 
 fn main() {
-    let tuple = Vector2::new("Vector", "2").as_tuple();
+    let tuple = Vector2::new("Vector", "2").to_tuple();
     println!("Vector as Tuple: {:?}", tuple);
     assert_eq!(tuple, ("Vector", "2"));
 }
