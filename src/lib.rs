@@ -119,7 +119,7 @@ impl<T> FusedIterator for IntoIter<T> {  }
 /// To see more implemented traits & functions, see the source code.
 #[macro_export]
 macro_rules! impl_vector {
-    ($Vector: ident { $($field: ident), + }, $len: expr) => {
+    ($Vector: ident { $($field: ident), + }, $tuple_type: tt, $len: expr) => {
         impl<T> $Vector<T> {
             /// Name of the [`Vector`] Struct as a `static str`.
             pub const NAME: &'static str = stringify!($Vector);
@@ -147,11 +147,14 @@ macro_rules! impl_vector {
         }
 
         impl<T> $crate::Vector<T, $len> for $Vector<T> {
+            type TupleOutput = $tuple_type;
+            
             #[inline]
             fn name(&self) -> &'static str {
                 return Self::NAME;
             }
 
+            #[inline]
             fn to_array(self) -> [T; $len] {
                 return [ $(self.$field), + ];
             }
@@ -160,6 +163,12 @@ macro_rules! impl_vector {
                 let mut vec = std::vec::Vec::with_capacity(Self::LEN);
                 $( vec.push(self.$field); ) +
                 return vec;
+            }
+
+            // TODO: There is no [`From`] Tuple trait implemented for [`Vector`], find a way to reimplement that!
+            #[inline]
+            fn to_tuple(self) -> Self::TupleOutput {
+                return ($(self.$field), +);
             }
         }
 
@@ -604,64 +613,6 @@ pub struct Vector4<T> {
     pub w: T,
 }
 
-
-impl_vector!(Vector2 { x, y }, 2);
-impl_vector!(Vector3 { x, y, z }, 3);
-impl_vector!(Vector4 { x, y, z, w }, 4);
-
-
-// TODO: Find a way to do this in `impl_vector` macro, this is repetitive.
-impl<T> TuplableVector<T, { Vector2::<()>::LEN }> for Vector2<T> {
-    type Output = (T, T);
-
-    #[inline]
-    fn to_tuple(self) -> Self::Output {
-        return (self.x, self.y);
-    }
-}
-
-
-impl<T> From<(T, T)> for Vector2<T> {
-    #[inline]
-    fn from(tup: (T, T)) -> Self {
-        return Self::new(tup.0, tup.1);
-    }
-}
-
-
-// TODO: Find a way to do this in `impl_vector` macro, this is repetitive.
-impl<T> TuplableVector<T, { Vector3::<()>::LEN }> for Vector3<T> {
-    type Output = (T, T, T);
-
-    #[inline]
-    fn to_tuple(self) -> Self::Output {
-        return (self.x, self.y, self.z);
-    }
-}
-
-
-impl<T> From<(T, T, T)> for Vector3<T> {
-    #[inline]
-    fn from(tup: (T, T, T)) -> Self {
-        return Self::new(tup.0, tup.1, tup.2);
-    }
-}
-
-
-// TODO: Find a way to do this in `impl_vector` macro, this is repetitive.
-impl<T> TuplableVector<T, { Vector4::<()>::LEN }> for Vector4<T> {
-    type Output = (T, T, T, T);
-
-    #[inline]
-    fn to_tuple(self) -> Self::Output {
-        return (self.x, self.y, self.z, self.w);
-    }
-}
-
-
-impl<T> From<(T, T, T, T)> for Vector4<T> {
-    #[inline]
-    fn from(tup: (T, T, T, T)) -> Self {
-        return Self::new(tup.0, tup.1, tup.2, tup.3);
-    }
-}
+impl_vector!(Vector2 { x, y }, (T, T), 2);
+impl_vector!(Vector3 { x, y, z }, (T, T, T), 3);
+impl_vector!(Vector4 { x, y, z, w }, (T, T, T, T), 4);

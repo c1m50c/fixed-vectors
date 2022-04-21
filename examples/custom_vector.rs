@@ -8,7 +8,11 @@ struct Vector5<T> {
     v: T,
 }
 
-impl_vector!(Vector5 { x, y, z, w, v }, 5);
+// StructName
+// { StructFields, * }
+// ( TupleGenerics, * )
+// SizeOfVector
+impl_vector!(Vector5 { x, y, z, w, v }, (T, T, T, T, T), 5);
 
 fn main() {
     println!("Vector5 Name: {}", Vector5::<()>::NAME);
@@ -19,6 +23,7 @@ fn main() {
 
     println!("Vector: {}", vector);
     println!("Vector Debug: {:?}", vector);
+    println!("Vector as Tuple: {:?}", vector.to_tuple());
     println!("Vector as Array: {:?}", vector.to_array());
     println!("Vector as Vec: {:?}", vector.to_vec());
 

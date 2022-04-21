@@ -43,7 +43,11 @@ struct Vector5<T> {
     v: T,
 }
 
-impl_vector!(Vector5 { x, y, z, w, v }, 5);
+// StructName
+// { StructFields, * }
+// ( TupleGenerics, * )
+// SizeOfVector
+impl_vector!(Vector5 { x, y, z, w, v }, (T, T, T, T, T), 5);
 
 fn main() {
     println!("Vector5 Name: {}", Vector5::<()>::NAME);
@@ -54,52 +58,13 @@ fn main() {
 
     println!("Vector: {}", vector);
     println!("Vector Debug: {:?}", vector);
+    println!("Vector as Tuple: {:?}", vector.to_tuple());
     println!("Vector as Array: {:?}", vector.to_array());
     println!("Vector as Vec: {:?}", vector.to_vec());
 
     let mut sum = 0;
     for i in vector { sum += i; }
     println!("Vector Sum: {}", sum);
-}
-```
-</details>
-
-<details>
-<summary><strong>Tuplable Vector</strong></summary>
-Example below shows how you would implemented the <strong>TuplableVector</strong> Trait in a
-<strong>Vector</strong>, as it's not currently implemented automatically with the <strong>impl_vector!</strong> Macro.
-
-```rust
-use fixed_vectors::{TuplableVector, impl_vector};
-
-struct Vector2<T> {
-    x: T,
-    y: T,
-}
-
-impl_vector!(Vector2 { x, y }, 2);
-
-impl<T> TuplableVector<T, { Vector2::<()>::LEN }> for Vector2<T> {
-    type Output = (T, T);
-
-    fn to_tuple(self) -> Self::Output {
-        return (self.x, self.y);
-    }
-}
-
-impl<T> From<(T, T)> for Vector2<T> {
-    fn from(tuple: (T, T)) -> Self {
-        return Self {
-            x: tuple.0,
-            y: tuple.1,
-        };
-    }
-}
-
-fn main() {
-    let tuple = Vector2::new("Vector", "2").to_tuple();
-    println!("Vector as Tuple: {:?}", tuple);
-    assert_eq!(tuple, ("Vector", "2"));
 }
 ```
 </details>

@@ -12,6 +12,8 @@
 
 /// Trait for structs that represent a [`Vector`], will be implemented by default when using the [`impl_vector`] Macro.
 pub trait Vector<T, const LEN: usize>: IntoIterator {
+    type TupleOutput;
+    
     /// Returns the name of the [`Vector`] struct.
     /// 
     /// # Example
@@ -92,6 +94,29 @@ pub trait Vector<T, const LEN: usize>: IntoIterator {
         Self: Clone
     {
         return self.clone().to_vec();
+    }
+
+    /// Converts the [`Vector`] into a tuple representing its values.
+    /// 
+    /// # Example:
+    /// ```rust
+    /// let tuple = Vector2::new(1, 2).to_tuple();
+    /// assert_eq!(tuple, (1, 2));
+    /// ```
+    fn to_tuple(self) -> Self::TupleOutput;
+
+    /// Converts a reference to a [`Vector`] into a tuple representing its values.
+    /// 
+    /// # Example:
+    /// ```rust
+    /// let vector = Vector2::new(1, 2);
+    /// assert_eq!(vector.as_tuple(), (1, 2));
+    /// ```
+    fn as_tuple(&self) -> Self::TupleOutput
+    where
+        Self: Clone
+    {
+        return self.clone().to_tuple();
     }
 }
 
@@ -269,52 +294,5 @@ pub trait FloatingPointVector<T: num_traits::Float, const LEN: usize>: Vector<T,
         Self: Sized + core::ops::Sub<Output = Self>
     {
         return (to - self).normalized();
-    }
-}
-
-
-/// Trait for structs that represent a [`Vector`] and that can be converted into tuples.
-/// 
-/// # Example
-/// ```rust
-/// pub struct Vector1<T> {
-///     pub x: T,
-/// }
-/// 
-/// // Implement [`Vector`] Trait for `Vector1`
-/// impl_vector!(Vector1 { x }, 1);
-/// 
-/// impl<T> TuplableVector<T, { Vector1::<()>::LEN }> for Vector1<T> {
-///     type Output = (T);
-///     
-///     fn to_tuple(self) -> Self::Output {
-///         return (self.x);
-///     }
-/// }
-/// ```
-pub trait TuplableVector<T, const LEN: usize>: Vector<T, LEN> {
-    type Output;
-    
-    /// Converts the [`TuplableVector`] into a tuple representing its values.
-    /// 
-    /// # Example:
-    /// ```rust
-    /// let tuple = Vector2::new(1, 2).to_tuple();
-    /// assert_eq!(tuple, (1, 2));
-    /// ```
-    fn to_tuple(self) -> Self::Output;
-
-    /// Converts a reference to a [`TuplableVector`] into a tuple representing its values.
-    /// 
-    /// # Example:
-    /// ```rust
-    /// let vector = Vector2::new(1, 2);
-    /// assert_eq!(vector.as_tuple(), (1, 2));
-    /// ```
-    fn as_tuple(&self) -> Self::Output
-    where
-        Self: Clone
-    {
-        return self.clone().to_tuple();
     }
 }
