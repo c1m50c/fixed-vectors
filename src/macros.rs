@@ -2,7 +2,7 @@
 /// 
 /// # Example
 /// ```rust
-/// use fixed_vectors::impl_vector;
+/// use fixed_vectors::macros::impl_vector;
 /// 
 /// struct Vector2<T> {
 ///     x: T,
@@ -12,9 +12,9 @@
 /// impl_vector!(Vector2 { x, y }, 2);
 /// let vec = Vector2::new(1, 2);
 /// 
-/// assert_eq!(vec.x, 1);
-/// assert_eq!(vec.x, 2);
 /// assert_eq!(vec.len(), 2);
+/// assert_eq!(vec.x, 1);
+/// assert_eq!(vec.y, 2);
 /// ```
 macro_rules! impl_vector {
     ($struct: ident { $($field: ident), + }, $len: expr) => {
@@ -71,7 +71,7 @@ macro_rules! impl_vector {
             /// assert_eq!(vec, vec![1, 2]);
             /// ```
             pub fn to_vec(self) -> std::vec::Vec<T> {
-                let mut vec = std::vec::Vec::with_capacity(self.len());
+                let mut vec = std::vec::Vec::with_capacity($len);
                 $( vec.push(self.$field); ) +
                 return vec;
             }
