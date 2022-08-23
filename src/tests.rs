@@ -25,3 +25,11 @@ fn iterators() {
     let into_iter = Vector3::new(1, 2, 3).into_iter();
     assert_eq!(into_iter.sum::<i32>(), 6);
 }
+
+
+#[test]
+fn try_froms() {
+    assert!(Vector2::try_from(vec![1]).is_err());
+    assert!(Vector2::try_from(vec![1, 2]).is_ok());
+    assert!(Vector2::try_from(vec![1, 2, 3]).is_ok());
+}

@@ -6,6 +6,27 @@ pub mod macros;
 mod macros;
 
 
+/// The type returned in [`Result`]s created by Vector functions.
+/// 
+/// # Example
+/// ```rust
+/// use fixed_vectors::{Vector2, VectorError};
+/// use std::convert::TryFrom;
+/// 
+/// // This returns an `Err` because the given `Vec` is not as big as a `Vector2`
+/// let try_from_vec = Vector2::try_from(vec![1]);
+/// 
+/// if let Err(error) = try_from_vec {
+///     assert_eq!(error, VectorError::CannotConvertFromImproperlySizedCollection);
+/// }
+/// ```
+#[derive(Debug, PartialEq, Clone, Copy)]
+pub enum VectorError {
+    GenericError,
+    CannotConvertFromImproperlySizedCollection
+}
+
+
 /// A Vector for holding two dimensional-values.
 /// 
 /// # Example

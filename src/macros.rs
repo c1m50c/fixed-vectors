@@ -85,6 +85,29 @@ macro_rules! impl_vector {
                 return std::iter::IntoIterator::into_iter(self.to_array());
             }
         }
+
+        impl<T> From<[T; $len]> for $struct<T> {
+            fn from(f: [T; $len]) -> Self {
+                let mut iter = f.into_iter();
+                return Self {
+                    $( $field: iter.next().unwrap() ), +
+                }
+            }
+        }
+
+        impl<T> TryFrom<std::vec::Vec<T>> for $struct<T> {
+            type Error = $crate::VectorError;
+            fn try_from(f: std::vec::Vec<T>) -> Result<Self, Self::Error> {
+                if f.len() < $len {
+                    return Err(Self::Error::CannotConvertFromImproperlySizedCollection);
+                }
+
+                let mut iter = f.into_iter();
+                return Ok(Self {
+                    $( $field: iter.next().ok_or(Self::Error::GenericError)? ), +
+                })
+            }
+        }
     };
 }
 
