@@ -11,7 +11,7 @@ fn construction() {
 
 
 #[test]
-fn owned_transformation() {
+fn owned_transformations() {
     let arr = Vector2::new(1, 2).to_array();
     let vec = Vector2::new(1, 2).to_vec();
 

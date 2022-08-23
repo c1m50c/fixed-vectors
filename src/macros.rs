@@ -108,6 +108,26 @@ macro_rules! impl_vector {
                 })
             }
         }
+
+        impl<T: core::fmt::Debug> core::fmt::Debug for $struct<T> {
+            fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+                return f.debug_struct(stringify!($struct))
+                    $( .field(stringify!($field), &self.$field) ) +
+                    .finish();
+            }
+        }
+
+        impl<T: core::fmt::Display> core::fmt::Display for $struct<T> {
+            fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+                if $len == 0 {
+                    return write!(f, "()");
+                }
+
+                let mut result = String::from("(");
+                $( result.push_str(format!("{}, ", &self.$field).as_str()); ) +
+                return write!(f, "{}", result.strip_suffix(", ").unwrap().to_string() + ")");
+            }
+        }
     };
 }
 
