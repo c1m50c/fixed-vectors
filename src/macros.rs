@@ -1,3 +1,21 @@
+/// Macro used in implementing all the methods for Vectors.
+/// 
+/// # Example
+/// ```rust
+/// use fixed_vectors::impl_vector;
+/// 
+/// struct Vector2<T> {
+///     x: T,
+///     y: T,
+/// }
+/// 
+/// impl_vector!(Vector2 { x, y }, 2);
+/// let vec = Vector2::new(1, 2);
+/// 
+/// assert_eq!(vec.x, 1);
+/// assert_eq!(vec.x, 2);
+/// assert_eq!(vec.len(), 2);
+/// ```
 macro_rules! impl_vector {
     ($struct: ident { $($field: ident), + }, $len: expr) => {
         impl<T> $struct<T> {
@@ -26,7 +44,7 @@ macro_rules! impl_vector {
             /// let len = Vector2::new(1, 2).len();
             /// assert_eq!(len, 2);
             /// ```
-            pub fn len(&self) -> usize {
+            pub const fn len(&self) -> usize {
                 return $len;
             }
 
@@ -56,6 +74,15 @@ macro_rules! impl_vector {
                 let mut vec = std::vec::Vec::with_capacity(self.len());
                 $( vec.push(self.$field); ) +
                 return vec;
+            }
+        }
+
+        impl<T> IntoIterator for $struct<T> {
+            type IntoIter = std::array::IntoIter<T, $len>;
+            type Item = T;
+            
+            fn into_iter(self) -> Self::IntoIter {
+                return std::iter::IntoIterator::into_iter(self.to_array());
             }
         }
     };

@@ -5,8 +5,8 @@ use super::*;
 fn construction() {
     let vec2 = Vector2::new(1, 2);
 
-    assert!(vec2.len() == 2);
-    assert!((vec2.x, vec2.y) == (1, 2));
+    assert_eq!(vec2.len(), 2);
+    assert_eq!((vec2.x, vec2.y), (1, 2));
 }
 
 
@@ -17,4 +17,11 @@ fn owned_transformation() {
 
     assert_eq!(arr, [1, 2]);
     assert_eq!(vec, vec![1, 2]);
+}
+
+
+#[test]
+fn iterators() {
+    let into_iter = Vector3::new(1, 2, 3).into_iter();
+    assert_eq!(into_iter.sum::<i32>(), 6);
 }
