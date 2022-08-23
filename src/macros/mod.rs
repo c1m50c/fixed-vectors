@@ -128,7 +128,13 @@ macro_rules! impl_vector {
                 return write!(f, "{}", result.strip_suffix(", ").unwrap().to_string() + ")");
             }
         }
+
+        $crate::macros::impl_floating_vector!($struct { $($field), + }, $len);
     };
 }
 
 pub(crate) use impl_vector;
+
+#[allow(unused_imports)]
+pub use floating::*;
+pub mod floating;
