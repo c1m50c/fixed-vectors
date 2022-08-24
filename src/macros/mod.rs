@@ -20,7 +20,7 @@ mod floating;
 /// assert_eq!(vec.y, 2);
 /// ```
 macro_rules! impl_vector {
-    ($struct: ident { $($field: ident), + }, $len: expr) => {
+    ($struct: ident { $($field: ident), + } -> $tuple_type: tt, $len: expr) => {
         impl<T> $struct<T> {
             /// Constructs a new Vector with the specified values for each field.
             /// 
@@ -62,6 +62,19 @@ macro_rules! impl_vector {
             /// ```
             pub fn to_array(self) -> [T; $len] {
                 return [ $(self.$field), + ]
+            }
+
+            /// Consumes the given Vector transforming it into a tuple.
+            /// 
+            /// # Example
+            /// ```rust
+            /// use fixed_vectors::Vector2;
+            /// 
+            /// let tuple = Vector2::new(1, 2).to_tuple();
+            /// assert_eq!(tuple, (1, 2));
+            /// ```
+            pub fn to_tuple(self) -> $tuple_type {
+                return ( $( self.$field ), + );
             }
 
             /// Consumes the given Vector transforming it into a [`Vec`].
@@ -111,6 +124,16 @@ macro_rules! impl_vector {
                 return Self {
                     $( $field: iter.next().unwrap() ), +
                 }
+            }
+        }
+
+        impl<T> From<$tuple_type> for $struct<T> {
+            fn from(f: $tuple_type) -> Self {
+                return match f {
+                    ($( $field ), +) => {
+                        Self { $( $field ), + }
+                    },
+                };
             }
         }
 

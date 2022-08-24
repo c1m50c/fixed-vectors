@@ -96,6 +96,6 @@ pub struct Vector4<T> {
 }
 
 
-macros::impl_vector!(Vector2 { x, y }, 2);
-macros::impl_vector!(Vector3 { x, y, z }, 3);
-macros::impl_vector!(Vector4 { x, y, z, w}, 4);
+macros::impl_vector!(Vector2 { x, y } -> (T, T), 2);
+macros::impl_vector!(Vector3 { x, y, z } -> (T, T, T), 3);
+macros::impl_vector!(Vector4 { x, y, z, w} -> (T, T, T, T), 4);

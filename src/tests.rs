@@ -13,9 +13,11 @@ fn construction() {
 #[test]
 fn owned_transformations() {
     let arr = Vector2::new(1, 2).to_array();
+    let tup = Vector2::new(1, 2).to_tuple();
     let vec = Vector2::new(1, 2).to_vec();
 
     assert_eq!(arr, [1, 2]);
+    assert_eq!(tup, (1, 2));
     assert_eq!(vec, vec![1, 2]);
 }
 
