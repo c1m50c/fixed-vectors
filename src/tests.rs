@@ -5,7 +5,7 @@ use super::*;
 fn construction() {
     let vec2 = Vector2::new(1, 2);
 
-    assert_eq!(vec2.len(), 2);
+    assert_eq!(vec2.size(), 2);
     assert_eq!((vec2.x, vec2.y), (1, 2));
 }
 

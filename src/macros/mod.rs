@@ -44,10 +44,10 @@ macro_rules! impl_vector {
             /// ```rust
             /// use fixed_vectors::Vector2;
             /// 
-            /// let len = Vector2::new(1, 2).len();
-            /// assert_eq!(len, 2);
+            /// let size = Vector2::new(1, 2).size();
+            /// assert_eq!(size, 2);
             /// ```
-            pub const fn len(&self) -> usize {
+            pub const fn size(&self) -> usize {
                 return $len;
             }
 
