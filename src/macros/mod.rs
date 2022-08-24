@@ -1,3 +1,5 @@
+mod floating;
+
 /// Macro used in implementing all the methods for Vectors.
 /// 
 /// # Example
@@ -134,7 +136,4 @@ macro_rules! impl_vector {
 }
 
 pub(crate) use impl_vector;
-
-#[allow(unused_imports)]
-pub use floating::*;
-pub mod floating;
+pub(crate) use floating::impl_floating_vector;
