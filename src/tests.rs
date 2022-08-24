@@ -35,3 +35,11 @@ fn try_froms() {
     assert!(Vector2::try_from(vec![1, 2]).is_ok());
     assert!(Vector2::try_from(vec![1, 2, 3]).is_ok());
 }
+
+
+#[test]
+fn map() {
+    let vector = Vector2::new("Hello", "World")
+        .map(|s| s.to_string());
+    assert_eq!(vector, Vector2::new(String::from("Hello"), String::from("World")));
+}

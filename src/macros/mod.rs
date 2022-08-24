@@ -91,6 +91,25 @@ macro_rules! impl_vector {
                 $( vec.push(self.$field); ) +
                 return vec;
             }
+
+            /// Takes a closure and creates a Vector that called the given closure on each field.
+            /// 
+            /// # Example
+            /// ```rust
+            /// use fixed_vectors::Vector2;
+            /// 
+            /// let vec = Vector2::new(1, 2)
+            ///     .map(|i| i as f64);
+            /// assert_eq!(vec, Vector2::new(1.0, 2.0));
+            /// ```
+            pub fn map<F, R>(self, mut f: F) -> $struct<R>
+            where
+                F: FnMut(T) -> R
+            {
+                return $struct {
+                    $( $field: f(self.$field) ), +
+                };
+            }
         }
 
         impl<T: Default> Default for $struct<T> {
