@@ -1,3 +1,4 @@
+mod operators;
 mod floating;
 
 /// Macro used in implementing all the methods for Vectors.
@@ -131,9 +132,11 @@ macro_rules! impl_vector {
             }
         }
 
-        $crate::macros::impl_floating_vector!($struct { $($field), + }, $len);
+        $crate::macros::impl_operators!($struct { $($field), + }, $len);
+        $crate::macros::impl_floating_point_operations!($struct { $($field), + }, $len);
     };
 }
 
 pub(crate) use impl_vector;
-pub(crate) use floating::impl_floating_vector;
+pub(crate) use operators::impl_operators;
+pub(crate) use floating::impl_floating_point_operations;

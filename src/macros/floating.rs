@@ -1,4 +1,4 @@
-macro_rules! impl_floating_vector {
+macro_rules! impl_floating_point_operations {
     ($struct: ident { $($field: ident), + }, $len: expr) => {
         #[allow(dead_code)]
         impl<T: num_traits::Float> $struct<T> {
@@ -121,4 +121,4 @@ macro_rules! impl_floating_vector {
     }
 }
 
-pub(crate) use impl_floating_vector;
+pub(crate) use impl_floating_point_operations;
