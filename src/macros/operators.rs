@@ -1,3 +1,21 @@
+/// Macro used in implementing all the operator methods for Vectors.
+/// 
+/// # Example
+/// ```rust
+/// use fixed_vectors::macros::impl_vector;
+/// 
+/// struct Vector2<T> {
+///     x: T,
+///     y: T,
+/// }
+/// 
+/// impl_vector!(Vector2 { x, y } -> (T, T), 2);
+/// 
+/// let vec_a = Vector2::new(2, 4);
+/// let vec_b = Vector2::new(2, 4);
+/// 
+/// assert_eq!(vec_a * vec_b, Vector2::new(4, 16));
+/// ```
 // TODO: Find a way to do the `_Assign` traits without using `Copy`.
 macro_rules! impl_operators {
     ($struct: ident { $($field: ident), + }, $len: expr) => {

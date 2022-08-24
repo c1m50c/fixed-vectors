@@ -12,7 +12,7 @@ mod floating;
 ///     y: T,
 /// }
 /// 
-/// impl_vector!(Vector2 { x, y }, 2);
+/// impl_vector!(Vector2 { x, y } -> (T, T), 2);
 /// let vec = Vector2::new(1, 2);
 /// 
 /// assert_eq!(vec.len(), 2);

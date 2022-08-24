@@ -1,3 +1,19 @@
+/// Macro used in implementing all the floating-point methods for Vectors.
+/// 
+/// # Example
+/// ```rust
+/// use fixed_vectors::macros::impl_vector;
+/// 
+/// struct Vector2<T> {
+///     x: T,
+///     y: T,
+/// }
+/// 
+/// impl_vector!(Vector2 { x, y } -> (T, T), 2);
+/// let vec = Vector2::new(1.5, 2.5);
+/// 
+/// assert_eq!(vec.floor(), Vector2::new(1.0, 2.0));
+/// ```
 macro_rules! impl_floating_point_operations {
     ($struct: ident { $($field: ident), + }, $len: expr) => {
         #[allow(dead_code)]
