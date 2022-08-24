@@ -32,9 +32,9 @@ macro_rules! impl_vector {
             /// assert_eq!(vec.x, 1);
             /// assert_eq!(vec.y, 2);
             /// ```
-            pub const fn new($($field: T), +) -> Self {
+            pub const fn new($( $field: T ), +) -> Self {
                 return Self {
-                    $($field: $field), +
+                    $( $field: $field ), +
                 }
             }
 
@@ -77,6 +77,22 @@ macro_rules! impl_vector {
                 let mut vec = std::vec::Vec::with_capacity($len);
                 $( vec.push(self.$field); ) +
                 return vec;
+            }
+        }
+
+        impl<T: Default> Default for $struct<T> {
+            fn default() -> Self {
+                return Self {
+                    $( $field: T::default() ), +
+                };
+            }
+        }
+
+        impl<T: Clone> Clone for $struct<T> {
+            fn clone(&self) -> Self {
+                return Self {
+                    $( $field: self.$field.clone() ), +
+                };
             }
         }
 
@@ -129,6 +145,12 @@ macro_rules! impl_vector {
                 let mut result = String::from("(");
                 $( result.push_str(format!("{}, ", &self.$field).as_str()); ) +
                 return write!(f, "{}", result.strip_suffix(", ").unwrap().to_string() + ")");
+            }
+        }
+
+        impl<T: core::hash::Hash> core::hash::Hash for $struct<T> {
+            fn hash<H: core::hash::Hasher>(&self, state: &mut H) {
+                $( self.$field.hash(state); ) +
             }
         }
 
