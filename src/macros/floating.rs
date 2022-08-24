@@ -114,8 +114,7 @@ macro_rules! impl_floating_point_operations {
             }
 
             fn direction(self, to: Self) -> Self {
-                todo!("Need to implement arithmetic traits first.");
-                // return (to - self).normalized();
+                return (to - self).normalized();
             }
         }
     }
