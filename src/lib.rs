@@ -22,7 +22,21 @@ mod macros;
 /// ```
 #[derive(Debug, PartialEq, Clone, Copy)]
 pub enum VectorError {
+    /// Returned when there's not enough information to give a more verbose [`VectorError`].
     GenericError,
+
+    /// Given when converting a Dynamically Sized Collection into a Vector,
+    /// only when the Collection's size is less than the Vector's.
+    /// 
+    /// # Example
+    /// ```rust
+    /// use fixed_vectors::{Vector3, VectorError};
+    /// use std::convert::TryFrom;
+    /// 
+    /// let vec = vec![1, 2];
+    /// let res = Vector3::try_from(vec);
+    /// assert_eq!(res.err().unwrap(), VectorError::CannotConvertFromImproperlySizedCollection);
+    /// ```
     CannotConvertFromImproperlySizedCollection
 }
 
