@@ -1,618 +1,129 @@
-//! Library implementing fixed-length Vectors meant for representing dimensional values.
-//! Tested heavily to ensure safety during use.
-//! Fixed Vectors are used heavily in game development for representing points in space,
-//! see the Godot Game Engine documentation on Vector math for written examples [here](https://docs.godotengine.org/en/stable/tutorials/math/vector_math.html).
+//! Library containing a collection of fixed-size Vectors.
+//! These Vectors are useful for use in positional, and dimensional values.
+//! There are three built-in Vectors to choose from, the built-in Vectors are the structs
+//! [`Vector2`], [`Vector3`], and [`Vector4`].
 //! 
-//! # Vectors
+//! # Example
 //! ```rust
-//! pub struct Vector2<T> { .. } // Two-dimensional [`Vector`].
-//! pub struct Vector3<T> { .. } // Three-dimensional [`Vector`].
-//! pub struct Vector4<T> { .. } // Four-dimensional [`Vector`].
+//! use fixed_vectors::Vector3;
+//! 
+//! let vec = Vector3::new(1, 2, 3);
+//! let sum = vec.into_iter().sum::<i32>();
+//! assert_eq!(sum, 6);
 //! ```
-
 
 #[cfg(test)]
 mod tests;
 
-pub mod traits;
+#[cfg(any(feature = "macros"))]
+pub mod macros;
 
-use core::iter::{Iterator, IntoIterator, FusedIterator, DoubleEndedIterator, ExactSizeIterator};
-use core::cmp::PartialEq;
-use core::convert::From;
-pub use traits::*;
+#[cfg(not(feature = "macros"))]
+mod macros;
 
-
-/// Struct for the [`IntoIter`] trait used by [`Vector`]s.
-/// Iterator works based off going from the `x` field to the remaining fields.
+/// The type returned in [`Result`]s created by Vector functions.
 /// 
 /// # Example
 /// ```rust
-/// let mut iter = Vector3::new("Vector", "3", "Iterator").into_iter();
-/// assert_eq!(iter.next(), Some("Vector"));
-/// assert_eq!(iter.next(), Some("3"));
-/// assert_eq!(iter.next(), Some("Iterator"));
-/// assert_eq!(iter.next(), None);
-/// ```
-pub struct IntoIter<T> {
-    pub vec: std::vec::Vec<T>,
-}
-
-
-impl<T> Iterator for IntoIter<T> {
-    type Item = T;
-    
-    #[inline]
-    fn next(&mut self) -> Option<Self::Item> {
-        if self.vec.len() == 0 { return None; }
-        return Some(self.vec.remove(0));
-    }
-
-    #[inline]
-    fn size_hint(&self) -> (usize, Option<usize>) {
-        return self.vec.iter().size_hint();
-    }
-}
-
-
-impl<T> DoubleEndedIterator for IntoIter<T> {
-    #[inline]
-    fn next_back(&mut self) -> Option<Self::Item> {
-        return self.vec.pop();
-    }
-}
-
-
-impl<T> ExactSizeIterator for IntoIter<T> {  }
-impl<T> FusedIterator for IntoIter<T> {  }
-
-
-/// Macros for implementing [`Vector`] functions & constants in `struct`s.
+/// use fixed_vectors::{Vector2, VectorError};
+/// use std::convert::TryFrom;
 /// 
-/// # Example
-/// ```rust
-/// struct Vector5<T> {
-///     x: T,
-///     y: T,
-///     z: T,
-///     w: T,
-///     v: T,
+/// // This returns an `Err` because the given `Vec` is not as big as a `Vector2`
+/// let try_from_vec = Vector2::try_from(vec![1]);
+/// 
+/// if let Err(error) = try_from_vec {
+///     assert_eq!(error, VectorError::CannotConvertFromImproperlySizedCollection);
 /// }
-/// 
-/// impl_vector!(Vector5 { x, y, z, w, v }, 5);
-/// 
-/// // Now the struct has generic Vector methods.
-/// let vector = Vector5::new(1, 2, 3, 4, 5);
-/// assert_eq!(format!("{}", vector), "(1, 2, 3, 4, 5)");
-/// 
-/// assert_eq!(Vector5::NAME, "Vector5");
-/// assert_eq!(Vector5::LEN, 5);
 /// ```
-/// 
-/// # Parameters
-/// ```rust
-/// $Vector: ident // Name of the Vector Struct
-/// { $($field: ident), + } // Fields within the Vector Struct
-/// $len: expr // The amount of fields within the Vector Struct
-/// ```
-/// 
-/// # `Impl` Constants
-/// ```rust
-/// pub const NAME: &'static str = stringify!($Vector)
-/// pub const SIZE: usize = core::mem::size_of::<T>() * $len
-/// pub const LEN: usize = $len
-/// ```
-/// 
-/// # `Impl` Functions
-/// ```rust
-/// pub const fn new( $($field: T), + ) -> $Vector<T>
-/// pub fn to_array(self) -> [T; $len]
-/// pub fn to_vec(self) -> Vec<T>
-/// ```
-/// 
-/// # `Impl` Traits
-/// ```rust
-/// impl<T> Vector<T, $len> for $Vector<T>
-/// impl<T: PrimInt> IntegerVector<T, $len> for $Vector<T>
-/// impl<T: Float> FloatingPointVector<T, $len> for $Vector<T>
-/// ```
-/// 
-/// To see more implemented traits & functions, see the source code.
-#[macro_export]
-macro_rules! impl_vector {
-    ($Vector: ident { $($field: ident), + }, $tuple_type: tt, $len: expr) => {
-        impl<T> $Vector<T> {
-            /// Name of the [`Vector`] Struct as a `static str`.
-            pub const NAME: &'static str = stringify!($Vector);
+#[derive(Debug, PartialEq, Clone, Copy)]
+pub enum VectorError {
+    /// Returned when there's not enough information to give a more verbose [`VectorError`].
+    GenericError,
 
-            /// Size of the [`Vector`] in Bytes, calculated based of `size_of::<T>()` * `Vector::LEN`.
-            pub const SIZE: usize = core::mem::size_of::<T>() * $len;
-
-            /// Number of fields in the [`Vector`] Struct as a `usize`.
-            pub const LEN: usize = $len;
-
-            /// Creates a new [`Vector`] with the specified values for the fields.
-            /// 
-            /// # Example
-            /// ```rust
-            /// let vector = Vector2::new("Vector", "2");
-            /// assert_eq!(vector.x, "Vector");
-            /// assert_eq!(vector.y, "2");
-            /// ```
-            #[inline]
-            pub const fn new($( $field: T ), +) -> $Vector<T> {
-                return Self {
-                    $( $field: $field ), +
-                };
-            }
-        }
-
-        impl<T> $crate::Vector<T, $len> for $Vector<T> {
-            type TupleOutput = $tuple_type;
-            
-            #[inline]
-            fn name(&self) -> &'static str {
-                return Self::NAME;
-            }
-
-            #[inline]
-            fn to_array(self) -> [T; $len] {
-                return [ $(self.$field), + ];
-            }
-
-            fn to_vec(self) -> std::vec::Vec<T> {
-                let mut vec = std::vec::Vec::with_capacity(Self::LEN);
-                $( vec.push(self.$field); ) +
-                return vec;
-            }
-
-            // TODO: There is no [`From`] Tuple trait implemented for [`Vector`], find a way to reimplement that!
-            #[inline]
-            fn to_tuple(self) -> Self::TupleOutput {
-                return ($(self.$field), +);
-            }
-        }
-
-        impl<T: PartialOrd + Copy> $Vector<T> {
-            /// Returns the maximum value contained within the [`Vector`].
-            /// 
-            /// # Example
-            /// ```rust
-            /// let vector = Vector3::new(1, 0, 2);
-            /// assert_eq!(vector.max(), 2);
-            /// ```
-            pub fn max(&self) -> T {
-                let mut iter = self.into_iter();
-                let mut result = iter.next().expect("Cannot retrieve max value on zero-lengthed Vector.");
-        
-                for v in iter {
-                    if v > result { result = v; }
-                }
-        
-                return result;
-            }
-
-            /// Returns the minimum value contained within the [`Vector`].
-            /// 
-            /// # Example
-            /// ```rust
-            /// let vector = Vector3::new(1, 0, 2);
-            /// assert_eq!(vector.min(), 0);
-            /// ```
-            pub fn min(&self) -> T {
-                let mut iter = self.into_iter();
-                let mut result = iter.next().expect("Cannot retrieve min value on zero-lengthed Vector.");
-        
-                for v in iter {
-                    if v < result { result = v; }
-                }
-        
-                return result;
-            }
-        }
-
-        impl<T: num_traits::PrimInt> $crate::IntegerVector<T, $len> for $Vector<T> {
-            #[inline]
-            fn pow(self, n: u32) -> Self {
-                return Self { $( $field: self.$field.pow(n) ), + };
-            }
-        }
-
-        impl<T: num_traits::Float> $crate::FloatingPointVector<T, $len> for $Vector<T> {
-            #[inline]
-            fn zero(self) -> Self {
-                return Self { $( $field: num_traits::zero::<T>() ), + };
-            }
-            
-            #[inline]
-            fn floor(self) -> Self {
-                return Self { $( $field: self.$field.floor() ), + };
-            }
-
-            #[inline]
-            fn ceil(self) -> Self {
-                return Self { $( $field: self.$field.ceil() ), + }
-            }
-
-            #[inline]
-            fn round(self) -> Self {
-                return Self { $( $field: self.$field.round() ), + }
-            }
-
-            #[inline]
-            fn abs(self) -> Self {
-                return Self { $( $field: self.$field.abs() ), + };
-            }
-
-            #[inline]
-            fn powi(self, n: i32) -> Self {
-                return Self { $( $field: self.$field.powi(n) ), + };
-            }
-
-            #[inline]
-            fn powf(self, n: T) -> Self {
-                return Self { $( $field: self.$field.powf(n) ), + };
-            }
-
-            #[inline]
-            fn trunc(self) -> Self {
-                return Self { $( $field: self.$field.trunc() ), + };
-            }
-
-            #[inline]
-            fn fract(self) -> Self {
-                return Self { $( $field: self.$field.fract() ), + };
-            }
-
-            #[inline]
-            fn sqrt(self) -> Self {
-                return Self { $( $field: self.$field.sqrt() ), + };
-            }
-
-            fn normalized(self) -> Self {
-                let mut iter = Self { $($field: self.$field * self.$field), + }.into_iter();
-                let mut m = iter.next().expect("Cannot normalize a zero-lengthed Vector.");
-                for f in iter { m = m + f; }
-
-                if m == num_traits::zero::<T>() { return self.zero(); }
-
-                let m = m.sqrt();
-
-                return Self {
-                    $( $field: self.$field / m ), +
-                };
-            }
-
-            fn lerp(self, to: Self, weight: T) -> Self {
-                return Self {
-                    $( $field: self.$field + (weight * (to.$field - self.$field)) ), +
-                };
-            }
-
-            fn dot(self, b: Self) -> T {
-                let mut iter = Self { $( $field: self.$field * b.$field ), + }.into_iter();
-                let mut dot = iter.next().expect("Cannot retrieve the dot product of a zero-lengthed Vector.");
-                for f in iter { dot = dot + f; }
-                return dot;
-            }
-            
-            fn length_squared(self) -> T {
-                let mut squared_iter = Self { $($field: self.$field * self.$field), + }.into_iter();
-
-                let mut added: T = squared_iter.next()
-                    .expect("Cannot obtain the length of a Vector with no fields.");
-
-                for f in squared_iter { added = added + f; }
-                
-                return added;
-            }
-        }
-
-        impl<T: Default> Default for $Vector<T> {
-            #[inline]
-            fn default() -> $Vector<T> {
-                return Self {
-                    $( $field: T::default() ), +
-                };
-            }
-        }
-
-        impl<T: Copy> Copy for $Vector<T> {  }
-
-        impl<T: Copy> Clone for $Vector<T> {
-            #[inline]
-            fn clone(&self) -> $Vector<T> {
-                return *self;
-            }
-        }
-
-        impl<T: core::ops::Add<Output = T>> core::ops::Add for $Vector<T> {
-            type Output = Self;
-
-            #[inline]
-            fn add(self, other: Self) -> Self::Output {
-                return Self {
-                    $( $field: self.$field + other.$field ), +
-                };
-            }
-        }
-
-        impl<T: core::ops::Add<Output = T> + Copy> core::ops::AddAssign for $Vector<T> {
-            #[inline]
-            fn add_assign(&mut self, other: Self) {
-                *self = Self {
-                    $( $field: self.$field + other.$field ), +
-                };
-            }
-        }
-
-        impl<T: core::ops::Sub<Output = T>> core::ops::Sub for $Vector<T> {
-            type Output = Self;
-
-            #[inline]
-            fn sub(self, other: Self) -> Self::Output {
-                return Self {
-                    $( $field: self.$field - other.$field ), +
-                };
-            }
-        }
-
-        impl<T: core::ops::Sub<Output = T> + Copy> core::ops::SubAssign for $Vector<T> {
-            #[inline]
-            fn sub_assign(&mut self, other: Self) {
-                *self = Self {
-                    $( $field: self.$field - other.$field ), +
-                };
-            }
-        }
-
-        impl<T: core::ops::Mul<Output = T>> core::ops::Mul for $Vector<T> {
-            type Output = Self;
-
-            #[inline]
-            fn mul(self, other: Self) -> Self::Output {
-                return Self {
-                    $( $field: self.$field * other.$field ), +
-                };
-            }
-        }
-
-        impl<T: core::ops::Mul<Output = T> + Copy> core::ops::MulAssign for $Vector<T> {
-            #[inline]
-            fn mul_assign(&mut self, other: Self) {
-                *self = Self {
-                    $( $field: self.$field * other.$field ), +
-                };
-            }
-        }
-
-        impl<T: core::ops::Div<Output = T>> core::ops::Div for $Vector<T> {
-            type Output = Self;
-
-            #[inline]
-            fn div(self, other: Self) -> Self::Output {
-                return Self {
-                    $( $field: self.$field / other.$field ), +
-                };
-            }
-        }
-
-        impl<T: core::ops::Div<Output = T> + Copy> core::ops::DivAssign for $Vector<T> {
-            #[inline]
-            fn div_assign(&mut self, other: Self) {
-                *self = Self {
-                    $( $field: self.$field / other.$field ), +
-                };
-            }
-        }
-
-        impl<T: core::ops::Rem<Output = T>> core::ops::Rem for $Vector<T> {
-            type Output = Self;
-
-            #[inline]
-            fn rem(self, other: Self) -> Self::Output {
-                return Self {
-                    $( $field: self.$field % other.$field ), +
-                };
-            }
-        }
-
-        impl<T: core::ops::Rem<Output = T> + Copy> core::ops::RemAssign for $Vector<T> {
-            #[inline]
-            fn rem_assign(&mut self, other: Self) {
-                *self = Self {
-                    $( $field: self.$field % other.$field ), +
-                };
-            }
-        }
-
-        impl<T: core::ops::Neg<Output = T>> core::ops::Neg for $Vector<T> {
-            type Output = Self;
-
-            #[inline]
-            fn neg(self) -> Self::Output {
-                return Self {
-                    $( $field: -self.$field ), +
-                };
-            }
-        }
-
-        impl<T: core::ops::BitAnd<Output = T>> core::ops::BitAnd for $Vector<T> {
-            type Output = Self;
-        
-            #[inline]
-            fn bitand(self, other: Self) -> Self::Output {
-                return Self {
-                    $( $field: self.$field & other.$field ), +
-                };
-            }
-        }
-
-        impl<T: core::ops::BitAnd<Output = T> + Copy> core::ops::BitAndAssign for $Vector<T> {
-            #[inline]
-            fn bitand_assign(&mut self, other: Self) {
-                *self = Self {
-                    $( $field: self.$field & other.$field ), +
-                };
-            }
-        }
-
-        impl<T: core::ops::BitOr<Output = T>> core::ops::BitOr for $Vector<T> {
-            type Output = Self;
-        
-            #[inline]
-            fn bitor(self, other: Self) -> Self::Output {
-                return Self {
-                    $( $field: self.$field | other.$field ), +
-                };
-            }
-        }
-
-        impl<T: core::ops::BitOr<Output = T> + Copy> core::ops::BitOrAssign for $Vector<T> {
-            #[inline]
-            fn bitor_assign(&mut self, other: Self) {
-                *self = Self {
-                    $( $field: self.$field | other.$field ), +
-                };
-            }
-        }
-
-        impl<T: core::ops::BitXor<Output = T>> core::ops::BitXor for $Vector<T> {
-            type Output = Self;
-        
-            #[inline]
-            fn bitxor(self, other: Self) -> Self::Output {
-                return Self {
-                    $( $field: self.$field ^ other.$field ), +
-                };
-            }
-        }
-
-        impl<T: core::ops::BitXor<Output = T> + Copy> core::ops::BitXorAssign for $Vector<T> {
-            #[inline]
-            fn bitxor_assign(&mut self, other: Self) {
-                *self = Self {
-                    $( $field: self.$field ^ other.$field ), +
-                };
-            }
-        }
-
-        impl<T: PartialEq> PartialEq for $Vector<T> {
-            #[inline]
-            fn eq(&self, other: &Self) -> bool {
-                return $( self.$field == other.$field ) && +
-            }
-        }
-
-        impl<T: Eq> Eq for $Vector<T> {  }
-
-        impl<T: core::hash::Hash> core::hash::Hash for $Vector<T> {
-            #[inline]
-            fn hash<H: core::hash::Hasher>(&self, state: &mut H) {
-                $( self.$field.hash(state); ) +
-            }
-        }
-
-        impl<T: core::fmt::Debug> core::fmt::Debug for $Vector<T> {
-            #[inline]
-            fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-                return f.debug_struct(stringify!($Vector))
-                    $( .field(stringify!($field), &self.$field) ) +
-                    .finish();
-            }
-        }
-
-        impl<T: core::fmt::Display> core::fmt::Display for $Vector<T> {
-            #[inline]
-            fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-                // SAFETY: Provided safety for the unwrapping in return.
-                if Self::LEN == 0 { return write!(f, "()"); }
-        
-                let mut result = String::from("(");
-                $( result.push_str(format!("{}, ", &self.$field).as_str()); ) +
-                
-                return write!(f, "{}", result.strip_suffix(", ").unwrap().to_string() + ")");
-            }
-        }
-
-        impl<T> IntoIterator for $Vector<T> {
-            type Item = T;
-            type IntoIter = $crate::IntoIter<T>;
-        
-            #[inline]
-            fn into_iter(self) -> Self::IntoIter {
-                let mut vec = std::vec::Vec::with_capacity(Self::LEN);
-                $( vec.push(self.$field); ) +
-                return Self::IntoIter { vec };
-            }
-        }
-
-        impl<T: Copy> From<[T; $len]> for $Vector<T> {
-            #[inline]
-            fn from(arr: [T; $len]) -> Self {
-                let mut iter = arr.iter();
-                return Self {
-                    $( $field: *iter.next().unwrap() ), +
-                };
-            }
-        }
-
-        impl<T: Copy> core::convert::TryFrom<std::vec::Vec<T>> for $Vector<T> {
-            type Error = &'static str;
-            
-            #[inline]
-            fn try_from(vec: std::vec::Vec<T>) -> Result<Self, Self::Error> {
-                if vec.len() < Self::LEN {
-                    return Err("Vec's length is less than the Vector's length.");
-                }
-
-                let mut iter = vec.iter();
-                return Ok(Self {
-                    $( $field: *iter.next().unwrap() ), +
-                });
-            }
-        }
-    }
+    /// Given when converting a Dynamically Sized Collection into a Vector,
+    /// only when the Collection's size is less than the Vector's.
+    /// 
+    /// # Example
+    /// ```rust
+    /// use fixed_vectors::{Vector3, VectorError};
+    /// use std::convert::TryFrom;
+    /// 
+    /// let vec = vec![1, 2];
+    /// let res = Vector3::try_from(vec);
+    /// assert_eq!(res.err().unwrap(), VectorError::CannotConvertFromImproperlySizedCollection);
+    /// ```
+    CannotConvertFromImproperlySizedCollection
 }
 
 
-/// [`Vector`] Struct for representing a two-dimensional value.
+/// A Vector for holding two dimensional-values.
+/// 
+/// # Example
+/// ```rust
+/// use fixed_vectors::Vector2;
+/// 
+/// let vec2 = Vector2::new(1, 2);
+/// assert_eq!(vec2.x, 1);
+/// assert_eq!(vec2.y, 2);
+/// ```
 pub struct Vector2<T> {
-    /// Represents the first dimensional value.
+    /// Field holding the first dimensional-value.
     pub x: T,
 
-    /// Represents the second dimensional value.
+    /// Field holding the second dimensional-value.
     pub y: T,
 }
 
 
-/// [`Vector`] Struct for representing a three-dimensional value.
+/// A Vector for holding three dimensional-values.
+/// 
+/// # Example
+/// ```rust
+/// use fixed_vectors::Vector3;
+/// 
+/// let vec3 = Vector3::new(1, 2, 3);
+/// assert_eq!(vec3.x, 1);
+/// assert_eq!(vec3.y, 2);
+/// assert_eq!(vec3.z, 3);
+/// ```
 pub struct Vector3<T> {
-    /// Represents the first dimensional value.
+    /// Field holding the first dimensional-value.
     pub x: T,
 
-    /// Represents the second dimensional value.
+    /// Field holding the second dimensional-value.
     pub y: T,
 
-    /// Represents the third dimensional value.
+    /// Field holding the third dimensional-value.
     pub z: T,
 }
 
 
-/// [`Vector`] Struct for representing a four-dimensional value.
+/// A Vector for holding four dimensional-values.
+/// 
+/// # Example
+/// ```rust
+/// use fixed_vectors::Vector4;
+/// 
+/// let vec4 = Vector4::new(1, 2, 3, 4);
+/// assert_eq!(vec4.x, 1);
+/// assert_eq!(vec4.y, 2);
+/// assert_eq!(vec4.z, 3);
+/// assert_eq!(vec4.w, 4);
+/// ```
 pub struct Vector4<T> {
-    /// Represents the first dimensional value.
+    /// Field holding the first dimensional-value.
     pub x: T,
 
-    /// Represents the second dimensional value.
+    /// Field holding the second dimensional-value.
     pub y: T,
 
-    /// Represents the third dimensional value.
+    /// Field holding the third dimensional-value.
     pub z: T,
-    
-    /// Represents the fourth dimensional value.
+
+    /// Field holding the fourth dimensional-value.
     pub w: T,
 }
 
-impl_vector!(Vector2 { x, y }, (T, T), 2);
-impl_vector!(Vector3 { x, y, z }, (T, T, T), 3);
-impl_vector!(Vector4 { x, y, z, w }, (T, T, T, T), 4);
+macros::impl_vector!(Vector2 { x, y } -> (T, T), 2);
+macros::impl_vector!(Vector3 { x, y, z } -> (T, T, T), 3);
+macros::impl_vector!(Vector4 { x, y, z, w } -> (T, T, T, T), 4);
