@@ -1,7 +1,7 @@
-name: Verify
+name: Publish
 
 on:
-  pull_request:
+  push:
     branches: ["main"]
 
 env:
@@ -12,10 +12,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Build
-        run: |
-          cargo build --verbose
-
       - name: Test
         run: |
           cargo test --verbose
+      
+      - name: Publish
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CRATESIO }}
+        run: |
+          cargo login
+          cargo publish
