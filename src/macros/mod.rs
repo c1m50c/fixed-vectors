@@ -1,3 +1,25 @@
+//! Module containing `impl_x!` macros for implementing common methods for Vectors.
+//! This module is primarily split into three different macros,
+//! [`impl_vector`], [`impl_operators`], and [`impl_floating_point_operations`].
+//! These macros handle implementation of every trait or method within a Vector.
+//! 
+//! # Example
+//! ```ignore
+//! use fixed_vectors::macros::impl_vector;
+//! 
+//! struct Vector2<T> {
+//!     x: T,
+//!     y: T,
+//! }
+//! 
+//! impl_vector!(Vector2 { x, y } -> (T, T), 2);
+//! let vec = Vector2::new(1, 2);
+//! 
+//! assert_eq!(vec.size(), 2);
+//! assert_eq!(vec.x, 1);
+//! assert_eq!(vec.y, 2);
+//! ```
+
 mod operators;
 mod floating;
 
@@ -15,7 +37,7 @@ mod floating;
 /// impl_vector!(Vector2 { x, y } -> (T, T), 2);
 /// let vec = Vector2::new(1, 2);
 /// 
-/// assert_eq!(vec.len(), 2);
+/// assert_eq!(vec.size(), 2);
 /// assert_eq!(vec.x, 1);
 /// assert_eq!(vec.y, 2);
 /// ```

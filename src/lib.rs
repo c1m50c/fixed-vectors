@@ -1,10 +1,25 @@
+//! Library containing a collection of fixed-size Vectors.
+//! These Vectors are useful for use in positional, and dimensional values.
+//! There are three built-in Vectors to choose from, the built-in Vectors are the structs
+//! [`Vector2`], [`Vector3`], and [`Vector4`].
+//! 
+//! # Example
+//! ```rust
+//! use fixed_vectors::Vector3;
+//! 
+//! let vec = Vector3::new(1, 2, 3);
+//! let sum = vec.into_iter().sum::<i32>();
+//! assert_eq!(sum, 6);
+//! ```
+
 #[cfg(test)]
 mod tests;
 
-#[cfg(feature = "macros")]
+#[cfg(any(feature = "macros"))]
 pub mod macros;
-mod macros;
 
+#[cfg(not(feature = "macros"))]
+mod macros;
 
 /// The type returned in [`Result`]s created by Vector functions.
 /// 
@@ -109,7 +124,6 @@ pub struct Vector4<T> {
     pub w: T,
 }
 
-
 macros::impl_vector!(Vector2 { x, y } -> (T, T), 2);
 macros::impl_vector!(Vector3 { x, y, z } -> (T, T, T), 3);
-macros::impl_vector!(Vector4 { x, y, z, w} -> (T, T, T, T), 4);
+macros::impl_vector!(Vector4 { x, y, z, w } -> (T, T, T, T), 4);
