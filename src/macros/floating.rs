@@ -1,7 +1,7 @@
 /// Macro used in implementing all the floating-point methods for Vectors.
 /// 
 /// # Example
-/// ```rust
+/// ```ignore
 /// use fixed_vectors::macros::impl_vector;
 /// 
 /// struct Vector2<T> {
