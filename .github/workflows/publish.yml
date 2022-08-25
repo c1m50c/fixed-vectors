@@ -8,7 +8,7 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -22,3 +22,15 @@ jobs:
         run: |
           cargo login
           cargo publish
+
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Publish
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CRATESIO }}
+        run: |
+          cargo login
+          cargo publish --all-features
+        continue-on-error: true # For the case the version is already uploaded.
