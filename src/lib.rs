@@ -15,11 +15,7 @@
 #[cfg(test)]
 mod tests;
 
-#[cfg(any(feature = "macros"))]
 pub mod macros;
-
-#[cfg(not(feature = "macros"))]
-mod macros;
 
 /// The type returned in [`Result`]s created by Vector functions.
 /// 
