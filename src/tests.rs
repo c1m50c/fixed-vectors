@@ -38,6 +38,18 @@ fn try_froms() {
 
 
 #[test]
+fn intos() {
+    let arr: [_; 2] = Vector2::new(1, 2).into();
+    let tup: (_, _) = Vector2::new(1, 2).into();
+    let vec: Vec<_> = Vector2::new(1, 2).into();
+
+    assert_eq!(arr, [1, 2]);
+    assert_eq!(tup, (1, 2));
+    assert_eq!(vec, vec![1, 2]);
+}
+
+
+#[test]
 fn map() {
     let vector = Vector2::new("Hello", "World")
         .map(|s| s.to_string());

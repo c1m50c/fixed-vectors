@@ -193,6 +193,7 @@ macro_rules! impl_vector {
 
         impl<T> TryFrom<std::vec::Vec<T>> for $struct<T> {
             type Error = $crate::VectorError;
+            
             fn try_from(f: std::vec::Vec<T>) -> Result<Self, Self::Error> {
                 if f.len() < $len {
                     return Err(Self::Error::CannotConvertFromImproperlySizedCollection);
