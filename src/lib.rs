@@ -15,11 +15,7 @@
 #[cfg(test)]
 mod tests;
 
-#[cfg(feature = "macros")]
 pub mod macros;
-
-#[cfg(not(feature = "macros"))]
-mod macros;
 
 /// The type returned in [`Result`]s created by Vector functions.
 /// 
@@ -124,6 +120,6 @@ pub struct Vector4<T> {
     pub w: T,
 }
 
-macros::impl_vector!(Vector2 { x, y } -> (T, T), 2);
-macros::impl_vector!(Vector3 { x, y, z } -> (T, T, T), 3);
-macros::impl_vector!(Vector4 { x, y, z, w } -> (T, T, T, T), 4);
+impl_vector!(Vector2 { x, y } -> (T, T), 2);
+impl_vector!(Vector3 { x, y, z } -> (T, T, T), 3);
+impl_vector!(Vector4 { x, y, z, w } -> (T, T, T, T), 4);

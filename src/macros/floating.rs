@@ -1,8 +1,8 @@
 /// Macro used in implementing all the floating-point methods for Vectors.
 /// 
 /// # Example
-/// ```ignore
-/// use fixed_vectors::macros::impl_vector;
+/// ```
+/// use fixed_vectors::impl_vector;
 /// 
 /// struct Vector2<T> {
 ///     x: T,
@@ -14,7 +14,7 @@
 /// 
 /// assert_eq!(vec.floor(), Vector2::new(1.0, 2.0));
 /// ```
-#[cfg_attr(feature = "macros", macro_export)]
+#[macro_export]
 macro_rules! impl_floating_point_operations {
     ($struct: ident { $($field: ident), + }, $len: expr) => {
         #[allow(dead_code)]
@@ -290,5 +290,3 @@ macro_rules! impl_floating_point_operations {
         }
     }
 }
-
-pub(crate) use impl_floating_point_operations;
