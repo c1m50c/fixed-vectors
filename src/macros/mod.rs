@@ -169,6 +169,12 @@ macro_rules! impl_vector {
             }
         }
 
+        impl<T> Into<[T; $len]> for $struct<T> {
+            fn into(self) -> [T; $len] {
+                return self.to_array();
+            }
+        }
+
         impl<T> From<$tuple_type> for $struct<T> {
             fn from(f: $tuple_type) -> Self {
                 return match f {
@@ -176,6 +182,12 @@ macro_rules! impl_vector {
                         Self { $( $field ), + }
                     },
                 };
+            }
+        }
+
+        impl<T> Into<$tuple_type> for $struct<T> {
+            fn into(self) -> $tuple_type {
+                return self.to_tuple();
             }
         }
 
@@ -190,6 +202,12 @@ macro_rules! impl_vector {
                 return Ok(Self {
                     $( $field: iter.next().ok_or(Self::Error::GenericError)? ), +
                 })
+            }
+        }
+
+        impl<T> Into<std::vec::Vec<T>> for $struct<T> {
+            fn into(self) -> std::vec::Vec<T> {
+                return self.to_vec();
             }
         }
 
