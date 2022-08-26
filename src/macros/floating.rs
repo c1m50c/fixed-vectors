@@ -14,6 +14,7 @@
 /// 
 /// assert_eq!(vec.floor(), Vector2::new(1.0, 2.0));
 /// ```
+#[cfg_attr(feature = "macros", macro_export)]
 macro_rules! impl_floating_point_operations {
     ($struct: ident { $($field: ident), + }, $len: expr) => {
         #[allow(dead_code)]

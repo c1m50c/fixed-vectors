@@ -17,6 +17,7 @@
 /// assert_eq!(vec_a * vec_b, Vector2::new(4, 16));
 /// ```
 // TODO: Find a way to do the `_Assign` traits without using `Copy`.
+#[cfg_attr(feature = "macros", macro_export)]
 macro_rules! impl_operators {
     ($struct: ident { $($field: ident), + }, $len: expr) => {
         impl<T: core::ops::Neg<Output = T>> core::ops::Neg for $struct<T> {

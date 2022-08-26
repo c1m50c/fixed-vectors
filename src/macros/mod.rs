@@ -20,8 +20,8 @@
 //! assert_eq!(vec.y, 2);
 //! ```
 
-mod operators;
-mod floating;
+pub mod operators;
+pub mod floating;
 
 /// Macro used in implementing all the methods for Vectors.
 /// 
@@ -41,6 +41,7 @@ mod floating;
 /// assert_eq!(vec.x, 1);
 /// assert_eq!(vec.y, 2);
 /// ```
+#[cfg_attr(feature = "macros", macro_export)]
 macro_rules! impl_vector {
     ($struct: ident { $($field: ident), + } -> $tuple_type: tt, $len: expr) => {
         impl<T> $struct<T> {
