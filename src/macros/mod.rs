@@ -4,8 +4,8 @@
 //! These macros handle implementation of every trait or method within a Vector.
 //! 
 //! # Example
-//! ```ignore
-//! use fixed_vectors::macros::impl_vector;
+//! ```
+//! use fixed_vectors::impl_vector;
 //! 
 //! struct Vector2<T> {
 //!     x: T,
@@ -26,8 +26,8 @@ pub mod floating;
 /// Macro used in implementing all the methods for Vectors.
 /// 
 /// # Example
-/// ```ignore
-/// use fixed_vectors::macros::impl_vector;
+/// ```
+/// use fixed_vectors::impl_vector;
 /// 
 /// struct Vector2<T> {
 ///     x: T,
@@ -41,7 +41,7 @@ pub mod floating;
 /// assert_eq!(vec.x, 1);
 /// assert_eq!(vec.y, 2);
 /// ```
-#[cfg_attr(feature = "macros", macro_export)]
+#[macro_export]
 macro_rules! impl_vector {
     ($struct: ident { $($field: ident), + } -> $tuple_type: tt, $len: expr) => {
         impl<T> $struct<T> {
@@ -169,6 +169,12 @@ macro_rules! impl_vector {
             }
         }
 
+        impl<T> Into<[T; $len]> for $struct<T> {
+            fn into(self) -> [T; $len] {
+                return self.to_array();
+            }
+        }
+
         impl<T> From<$tuple_type> for $struct<T> {
             fn from(f: $tuple_type) -> Self {
                 return match f {
@@ -179,8 +185,15 @@ macro_rules! impl_vector {
             }
         }
 
+        impl<T> Into<$tuple_type> for $struct<T> {
+            fn into(self) -> $tuple_type {
+                return self.to_tuple();
+            }
+        }
+
         impl<T> TryFrom<std::vec::Vec<T>> for $struct<T> {
             type Error = $crate::VectorError;
+
             fn try_from(f: std::vec::Vec<T>) -> Result<Self, Self::Error> {
                 if f.len() < $len {
                     return Err(Self::Error::CannotConvertFromImproperlySizedCollection);
@@ -190,6 +203,12 @@ macro_rules! impl_vector {
                 return Ok(Self {
                     $( $field: iter.next().ok_or(Self::Error::GenericError)? ), +
                 })
+            }
+        }
+
+        impl<T> Into<std::vec::Vec<T>> for $struct<T> {
+            fn into(self) -> std::vec::Vec<T> {
+                return self.to_vec();
             }
         }
 
@@ -219,11 +238,7 @@ macro_rules! impl_vector {
             }
         }
 
-        $crate::macros::impl_operators!($struct { $($field), + }, $len);
-        $crate::macros::impl_floating_point_operations!($struct { $($field), + }, $len);
+        $crate::impl_operators!($struct { $($field), + }, $len);
+        $crate::impl_floating_point_operations!($struct { $($field), + }, $len);
     };
 }
-
-pub(crate) use impl_vector;
-pub(crate) use operators::impl_operators;
-pub(crate) use floating::impl_floating_point_operations;

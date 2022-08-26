@@ -1,8 +1,8 @@
 /// Macro used in implementing all the operator methods for Vectors.
 /// 
 /// # Example
-/// ```ignore
-/// use fixed_vectors::macros::impl_vector;
+/// ```
+/// use fixed_vectors::impl_vector;
 /// 
 /// struct Vector2<T> {
 ///     x: T,
@@ -17,7 +17,7 @@
 /// assert_eq!(vec_a * vec_b, Vector2::new(4, 16));
 /// ```
 // TODO: Find a way to do the `_Assign` traits without using `Copy`.
-#[cfg_attr(feature = "macros", macro_export)]
+#[macro_export]
 macro_rules! impl_operators {
     ($struct: ident { $($field: ident), + }, $len: expr) => {
         impl<T: core::ops::Neg<Output = T>> core::ops::Neg for $struct<T> {
@@ -183,5 +183,3 @@ macro_rules! impl_operators {
         impl<T: Eq> Eq for $struct<T> {  }
     }
 }
-
-pub(crate) use impl_operators;
