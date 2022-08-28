@@ -6,7 +6,7 @@
 [![Crates.io - Version](https://img.shields.io/crates/v/fixed-vectors?color=orange&style=for-the-badge)](https://crates.io/crates/fixed-vectors/)
 [![Crates.io - License](https://img.shields.io/crates/l/fixed-vectors?style=for-the-badge)](https://crates.io/crates/fixed-vectors/)
 
-Library implementing fixed-length vectors meant for representing positional and dimensional values. These vectors have various mathematical and helper functions implemented for them out of the box for ease of use in calculations, especially game development related ones. These methods are all implemented using the [`impl_vector!`](https://github.com/c1m50c/fixed-vectors/blob/main/src/macros/mod.rs) macro, you can have access to this macro by using the `macros` feature tag while managing your dependencies.
+Library implementing fixed-length vectors meant for representing positional and dimensional values. These vectors have various mathematical and helper functions implemented for them out of the box for ease of use in calculations, especially game development related ones. These methods are all implemented using the [`impl_vector!`](https://github.com/c1m50c/fixed-vectors/blob/main/src/macros/mod.rs) macro.
 
 # Example
 
