@@ -198,19 +198,16 @@ macro_rules! impl_floating_point_operations {
             /// assert!(vector.y < 1.0);
             /// ```
             pub fn normalized(self) -> Self {
-                let mut iter = Self {
-                    $( $field: self.$field * self.$field ), +
-                }.into_iter();
+                let mut iter = self.clone().into_iter()
+                    .map(|f| f * f);
 
-                let mut magnitude = iter.next()
+                let start = iter.next()
                     .expect("Cannot normalize a Vector that contains no fields.");
-                iter.for_each(|float| magnitude = magnitude + float);
+                let mut magnitude = iter.fold(start, |acc, f| acc * f);
 
-                if magnitude == T::zero() {
-                    return self.zero();
-                }
+                if magnitude == T::zero() { return self.zero(); }
+                magnitude = magnitude.sqrt();
 
-                let magnitude = magnitude.sqrt();
                 return Self {
                     $( $field: self.$field / magnitude ), +
                 };
@@ -227,14 +224,13 @@ macro_rules! impl_floating_point_operations {
             /// assert_eq!(dot, 16.0);
             /// ```
             pub fn dot(self, b: Self) -> T {
-                let mut iter = Self {
-                    $( $field: self.$field * b.$field ), +
-                }.into_iter();
+                let mut iter = self.into_iter()
+                    .zip(b.into_iter())
+                    .map(|(a, b)| a * b);
 
-                let mut dot_product = iter.next()
-                    .expect("Cannot normalize a Vector that contains no fields.");
-                iter.for_each(|float| dot_product = dot_product * float);
-                return dot_product;
+                let start = iter.next()
+                    .expect("Cannot retrieve the dot product of a Vector that contains no fields.");
+                return iter.fold(start, |acc, f| acc * f);
             }
 
             /// Returns the squared magnitude of the Vector.
@@ -248,14 +244,9 @@ macro_rules! impl_floating_point_operations {
             /// assert!(lsq >= 17.0);
             /// ```
             pub fn length_squared(self) -> T {
-                let mut iter = Self {
-                    $( $field: self.$field * self.$field ), +
-                }.into_iter();
-
-                let mut added = iter.next()
-                    .expect("Cannot normalize a Vector that contains no fields.");
-                iter.for_each(|float| added = added + float);
-                return added;
+                return self.into_iter()
+                    .map(|f| f * f)
+                    .fold(T::zero(), |acc, f| acc + f);
             }
 
             /// Returns the magnitude of the Vector.
