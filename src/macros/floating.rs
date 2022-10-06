@@ -29,9 +29,13 @@ macro_rules! impl_floating_point_operations {
             /// assert_eq!(vector, Vector2::new(0.0, 0.0));
             /// ```
             pub fn zero(self) -> Self {
-                return Self {
-                    $( $field: T::zero() ), +
-                };
+                /*
+                    TODO: Look into this later?
+                    NOTE: 🤔 I wonder what's more performant:
+                    - Mapping the given Vector with the required functions.
+                    - Constructing a new Vector calling the required function on each field.
+                */
+                return self.map(|_| T::zero());
             }
 
             /// Converts all numbers within the Vector to largest integer
@@ -45,9 +49,7 @@ macro_rules! impl_floating_point_operations {
             /// assert_eq!(vector, Vector2::new(1.0, 5.0));
             /// ```
             pub fn floor(self) -> Self {
-                return Self {
-                    $( $field: self.$field.floor() ), +
-                };
+                return self.map(|f| f.floor());
             }
 
             /// Converts all numbers within the Vector to largest integer
@@ -61,9 +63,7 @@ macro_rules! impl_floating_point_operations {
             /// assert_eq!(vector, Vector2::new(2.0, 6.0));
             /// ```
             pub fn ceil(self) -> Self {
-                return Self {
-                    $( $field: self.$field.ceil() ), +
-                };
+                return self.map(|f| f.ceil());
             }
 
             /// Converts all numbers within the Vector to the nearest integer.
@@ -76,9 +76,7 @@ macro_rules! impl_floating_point_operations {
             /// assert_eq!(vector, Vector2::new(1.0, 6.0));
             /// ```
             pub fn round(self) -> Self {
-                return Self {
-                    $( $field: self.$field.round() ), +
-                };
+                return self.map(|f| f.round());
             }
 
             /// Converts all numbers within the Vector to their absolute value.
@@ -91,9 +89,7 @@ macro_rules! impl_floating_point_operations {
             /// assert_eq!(vector, Vector2::new(1.0, 1.0));
             /// ```
             pub fn abs(self) -> Self {
-                return Self {
-                    $( $field: self.$field.abs() ), +
-                };
+                return self.map(|f| f.abs());
             }
 
             /// Converts all numbers within the Vector to their integer parts.
@@ -106,9 +102,7 @@ macro_rules! impl_floating_point_operations {
             /// assert_eq!(vector, Vector2::new(1.0, 2.0));
             /// ```
             pub fn trunc(self) -> Self {
-                return Self {
-                    $( $field: self.$field.trunc() ), +
-                };
+                return self.map(|f| f.trunc());
             }
 
             /// Converts all numbers within the Vector to their fractional parts.
@@ -122,9 +116,7 @@ macro_rules! impl_floating_point_operations {
             /// assert!(vector.y <= 0.5);
             /// ```
             pub fn fract(self) -> Self {
-                return Self {
-                    $( $field: self.$field.fract() ), +
-                };
+                return self.map(|f| f.fract());
             }
 
             /// Converts all numbers within the Vector to their square-root.
@@ -137,9 +129,7 @@ macro_rules! impl_floating_point_operations {
             /// assert_eq!(vector, Vector2::new(8.0, 5.0));
             /// ```
             pub fn sqrt(self) -> Self {
-                return Self {
-                    $( $field: self.$field.sqrt() ), +
-                };
+                return self.map(|f| f.sqrt());
             }
 
             /// Raises all numbers within the Vector to an integer power.
@@ -152,9 +142,7 @@ macro_rules! impl_floating_point_operations {
             /// assert_eq!(vector, Vector2::new(4.0, 16.0));
             /// ```
             pub fn powi(self, n: i32) -> Self {
-                return Self {
-                    $( $field: self.$field.powi(n) ), +
-                };
+                return self.map(|f| f.powi(n));
             }
 
             /// Raises all numbers within the Vector to a floating-point power.
@@ -167,9 +155,7 @@ macro_rules! impl_floating_point_operations {
             /// assert_eq!(vector, Vector2::new(4.0, 16.0));
             /// ```
             pub fn powf(self, n: T) -> Self {
-                return Self {
-                    $( $field: self.$field.powf(n) ), +
-                };
+                return self.map(|f| f.powf(n));
             }
 
             /// Linearly interpolates between two Vectors by a normalized `weight`.

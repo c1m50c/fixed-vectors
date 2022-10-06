@@ -24,9 +24,7 @@ macro_rules! impl_operators {
             type Output = Self;
 
             fn neg(self) -> Self::Output {
-                return Self {
-                    $( $field: -self.$field ), +
-                };
+                return self.map(|x| -x);
             }
         }
 
