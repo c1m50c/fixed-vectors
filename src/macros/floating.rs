@@ -143,7 +143,7 @@ macro_rules! impl_cross_type_floating_point_operations {
             /// ```
             #[inline]
             pub fn dot(&self, other: &Self) -> T {
-                crate::sum_repeating!(
+                $crate::sum_repeating!(
                     $( + (self.$field * other.$field) ) +
                 )
             }
@@ -165,7 +165,7 @@ macro_rules! impl_cross_type_floating_point_operations {
                     $( $field: self.$field * self.$field ), +
                 };
 
-                crate::sum_repeating!(
+                $crate::sum_repeating!(
                     $( + squared.$field ) +
                 )
             }
