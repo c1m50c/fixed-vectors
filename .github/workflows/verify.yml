@@ -2,20 +2,73 @@ name: Verify
 
 on:
   pull_request:
-    branches: ["main"]
+    branches: [ main ]
+  push:
+    branches: [ main ]
 
 env:
   CARGO_TERM_COLOR: always
 
 jobs:
   verify:
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - identifier: Windows
+            os: windows-latest
+
+          - identifier: Ubuntu
+            os: ubuntu-latest
+
+          - identifier: MacOS
+            os: macos-latest
+
+    name: Verify - ${{ matrix.identifier }}
+    runs-on: ${{ matrix.os }}
+
     steps:
       - uses: actions/checkout@v3
-      - name: Build
-        run: |
-          cargo build --verbose
+      
+      - name: Install Toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          components: clippy
+          toolchain: stable
+          override: true
 
-      - name: Test
+      - name: Configure Dependency Caching
+        uses: Swatinem/rust-cache@v2
+
+      - name: Verify - Build ${{ matrix.identifier }}
+        run: cargo build --verbose
+      
+      - name: Verify - Clippy
+        run: cargo clippy --no-deps -- -Dwarnings
+      
+      - name: Verify - Tests
+        run: cargo test --verbose
+
+  dry-run:
+    if: github.event_name == 'pull_request'
+    runs-on: [ ubuntu-latest ]
+    name: Verify - Dry Run
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install Toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          components: clippy
+          toolchain: stable
+          override: true
+
+      - name: Configure Dependency Caching
+        uses: Swatinem/rust-cache@v2
+
+      - name: Publish Dry Run - `crates.io`
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CRATES_IO_TOKEN }}
         run: |
-          cargo test --verbose
+          cargo publish --all-features --dry-run --verbose

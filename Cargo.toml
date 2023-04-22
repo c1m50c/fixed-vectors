@@ -1,15 +1,16 @@
 [package]
 name = "fixed-vectors"
-version = "2.0.5"
-edition = "2021"
 readme = "README.MD"
-repository = "https://github.com/c1m50c/fixed-vectors"
+version = "3.0.0"
+edition = "2021"
 license = "MIT"
-description = "Library implementing fixed-length Vectors meant for representing dimensional values."
-keywords = [ "math", "vector", "vector2", "vector3", "gamedev" ]
-categories = [ "data-structures", "game-development", "mathematics" ]
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+description = "Library implementing fixed-length Vectors meant for representing dimensional values."
+categories = [ "data-structures", "game-development", "mathematics" ]
+keywords = [ "math", "vector", "vector2", "vector3", "gamedev" ]
+repository = "https://github.com/c1m50c/fixed-vectors"
+
 
 [dependencies]
-num-traits = "0.2.14"
+num-traits = { version = "0.2.15", default-features = false }
+libm = "0.2.6"
