@@ -170,6 +170,28 @@ macro_rules! impl_vector {
             }
         }
 
+        impl<T: core::hash::Hash> core::hash::Hash for $struct<T> {
+            fn hash<H: core::hash::Hasher>(&self, state: &mut H) {
+                $( self.$field.hash(state); ) +
+            }
+        }
+
+        impl<T: Clone> Clone for $struct<T> {
+            fn clone(&self) -> Self {
+                Self {
+                    $( $field: self.$field.clone() ), +
+                }
+            }
+        }
+
+        impl<T: Default> Default for $struct<T> {
+            fn default() -> Self {
+                Self {
+                    $( $field: T::default() ), +
+                }
+            }
+        }
+
         $crate::impl_cross_type_floating_point_operations!( $struct { $($field), + }, $size );
         $crate::impl_floating_point_operations!( $struct { $($field), + }, $size, f32 );
         $crate::impl_floating_point_operations!( $struct { $($field), + }, $size, f64 );
