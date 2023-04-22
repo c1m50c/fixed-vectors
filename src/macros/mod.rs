@@ -170,6 +170,7 @@ macro_rules! impl_vector {
             }
         }
 
+        $crate::impl_cross_type_floating_point_operations!( $struct { $($field), + }, $size );
         $crate::impl_floating_point_operations!( $struct { $($field), + }, $size, f32 );
         $crate::impl_floating_point_operations!( $struct { $($field), + }, $size, f64 );
     };
