@@ -17,7 +17,7 @@ macro_rules! impl_vector {
             #[inline(always)]
             pub const fn new( $($field: T), + ) -> Self {
                 Self {
-                    $( $field: $field ), +
+                    $( $field ), +
                 }
             }
 
