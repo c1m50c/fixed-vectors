@@ -9,3 +9,8 @@ description = "Library implementing fixed-length Vectors meant for representing 
 categories = [ "data-structures", "game-development", "mathematics" ]
 keywords = [ "math", "vector", "vector2", "vector3", "gamedev" ]
 repository = "https://github.com/c1m50c/fixed-vectors"
+
+
+[dependencies]
+num-traits = { version = "0.2.15", default-features = false }
+libm = "0.2.6"

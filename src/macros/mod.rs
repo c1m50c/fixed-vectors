@@ -1,3 +1,6 @@
+pub mod floating;
+
+
 #[macro_export(local_inner_macros)]
 macro_rules! impl_vector {
     ( $struct: ident { $($field: ident), + }, $size: expr ) => {
@@ -166,5 +169,8 @@ macro_rules! impl_vector {
                 $( self.$field %= other.$field ); +
             }
         }
+
+        $crate::impl_floating_point_operations!( $struct { $($field), + }, $size, f32 );
+        $crate::impl_floating_point_operations!( $struct { $($field), + }, $size, f64 );
     };
 }
