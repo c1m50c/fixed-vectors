@@ -1,244 +1,170 @@
-//! Module containing `impl_x!` macros for implementing common methods for Vectors.
-//! This module is primarily split into three different macros,
-//! [`impl_vector`], [`impl_operators`], and [`impl_floating_point_operations`].
-//! These macros handle implementation of every trait or method within a Vector.
-//! 
-//! # Example
-//! ```
-//! use fixed_vectors::impl_vector;
-//! 
-//! struct Vector2<T> {
-//!     x: T,
-//!     y: T,
-//! }
-//! 
-//! impl_vector!(Vector2 { x, y } -> (T, T), 2);
-//! let vec = Vector2::new(1, 2);
-//! 
-//! assert_eq!(vec.size(), 2);
-//! assert_eq!(vec.x, 1);
-//! assert_eq!(vec.y, 2);
-//! ```
-
-pub mod operators;
-pub mod floating;
-
-/// Macro used in implementing all the methods for Vectors.
-/// 
-/// # Example
-/// ```
-/// use fixed_vectors::impl_vector;
-/// 
-/// struct Vector2<T> {
-///     x: T,
-///     y: T,
-/// }
-/// 
-/// impl_vector!(Vector2 { x, y } -> (T, T), 2);
-/// let vec = Vector2::new(1, 2);
-/// 
-/// assert_eq!(vec.size(), 2);
-/// assert_eq!(vec.x, 1);
-/// assert_eq!(vec.y, 2);
-/// ```
-#[macro_export]
+#[macro_export(local_inner_macros)]
 macro_rules! impl_vector {
-    ($struct: ident { $($field: ident), + } -> $tuple_type: tt, $len: expr) => {
+    ( $struct: ident { $($field: ident), + }, $size: expr ) => {
         impl<T> $struct<T> {
-            /// Constructs a new Vector with the specified values for each field.
+            /// Constructs a new vector with the specified values for each field.
             /// 
             /// # Example
-            /// ```rust
+            /// 
+            /// ```
             /// use fixed_vectors::Vector2;
             /// 
-            /// let vec = Vector2::new(1, 2);
-            /// assert_eq!(vec.x, 1);
-            /// assert_eq!(vec.y, 2);
+            /// let vec2 = Vector2::new(0, 0);
+            /// 
+            /// assert_eq!(vec2.x, 0);
+            /// assert_eq!(vec2.y, 0);
             /// ```
-            pub const fn new($( $field: T ), +) -> Self {
-                return Self {
+            #[inline(always)]
+            pub const fn new( $($field: T), + ) -> Self {
+                Self {
                     $( $field: $field ), +
                 }
             }
 
-            /// Returns the number of fields within the Vector as a [`usize`].
+            /// Consumes the vector and returns its values as an array.
             /// 
             /// # Example
-            /// ```rust
+            /// 
+            /// ```
             /// use fixed_vectors::Vector2;
             /// 
-            /// let size = Vector2::new(1, 2).size();
-            /// assert_eq!(size, 2);
+            /// let vec2 = Vector2::new(0, 0);
+            /// let array = vec2.to_array();
+            /// 
+            /// assert_eq!(array, [0, 0]);
             /// ```
-            pub const fn size(&self) -> usize {
-                return $len;
+            #[inline(always)]
+            pub fn to_array(self) -> [T; $size] {
+                [ $(self.$field), + ]
             }
 
-            /// Connsumes the given Vector transforming it into an array.
+            /// Consumes the vector and returns a new vector with the given function applied on each field.
             /// 
             /// # Example
-            /// ```rust
+            /// 
+            /// ```
             /// use fixed_vectors::Vector2;
             /// 
-            /// let arr = Vector2::new(1, 2).to_array();
-            /// assert_eq!(arr, [1, 2]);
+            /// let vec2 = Vector2::new(1, 2)
+            ///     .map(|i| i * 2);
+            /// 
+            /// assert_eq!(vec2, Vector2::new(2, 4));
             /// ```
-            pub fn to_array(self) -> [T; $len] {
-                return [ $(self.$field), + ]
-            }
-
-            /// Consumes the given Vector transforming it into a tuple.
-            /// 
-            /// # Example
-            /// ```rust
-            /// use fixed_vectors::Vector2;
-            /// 
-            /// let tuple = Vector2::new(1, 2).to_tuple();
-            /// assert_eq!(tuple, (1, 2));
-            /// ```
-            pub fn to_tuple(self) -> $tuple_type {
-                return ( $( self.$field ), + );
-            }
-
-            /// Consumes the given Vector transforming it into a [`Vec`].
-            /// 
-            /// # Example
-            /// ```rust
-            /// use fixed_vectors::Vector2;
-            /// 
-            /// let vec = Vector2::new(1, 2).to_vec();
-            /// assert_eq!(vec, vec![1, 2]);
-            /// ```
-            pub fn to_vec(self) -> std::vec::Vec<T> {
-                let mut vec = std::vec::Vec::with_capacity($len);
-                $( vec.push(self.$field); ) +
-                return vec;
-            }
-
-            /// Takes a closure and creates a Vector that called the given closure on each field.
-            /// 
-            /// # Example
-            /// ```rust
-            /// use fixed_vectors::Vector2;
-            /// 
-            /// let vec = Vector2::new(1, 2)
-            ///     .map(|i| i as f64);
-            /// assert_eq!(vec, Vector2::new(1.0, 2.0));
-            /// ```
-            pub fn map<F, R>(self, mut f: F) -> $struct<R>
+            #[inline]
+            pub fn map<F, U>(self, f: F) -> $struct<U>
             where
-                F: FnMut(T) -> R
+                F: Fn(T) -> U
             {
-                return $struct {
+                $struct {
                     $( $field: f(self.$field) ), +
-                };
-            }
-        }
-
-        impl<T: Default> Default for $struct<T> {
-            fn default() -> Self {
-                return Self {
-                    $( $field: T::default() ), +
-                };
-            }
-        }
-
-        impl<T: Clone> Clone for $struct<T> {
-            fn clone(&self) -> Self {
-                return Self {
-                    $( $field: self.$field.clone() ), +
-                };
-            }
-        }
-
-        impl<T> IntoIterator for $struct<T> {
-            type IntoIter = std::array::IntoIter<T, $len>;
-            type Item = T;
-            
-            fn into_iter(self) -> Self::IntoIter {
-                return std::iter::IntoIterator::into_iter(self.to_array());
-            }
-        }
-
-        impl<T> From<[T; $len]> for $struct<T> {
-            fn from(f: [T; $len]) -> Self {
-                let mut iter = f.into_iter();
-                return Self {
-                    $( $field: iter.next().unwrap() ), +
                 }
-            }
-        }
-
-        impl<T> Into<[T; $len]> for $struct<T> {
-            fn into(self) -> [T; $len] {
-                return self.to_array();
-            }
-        }
-
-        impl<T> From<$tuple_type> for $struct<T> {
-            fn from(f: $tuple_type) -> Self {
-                return match f {
-                    ($( $field ), +) => {
-                        Self { $( $field ), + }
-                    },
-                };
-            }
-        }
-
-        impl<T> Into<$tuple_type> for $struct<T> {
-            fn into(self) -> $tuple_type {
-                return self.to_tuple();
-            }
-        }
-
-        impl<T> TryFrom<std::vec::Vec<T>> for $struct<T> {
-            type Error = $crate::VectorError;
-
-            fn try_from(f: std::vec::Vec<T>) -> Result<Self, Self::Error> {
-                if f.len() < $len {
-                    return Err(Self::Error::CannotConvertFromImproperlySizedCollection);
-                }
-
-                let mut iter = f.into_iter();
-                return Ok(Self {
-                    $( $field: iter.next().ok_or(Self::Error::GenericError)? ), +
-                })
-            }
-        }
-
-        impl<T> Into<std::vec::Vec<T>> for $struct<T> {
-            fn into(self) -> std::vec::Vec<T> {
-                return self.to_vec();
             }
         }
 
         impl<T: core::fmt::Debug> core::fmt::Debug for $struct<T> {
             fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-                return f.debug_struct(stringify!($struct))
-                    $( .field(stringify!($field), &self.$field) ) +
-                    .finish();
+                let identifier = core::stringify!($struct);
+
+                f.debug_struct(identifier)
+                    $( .field( core::stringify!($field), &self.$field ) ) +
+                    .finish()
             }
         }
 
-        impl<T: core::fmt::Display> core::fmt::Display for $struct<T> {
-            fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-                if $len == 0 {
-                    return write!(f, "()");
+        impl<T: PartialEq> PartialEq for $struct<T> {
+            fn eq(&self, other: &Self) -> bool {
+                $( self.$field == other.$field ) && +
+            }
+        }
+
+        impl<T: Eq> Eq for $struct<T> {  }
+
+        impl<T: core::ops::Neg<Output = T>> core::ops::Neg for $struct<T> {
+            type Output = Self;
+
+            fn neg(self) -> Self::Output {
+                self.map(|x| -x)
+            }
+        }
+
+        impl<T: core::ops::Add<Output = T>> core::ops::Add for $struct<T> {
+            type Output = Self;
+
+            fn add(self, other: Self) -> Self::Output {
+                Self {
+                    $( $field: self.$field + other.$field ), +
                 }
-
-                let mut result = String::from("(");
-                $( result.push_str(format!("{}, ", &self.$field).as_str()); ) +
-                return write!(f, "{}", result.strip_suffix(", ").unwrap().to_string() + ")");
             }
         }
 
-        impl<T: core::hash::Hash> core::hash::Hash for $struct<T> {
-            fn hash<H: core::hash::Hasher>(&self, state: &mut H) {
-                $( self.$field.hash(state); ) +
+        impl<T: core::ops::AddAssign> core::ops::AddAssign for $struct<T> {
+            fn add_assign(&mut self, other: Self)  {
+                $( self.$field += other.$field ); +
             }
         }
 
-        $crate::impl_operators!($struct { $($field), + }, $len);
-        $crate::impl_floating_point_operations!($struct { $($field), + }, $len);
+        impl<T: core::ops::Sub<Output = T>> core::ops::Sub for $struct<T> {
+            type Output = Self;
+
+            fn sub(self, other: Self) -> Self::Output {
+                Self {
+                    $( $field: self.$field - other.$field ), +
+                }
+            }
+        }
+
+        impl<T: core::ops::SubAssign> core::ops::SubAssign for $struct<T> {
+            fn sub_assign(&mut self, other: Self)  {
+                $( self.$field -= other.$field ); +
+            }
+        }
+
+        impl<T: core::ops::Mul<Output = T>> core::ops::Mul for $struct<T> {
+            type Output = Self;
+
+            fn mul(self, other: Self) -> Self::Output {
+                Self {
+                    $( $field: self.$field * other.$field ), +
+                }
+            }
+        }
+
+        impl<T: core::ops::MulAssign> core::ops::MulAssign for $struct<T> {
+            fn mul_assign(&mut self, other: Self)  {
+                $( self.$field *= other.$field ); +
+            }
+        }
+
+        impl<T: core::ops::Div<Output = T>> core::ops::Div for $struct<T> {
+            type Output = Self;
+
+            fn div(self, other: Self) -> Self::Output {
+                Self {
+                    $( $field: self.$field / other.$field ), +
+                }
+            }
+        }
+
+        impl<T: core::ops::DivAssign> core::ops::DivAssign for $struct<T> {
+            fn div_assign(&mut self, other: Self)  {
+                $( self.$field /= other.$field ); +
+            }
+        }
+
+        impl<T: core::ops::Rem<Output = T>> core::ops::Rem for $struct<T> {
+            type Output = Self;
+
+            fn rem(self, other: Self) -> Self::Output {
+                Self {
+                    $( $field: self.$field % other.$field ), +
+                }
+            }
+        }
+
+        impl<T: core::ops::RemAssign> core::ops::RemAssign for $struct<T> {
+            fn rem_assign(&mut self, other: Self)  {
+                $( self.$field %= other.$field ); +
+            }
+        }
     };
 }
