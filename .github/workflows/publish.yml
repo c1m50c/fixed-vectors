@@ -27,6 +27,5 @@ jobs:
         env:
           CARGO_REGISTRY_TOKEN: ${{ secrets.CRATES_IO_TOKEN }}
         run: |
-          cargo login
           cargo publish --all-features --verbose
         continue-on-error: true # For the case the version is already uploaded.
