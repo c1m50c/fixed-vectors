@@ -3,7 +3,7 @@ pub mod floating;
 
 #[macro_export(local_inner_macros)]
 macro_rules! impl_vector {
-    ( $struct: ident { $($field: ident), + }, $size: expr ) => {
+    ( $struct: ident { $($field: ident), + }, ( $($generic: ident), + ), $size: expr ) => {
         impl<T> $struct<T> {
             /// Constructs a new vector with the specified values for each field.
             /// 
@@ -39,6 +39,23 @@ macro_rules! impl_vector {
             #[inline(always)]
             pub fn to_array(self) -> [T; $size] {
                 [ $(self.$field), + ]
+            }
+
+            /// Consumes the vector and returns its values as a tuple.
+            /// 
+            /// # Example
+            /// 
+            /// ```
+            /// use fixed_vectors::Vector2;
+            /// 
+            /// let vec2 = Vector2::new(0, 0);
+            /// let tuple = vec2.to_tuple();
+            /// 
+            /// assert_eq!(tuple, (0, 0));
+            /// ```
+            #[inline(always)]
+            pub fn to_tuple(self) -> ( $($generic), + ) {
+                ( $(self.$field), + )
             }
 
             /// Consumes the vector and returns a new vector with the given function applied on each field.
@@ -110,7 +127,7 @@ macro_rules! impl_vector {
             }
         }
 
-        impl<T: core::ops::Add<Output = T>> core::ops::Add for $struct<T> {
+        impl<T: core::ops::Add<Output = T>> core::ops::Add<Self> for $struct<T> {
             type Output = Self;
 
             fn add(self, other: Self) -> Self::Output {
@@ -120,29 +137,25 @@ macro_rules! impl_vector {
             }
         }
 
-        impl<T: core::ops::Add<Output = T> + Copy> $struct<T> {
-            /// Adds the given `value` to all fields within the vector.
-            /// 
-            /// # Example
-            /// 
-            /// ```
-            /// use fixed_vectors::Vector2;
-            /// 
-            /// let vec2 = Vector2::new(0, 0).add_value(1);
-            /// 
-            /// assert_eq!(vec2, Vector2::new(1, 1));
-            /// ```
-            #[inline(always)]
-            pub fn add_value(self, value: T) -> Self {
+        impl<T: core::ops::AddAssign> core::ops::AddAssign<Self> for $struct<T> {
+            fn add_assign(&mut self, other: Self)  {
+                $( self.$field += other.$field ); +
+            }
+        }
+
+        impl<T: core::ops::Add<Output = T> + Copy> core::ops::Add<T> for $struct<T> {
+            type Output = Self;
+
+            fn add(self, other: T) -> Self::Output {
                 Self {
-                    $( $field: self.$field + value ), +
+                    $( $field: self.$field + other ), +
                 }
             }
         }
 
-        impl<T: core::ops::AddAssign> core::ops::AddAssign for $struct<T> {
-            fn add_assign(&mut self, other: Self)  {
-                $( self.$field += other.$field ); +
+        impl<T: core::ops::AddAssign + Copy> core::ops::AddAssign<T> for $struct<T> {
+            fn add_assign(&mut self, other: T)  {
+                $( self.$field += other); +
             }
         }
 
@@ -156,31 +169,28 @@ macro_rules! impl_vector {
             }
         }
 
-        impl<T: core::ops::Sub<Output = T> + Copy> $struct<T> {
-            /// Subtracts the given `value` from all fields within the vector.
-            /// 
-            /// # Example
-            /// 
-            /// ```
-            /// use fixed_vectors::Vector2;
-            /// 
-            /// let vec2 = Vector2::new(0, 0).sub_value(1);
-            /// 
-            /// assert_eq!(vec2, Vector2::new(-1, -1));
-            /// ```
-            #[inline(always)]
-            pub fn sub_value(self, value: T) -> Self {
-                Self {
-                    $( $field: self.$field - value ), +
-                }
-            }
-        }
-
         impl<T: core::ops::SubAssign> core::ops::SubAssign for $struct<T> {
             fn sub_assign(&mut self, other: Self)  {
                 $( self.$field -= other.$field ); +
             }
         }
+
+        impl<T: core::ops::Sub<Output = T> + Copy> core::ops::Sub<T> for $struct<T> {
+            type Output = Self;
+
+            fn sub(self, other: T) -> Self::Output {
+                Self {
+                    $( $field: self.$field - other ), +
+                }
+            }
+        }
+
+        impl<T: core::ops::SubAssign + Copy> core::ops::SubAssign<T> for $struct<T> {
+            fn sub_assign(&mut self, other: T)  {
+                $( self.$field -= other); +
+            }
+        }
+
 
         impl<T: core::ops::Mul<Output = T>> core::ops::Mul for $struct<T> {
             type Output = Self;
@@ -192,29 +202,25 @@ macro_rules! impl_vector {
             }
         }
 
-        impl<T: core::ops::Mul<Output = T> + Copy> $struct<T> {
-            /// Multiplies the given `value` across all fields within the vector.
-            /// 
-            /// # Example
-            /// 
-            /// ```
-            /// use fixed_vectors::Vector2;
-            /// 
-            /// let vec2 = Vector2::new(1, 2).mul_value(2);
-            /// 
-            /// assert_eq!(vec2, Vector2::new(2, 4));
-            /// ```
-            #[inline(always)]
-            pub fn mul_value(self, value: T) -> Self {
+        impl<T: core::ops::MulAssign> core::ops::MulAssign for $struct<T> {
+            fn mul_assign(&mut self, other: Self)  {
+                $( self.$field *= other.$field ); +
+            }
+        }
+
+        impl<T: core::ops::Mul<Output = T> + Copy> core::ops::Mul<T> for $struct<T> {
+            type Output = Self;
+
+            fn mul(self, other: T) -> Self::Output {
                 Self {
-                    $( $field: self.$field * value ), +
+                    $( $field: self.$field * other ), +
                 }
             }
         }
 
-        impl<T: core::ops::MulAssign> core::ops::MulAssign for $struct<T> {
-            fn mul_assign(&mut self, other: Self)  {
-                $( self.$field *= other.$field ); +
+        impl<T: core::ops::MulAssign + Copy> core::ops::MulAssign<T> for $struct<T> {
+            fn mul_assign(&mut self, other: T)  {
+                $( self.$field *= other); +
             }
         }
 
@@ -228,29 +234,25 @@ macro_rules! impl_vector {
             }
         }
 
-        impl<T: core::ops::Div<Output = T> + Copy> $struct<T> {
-            /// Divides the given `value` across all fields within the vector.
-            /// 
-            /// # Example
-            /// 
-            /// ```
-            /// use fixed_vectors::Vector2;
-            /// 
-            /// let vec2 = Vector2::new(2, 4).div_value(2);
-            /// 
-            /// assert_eq!(vec2, Vector2::new(1, 2));
-            /// ```
-            #[inline(always)]
-            pub fn div_value(self, value: T) -> Self {
+        impl<T: core::ops::DivAssign> core::ops::DivAssign for $struct<T> {
+            fn div_assign(&mut self, other: Self)  {
+                $( self.$field /= other.$field ); +
+            }
+        }
+
+        impl<T: core::ops::Div<Output = T> + Copy> core::ops::Div<T> for $struct<T> {
+            type Output = Self;
+
+            fn div(self, other: T) -> Self::Output {
                 Self {
-                    $( $field: self.$field / value ), +
+                    $( $field: self.$field / other ), +
                 }
             }
         }
 
-        impl<T: core::ops::DivAssign> core::ops::DivAssign for $struct<T> {
-            fn div_assign(&mut self, other: Self)  {
-                $( self.$field /= other.$field ); +
+        impl<T: core::ops::DivAssign + Copy> core::ops::DivAssign<T> for $struct<T> {
+            fn div_assign(&mut self, other: T)  {
+                $( self.$field /= other); +
             }
         }
 
@@ -267,6 +269,22 @@ macro_rules! impl_vector {
         impl<T: core::ops::RemAssign> core::ops::RemAssign for $struct<T> {
             fn rem_assign(&mut self, other: Self)  {
                 $( self.$field %= other.$field ); +
+            }
+        }
+
+        impl<T: core::ops::Rem<Output = T> + Copy> core::ops::Rem<T> for $struct<T> {
+            type Output = Self;
+
+            fn rem(self, other: T) -> Self::Output {
+                Self {
+                    $( $field: self.$field % other ), +
+                }
+            }
+        }
+
+        impl<T: core::ops::RemAssign + Copy> core::ops::RemAssign<T> for $struct<T> {
+            fn rem_assign(&mut self, other: T)  {
+                $( self.$field %= other); +
             }
         }
 
