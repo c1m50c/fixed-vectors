@@ -64,6 +64,26 @@ macro_rules! impl_vector {
             }
         }
 
+        impl<T: Copy> $struct<T> {
+            /// Constructs a vector using the given `value` as the value for all of its fields.
+            /// 
+            /// # Example
+            /// 
+            /// ```
+            /// use fixed_vectors::Vector2;
+            /// 
+            /// let vec2 = Vector2::from_value(0);
+            /// 
+            /// assert_eq!(vec2, Vector2::new(0, 0));
+            /// ```
+            #[inline(always)]
+            pub const fn from_value(value: T) -> Self {
+                Self {
+                    $( $field: value ), +
+                }
+            }
+        }
+
         impl<T: core::fmt::Debug> core::fmt::Debug for $struct<T> {
             fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
                 let identifier = core::stringify!($struct);
@@ -100,6 +120,26 @@ macro_rules! impl_vector {
             }
         }
 
+        impl<T: core::ops::Add<Output = T> + Copy> $struct<T> {
+            /// Adds the given `value` to all fields within the vector.
+            /// 
+            /// # Example
+            /// 
+            /// ```
+            /// use fixed_vectors::Vector2;
+            /// 
+            /// let vec2 = Vector2::new(0, 0).add_value(1);
+            /// 
+            /// assert_eq!(vec2, Vector2::new(1, 1));
+            /// ```
+            #[inline(always)]
+            pub fn add_value(self, value: T) -> Self {
+                Self {
+                    $( $field: self.$field + value ), +
+                }
+            }
+        }
+
         impl<T: core::ops::AddAssign> core::ops::AddAssign for $struct<T> {
             fn add_assign(&mut self, other: Self)  {
                 $( self.$field += other.$field ); +
@@ -112,6 +152,26 @@ macro_rules! impl_vector {
             fn sub(self, other: Self) -> Self::Output {
                 Self {
                     $( $field: self.$field - other.$field ), +
+                }
+            }
+        }
+
+        impl<T: core::ops::Sub<Output = T> + Copy> $struct<T> {
+            /// Subtracts the given `value` from all fields within the vector.
+            /// 
+            /// # Example
+            /// 
+            /// ```
+            /// use fixed_vectors::Vector2;
+            /// 
+            /// let vec2 = Vector2::new(0, 0).sub_value(1);
+            /// 
+            /// assert_eq!(vec2, Vector2::new(-1, -1));
+            /// ```
+            #[inline(always)]
+            pub fn sub_value(self, value: T) -> Self {
+                Self {
+                    $( $field: self.$field - value ), +
                 }
             }
         }
@@ -132,6 +192,26 @@ macro_rules! impl_vector {
             }
         }
 
+        impl<T: core::ops::Mul<Output = T> + Copy> $struct<T> {
+            /// Multiplies the given `value` across all fields within the vector.
+            /// 
+            /// # Example
+            /// 
+            /// ```
+            /// use fixed_vectors::Vector2;
+            /// 
+            /// let vec2 = Vector2::new(1, 2).mul_value(2);
+            /// 
+            /// assert_eq!(vec2, Vector2::new(2, 4));
+            /// ```
+            #[inline(always)]
+            pub fn mul_value(self, value: T) -> Self {
+                Self {
+                    $( $field: self.$field * value ), +
+                }
+            }
+        }
+
         impl<T: core::ops::MulAssign> core::ops::MulAssign for $struct<T> {
             fn mul_assign(&mut self, other: Self)  {
                 $( self.$field *= other.$field ); +
@@ -144,6 +224,26 @@ macro_rules! impl_vector {
             fn div(self, other: Self) -> Self::Output {
                 Self {
                     $( $field: self.$field / other.$field ), +
+                }
+            }
+        }
+
+        impl<T: core::ops::Div<Output = T> + Copy> $struct<T> {
+            /// Divides the given `value` across all fields within the vector.
+            /// 
+            /// # Example
+            /// 
+            /// ```
+            /// use fixed_vectors::Vector2;
+            /// 
+            /// let vec2 = Vector2::new(2, 4).div_value(2);
+            /// 
+            /// assert_eq!(vec2, Vector2::new(1, 2));
+            /// ```
+            #[inline(always)]
+            pub fn div_value(self, value: T) -> Self {
+                Self {
+                    $( $field: self.$field / value ), +
                 }
             }
         }
