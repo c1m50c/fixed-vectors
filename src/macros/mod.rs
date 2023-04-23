@@ -64,6 +64,26 @@ macro_rules! impl_vector {
             }
         }
 
+        impl<T: Copy> $struct<T> {
+            /// Constructs a vector using the given `value` as the value for all of its fields.
+            /// 
+            /// # Example
+            /// 
+            /// ```
+            /// use fixed_vectors::Vector2;
+            /// 
+            /// let vec2 = Vector2::from_value(0);
+            /// 
+            /// assert_eq!(vec2, Vector2::new(0, 0));
+            /// ```
+            #[inline(always)]
+            pub const fn from_value(value: T) -> Self {
+                Self {
+                    $( $field: value ), +
+                }
+            }
+        }
+
         impl<T: core::fmt::Debug> core::fmt::Debug for $struct<T> {
             fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
                 let identifier = core::stringify!($struct);
