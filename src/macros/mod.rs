@@ -194,9 +194,7 @@ macro_rules! impl_vector {
         $crate::impl_operator!( $struct { $($field), + }, BitXor, bitxor, Self );
 
         // Impl floating-point based methods
-        $crate::impl_cross_type_floating_point_operations!( $struct { $($field), + }, $size );
-        $crate::impl_floating_point_operations!( $struct { $($field), + }, $size, f32 );
-        $crate::impl_floating_point_operations!( $struct { $($field), + }, $size, f64 );
+        $crate::impl_floating_point_operations!( $struct { $($field), + }, $size );
     };
 }
 
