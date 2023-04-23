@@ -14,6 +14,42 @@ fn to_array() {
 
 
 #[test]
+fn from_array() {
+    let vec4 = Vector4::from([0, 0, 0, 0]);
+    let vec3 = Vector3::from([0, 0, 0]);
+    let vec2 = Vector2::from([0, 0]);
+
+    assert_eq!(vec4, Vector4::from_value(0));
+    assert_eq!(vec3, Vector3::from_value(0));
+    assert_eq!(vec2, Vector2::from_value(0));
+}
+
+
+#[test]
+fn to_tuple() {
+    let vec4 = Vector4::new(0, 0, 0, 0).to_tuple();
+    let vec3 = Vector3::new(0, 0, 0).to_tuple();
+    let vec2 = Vector2::new(0, 0).to_tuple();
+
+    assert_eq!(vec4, (0, 0, 0, 0));
+    assert_eq!(vec3, (0, 0, 0));
+    assert_eq!(vec2, (0, 0));
+}
+
+
+#[test]
+fn from_tuple() {
+    let vec4 = Vector4::from((0, 0, 0, 0));
+    let vec3 = Vector3::from((0, 0, 0));
+    let vec2 = Vector2::from((0, 0));
+
+    assert_eq!(vec4, Vector4::from_value(0));
+    assert_eq!(vec3, Vector3::from_value(0));
+    assert_eq!(vec2, Vector2::from_value(0));
+}
+
+
+#[test]
 fn map() {
     let vec4 = Vector4::new(0, 0, 0, 0).map(|i| i as f32);
     let vec3 = Vector3::new(0, 0, 0).map(|i| i as f32);
@@ -34,6 +70,14 @@ fn add() {
     assert_eq!(vec4, Vector4::new(2, 4, 6, 8));
     assert_eq!(vec3, Vector3::new(2, 4, 6));
     assert_eq!(vec2, Vector2::new(2, 4));
+
+    let vec4 = Vector4::new(1, 2, 3, 4) + 2;
+    let vec3 = Vector3::new(1, 2, 3) + 2;
+    let vec2 = Vector2::new(1, 2) + 2;
+
+    assert_eq!(vec4, Vector4::new(3, 4, 5, 6));
+    assert_eq!(vec3, Vector3::new(3, 4, 5));
+    assert_eq!(vec2, Vector2::new(3, 4));
 }
 
 
@@ -51,6 +95,19 @@ fn add_assign() {
     assert_eq!(vec4, Vector4::new(2, 4, 6, 8));
     assert_eq!(vec3, Vector3::new(2, 4, 6));
     assert_eq!(vec2, Vector2::new(2, 4));
+
+    let mut vec4 = Vector4::new(1, 2, 3, 4);
+    vec4 += 2;
+
+    let mut vec3 = Vector3::new(1, 2, 3);
+    vec3 += 2;
+
+    let mut vec2 = Vector2::new(1, 2);
+    vec2 += 2;
+
+    assert_eq!(vec4, Vector4::new(3, 4, 5, 6));
+    assert_eq!(vec3, Vector3::new(3, 4, 5));
+    assert_eq!(vec2, Vector2::new(3, 4));
 }
 
 
@@ -63,6 +120,14 @@ fn sub() {
     assert_eq!(vec4, Vector4::new(0, 0, 0, 0));
     assert_eq!(vec3, Vector3::new(0, 0, 0));
     assert_eq!(vec2, Vector2::new(0, 0));
+
+    let vec4 = Vector4::new(1, 2, 3, 4) - 2;
+    let vec3 = Vector3::new(1, 2, 3) - 2;
+    let vec2 = Vector2::new(1, 2) - 2;
+
+    assert_eq!(vec4, Vector4::new(-1, 0, 1, 2));
+    assert_eq!(vec3, Vector3::new(-1, 0, 1));
+    assert_eq!(vec2, Vector2::new(-1, 0));
 }
 
 
@@ -80,6 +145,19 @@ fn sub_assign() {
     assert_eq!(vec4, Vector4::new(0, 0, 0, 0));
     assert_eq!(vec3, Vector3::new(0, 0, 0));
     assert_eq!(vec2, Vector2::new(0, 0));
+
+    let mut vec4 = Vector4::new(1, 2, 3, 4);
+    vec4 -= 2;
+
+    let mut vec3 = Vector3::new(1, 2, 3);
+    vec3 -= 2;
+
+    let mut vec2 = Vector2::new(1, 2);
+    vec2 -= 2;
+
+    assert_eq!(vec4, Vector4::new(-1, 0, 1, 2));
+    assert_eq!(vec3, Vector3::new(-1, 0, 1));
+    assert_eq!(vec2, Vector2::new(-1, 0));
 }
 
 
@@ -92,6 +170,14 @@ fn mul() {
     assert_eq!(vec4, Vector4::new(1, 4, 9, 16));
     assert_eq!(vec3, Vector3::new(1, 4, 9));
     assert_eq!(vec2, Vector2::new(1, 4));
+
+    let vec4 = Vector4::new(1, 2, 3, 4) * 2;
+    let vec3 = Vector3::new(1, 2, 3) * 2;
+    let vec2 = Vector2::new(1, 2) * 2;
+
+    assert_eq!(vec4, Vector4::new(2, 4, 6, 8));
+    assert_eq!(vec3, Vector3::new(2, 4, 6));
+    assert_eq!(vec2, Vector2::new(2, 4));
 }
 
 
@@ -109,6 +195,19 @@ fn mul_assign() {
     assert_eq!(vec4, Vector4::new(1, 4, 9, 16));
     assert_eq!(vec3, Vector3::new(1, 4, 9));
     assert_eq!(vec2, Vector2::new(1, 4));
+
+    let mut vec4 = Vector4::new(1, 2, 3, 4);
+    vec4 *= 2;
+
+    let mut vec3 = Vector3::new(1, 2, 3);
+    vec3 *= 2;
+
+    let mut vec2 = Vector2::new(1, 2);
+    vec2 *= 2;
+
+    assert_eq!(vec4, Vector4::new(2, 4, 6, 8));
+    assert_eq!(vec3, Vector3::new(2, 4, 6));
+    assert_eq!(vec2, Vector2::new(2, 4));
 }
 
 
@@ -121,6 +220,14 @@ fn div() {
     assert_eq!(vec4, Vector4::new(1, 1, 1, 1));
     assert_eq!(vec3, Vector3::new(1, 1, 1));
     assert_eq!(vec2, Vector2::new(1, 1));
+
+    let vec4 = Vector4::new(1, 2, 3, 4) / 2;
+    let vec3 = Vector3::new(1, 2, 3) / 2;
+    let vec2 = Vector2::new(1, 2) / 2;
+
+    assert_eq!(vec4, Vector4::new(0, 1, 1, 2));
+    assert_eq!(vec3, Vector3::new(0, 1, 1));
+    assert_eq!(vec2, Vector2::new(0, 1));
 }
 
 
@@ -138,6 +245,19 @@ fn div_assign() {
     assert_eq!(vec4, Vector4::new(1, 1, 1, 1));
     assert_eq!(vec3, Vector3::new(1, 1, 1));
     assert_eq!(vec2, Vector2::new(1, 1));
+
+    let mut vec4 = Vector4::new(1, 2, 3, 4);
+    vec4 /= 2;
+
+    let mut vec3 = Vector3::new(1, 2, 3);
+    vec3 /= 2;
+
+    let mut vec2 = Vector2::new(1, 2);
+    vec2 /= 2;
+
+    assert_eq!(vec4, Vector4::new(0, 1, 1, 2));
+    assert_eq!(vec3, Vector3::new(0, 1, 1));
+    assert_eq!(vec2, Vector2::new(0, 1));
 }
 
 
@@ -146,6 +266,14 @@ fn rem() {
     let vec4 = Vector4::new(1, 2, 3, 4) % Vector4::new(2, 2, 2, 2);
     let vec3 = Vector3::new(1, 2, 3) % Vector3::new(2, 2, 2);
     let vec2 = Vector2::new(1, 2) % Vector2::new(2, 2);
+
+    assert_eq!(vec4, Vector4::new(1, 0, 1, 0));
+    assert_eq!(vec3, Vector3::new(1, 0, 1));
+    assert_eq!(vec2, Vector2::new(1, 0));
+
+    let vec4 = Vector4::new(1, 2, 3, 4) % 2;
+    let vec3 = Vector3::new(1, 2, 3) % 2;
+    let vec2 = Vector2::new(1, 2) % 2;
 
     assert_eq!(vec4, Vector4::new(1, 0, 1, 0));
     assert_eq!(vec3, Vector3::new(1, 0, 1));
@@ -163,6 +291,19 @@ fn rem_assign() {
 
     let mut vec2 = Vector2::new(1, 2);
     vec2 %= Vector2::new(2, 2);
+
+    assert_eq!(vec4, Vector4::new(1, 0, 1, 0));
+    assert_eq!(vec3, Vector3::new(1, 0, 1));
+    assert_eq!(vec2, Vector2::new(1, 0));
+
+    let mut vec4 = Vector4::new(1, 2, 3, 4);
+    vec4 %= 2;
+
+    let mut vec3 = Vector3::new(1, 2, 3);
+    vec3 %= 2;
+
+    let mut vec2 = Vector2::new(1, 2);
+    vec2 %= 2;
 
     assert_eq!(vec4, Vector4::new(1, 0, 1, 0));
     assert_eq!(vec3, Vector3::new(1, 0, 1));

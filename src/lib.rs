@@ -70,6 +70,6 @@ pub struct Vector4<T> {
 }
 
 
-impl_vector!(Vector2 { x, y }, 2);
-impl_vector!(Vector3 { x, y, z }, 3);
-impl_vector!(Vector4 { x, y, z, w }, 4);
+impl_vector!(Vector2 { x, y }, (T, T), 2);
+impl_vector!(Vector3 { x, y, z }, (T, T, T), 3);
+impl_vector!(Vector4 { x, y, z, w }, (T, T, T, T), 4);
