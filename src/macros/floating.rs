@@ -1,3 +1,4 @@
+#[doc(hidden)]
 #[macro_export(local_inner_macros)]
 macro_rules! impl_floating_point_operations {
     ( $struct: ident { $($field: ident), + }, $size: expr, f32 ) => {
@@ -124,6 +125,7 @@ macro_rules! impl_floating_point_operations {
 }
 
 
+#[doc(hidden)]
 #[macro_export(local_inner_macros)]
 macro_rules! impl_cross_type_floating_point_operations {
     ( $struct: ident { $($field: ident), + }, $size: expr ) => {

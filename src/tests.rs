@@ -14,6 +14,18 @@ fn to_array() {
 
 
 #[test]
+fn from_array() {
+    let vec4 = Vector4::from([0, 0, 0, 0]);
+    let vec3 = Vector3::from([0, 0, 0]);
+    let vec2 = Vector2::from([0, 0]);
+
+    assert_eq!(vec4, Vector4::from_value(0));
+    assert_eq!(vec3, Vector3::from_value(0));
+    assert_eq!(vec2, Vector2::from_value(0));
+}
+
+
+#[test]
 fn to_tuple() {
     let vec4 = Vector4::new(0, 0, 0, 0).to_tuple();
     let vec3 = Vector3::new(0, 0, 0).to_tuple();
@@ -22,6 +34,18 @@ fn to_tuple() {
     assert_eq!(vec4, (0, 0, 0, 0));
     assert_eq!(vec3, (0, 0, 0));
     assert_eq!(vec2, (0, 0));
+}
+
+
+#[test]
+fn from_tuple() {
+    let vec4 = Vector4::from((0, 0, 0, 0));
+    let vec3 = Vector3::from((0, 0, 0));
+    let vec2 = Vector2::from((0, 0));
+
+    assert_eq!(vec4, Vector4::from_value(0));
+    assert_eq!(vec3, Vector3::from_value(0));
+    assert_eq!(vec2, Vector2::from_value(0));
 }
 
 

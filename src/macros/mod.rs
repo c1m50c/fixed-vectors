@@ -1,6 +1,7 @@
 pub mod floating;
 
 
+#[doc(hidden)]
 #[macro_export(local_inner_macros)]
 macro_rules! impl_vector {
     ( $struct: ident { $($field: ident), + }, ( $($generic: ident), + ), $size: expr ) => {
@@ -101,6 +102,27 @@ macro_rules! impl_vector {
             }
         }
 
+        impl<T> From<[T; $size]> for $struct<T> {
+            fn from(from: [T; $size]) -> Self {
+                let mut iterator = from.into_iter();
+
+                Self {
+                    // SAFETY: We know the size of `from` so `iterator.next()` is always `Some(..)`
+                    $( $field: unsafe { iterator.next().unwrap_unchecked() } ), +
+                }
+            }
+        }
+
+        impl<T> From<($($generic), +)> for $struct<T> {
+            fn from(from: ($($generic), +)) -> Self {
+                let ( $($field), + ) = from;
+    
+                Self {
+                    $( $field ), +
+                }
+            }
+        }
+
         impl<T: core::fmt::Debug> core::fmt::Debug for $struct<T> {
             fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
                 let identifier = core::stringify!($struct);
@@ -118,175 +140,6 @@ macro_rules! impl_vector {
         }
 
         impl<T: Eq> Eq for $struct<T> {  }
-
-        impl<T: core::ops::Neg<Output = T>> core::ops::Neg for $struct<T> {
-            type Output = Self;
-
-            fn neg(self) -> Self::Output {
-                self.map(|x| -x)
-            }
-        }
-
-        impl<T: core::ops::Add<Output = T>> core::ops::Add<Self> for $struct<T> {
-            type Output = Self;
-
-            fn add(self, other: Self) -> Self::Output {
-                Self {
-                    $( $field: self.$field + other.$field ), +
-                }
-            }
-        }
-
-        impl<T: core::ops::AddAssign> core::ops::AddAssign<Self> for $struct<T> {
-            fn add_assign(&mut self, other: Self)  {
-                $( self.$field += other.$field ); +
-            }
-        }
-
-        impl<T: core::ops::Add<Output = T> + Copy> core::ops::Add<T> for $struct<T> {
-            type Output = Self;
-
-            fn add(self, other: T) -> Self::Output {
-                Self {
-                    $( $field: self.$field + other ), +
-                }
-            }
-        }
-
-        impl<T: core::ops::AddAssign + Copy> core::ops::AddAssign<T> for $struct<T> {
-            fn add_assign(&mut self, other: T)  {
-                $( self.$field += other); +
-            }
-        }
-
-        impl<T: core::ops::Sub<Output = T>> core::ops::Sub for $struct<T> {
-            type Output = Self;
-
-            fn sub(self, other: Self) -> Self::Output {
-                Self {
-                    $( $field: self.$field - other.$field ), +
-                }
-            }
-        }
-
-        impl<T: core::ops::SubAssign> core::ops::SubAssign for $struct<T> {
-            fn sub_assign(&mut self, other: Self)  {
-                $( self.$field -= other.$field ); +
-            }
-        }
-
-        impl<T: core::ops::Sub<Output = T> + Copy> core::ops::Sub<T> for $struct<T> {
-            type Output = Self;
-
-            fn sub(self, other: T) -> Self::Output {
-                Self {
-                    $( $field: self.$field - other ), +
-                }
-            }
-        }
-
-        impl<T: core::ops::SubAssign + Copy> core::ops::SubAssign<T> for $struct<T> {
-            fn sub_assign(&mut self, other: T)  {
-                $( self.$field -= other); +
-            }
-        }
-
-
-        impl<T: core::ops::Mul<Output = T>> core::ops::Mul for $struct<T> {
-            type Output = Self;
-
-            fn mul(self, other: Self) -> Self::Output {
-                Self {
-                    $( $field: self.$field * other.$field ), +
-                }
-            }
-        }
-
-        impl<T: core::ops::MulAssign> core::ops::MulAssign for $struct<T> {
-            fn mul_assign(&mut self, other: Self)  {
-                $( self.$field *= other.$field ); +
-            }
-        }
-
-        impl<T: core::ops::Mul<Output = T> + Copy> core::ops::Mul<T> for $struct<T> {
-            type Output = Self;
-
-            fn mul(self, other: T) -> Self::Output {
-                Self {
-                    $( $field: self.$field * other ), +
-                }
-            }
-        }
-
-        impl<T: core::ops::MulAssign + Copy> core::ops::MulAssign<T> for $struct<T> {
-            fn mul_assign(&mut self, other: T)  {
-                $( self.$field *= other); +
-            }
-        }
-
-        impl<T: core::ops::Div<Output = T>> core::ops::Div for $struct<T> {
-            type Output = Self;
-
-            fn div(self, other: Self) -> Self::Output {
-                Self {
-                    $( $field: self.$field / other.$field ), +
-                }
-            }
-        }
-
-        impl<T: core::ops::DivAssign> core::ops::DivAssign for $struct<T> {
-            fn div_assign(&mut self, other: Self)  {
-                $( self.$field /= other.$field ); +
-            }
-        }
-
-        impl<T: core::ops::Div<Output = T> + Copy> core::ops::Div<T> for $struct<T> {
-            type Output = Self;
-
-            fn div(self, other: T) -> Self::Output {
-                Self {
-                    $( $field: self.$field / other ), +
-                }
-            }
-        }
-
-        impl<T: core::ops::DivAssign + Copy> core::ops::DivAssign<T> for $struct<T> {
-            fn div_assign(&mut self, other: T)  {
-                $( self.$field /= other); +
-            }
-        }
-
-        impl<T: core::ops::Rem<Output = T>> core::ops::Rem for $struct<T> {
-            type Output = Self;
-
-            fn rem(self, other: Self) -> Self::Output {
-                Self {
-                    $( $field: self.$field % other.$field ), +
-                }
-            }
-        }
-
-        impl<T: core::ops::RemAssign> core::ops::RemAssign for $struct<T> {
-            fn rem_assign(&mut self, other: Self)  {
-                $( self.$field %= other.$field ); +
-            }
-        }
-
-        impl<T: core::ops::Rem<Output = T> + Copy> core::ops::Rem<T> for $struct<T> {
-            type Output = Self;
-
-            fn rem(self, other: T) -> Self::Output {
-                Self {
-                    $( $field: self.$field % other ), +
-                }
-            }
-        }
-
-        impl<T: core::ops::RemAssign + Copy> core::ops::RemAssign<T> for $struct<T> {
-            fn rem_assign(&mut self, other: T)  {
-                $( self.$field %= other); +
-            }
-        }
 
         impl<T: core::hash::Hash> core::hash::Hash for $struct<T> {
             fn hash<H: core::hash::Hasher>(&self, state: &mut H) {
@@ -310,8 +163,80 @@ macro_rules! impl_vector {
             }
         }
 
+        impl<T: core::ops::Neg<Output = T>> core::ops::Neg for $struct<T> {
+            type Output = Self;
+
+            fn neg(self) -> Self::Output {
+                Self {
+                    $( $field: -self.$field ), +
+                }
+            }
+        }
+
+        // Impl arithmetic pperators
+        $crate::impl_operator!( $struct { $($field), + }, AddAssign, add_assign );
+        $crate::impl_operator!( $struct { $($field), + }, Add, add, Self );
+        $crate::impl_operator!( $struct { $($field), + }, SubAssign, sub_assign );
+        $crate::impl_operator!( $struct { $($field), + }, Sub, sub, Self );
+        $crate::impl_operator!( $struct { $($field), + }, MulAssign, mul_assign );
+        $crate::impl_operator!( $struct { $($field), + }, Mul, mul, Self );
+        $crate::impl_operator!( $struct { $($field), + }, DivAssign, div_assign );
+        $crate::impl_operator!( $struct { $($field), + }, Div, div, Self );
+        $crate::impl_operator!( $struct { $($field), + }, RemAssign, rem_assign );
+        $crate::impl_operator!( $struct { $($field), + }, Rem, rem, Self );
+
+        // Impl bitwise operators
+        $crate::impl_operator!( $struct { $($field), + }, BitAndAssign, bitand_assign );
+        $crate::impl_operator!( $struct { $($field), + }, BitAnd, bitand, Self );
+        $crate::impl_operator!( $struct { $($field), + }, BitOrAssign, bitor_assign );
+        $crate::impl_operator!( $struct { $($field), + }, BitOr, bitor, Self );
+        $crate::impl_operator!( $struct { $($field), + }, BitXorAssign, bitxor_assign );
+        $crate::impl_operator!( $struct { $($field), + }, BitXor, bitxor, Self );
+
+        // Impl floating-point based methods
         $crate::impl_cross_type_floating_point_operations!( $struct { $($field), + }, $size );
         $crate::impl_floating_point_operations!( $struct { $($field), + }, $size, f32 );
         $crate::impl_floating_point_operations!( $struct { $($field), + }, $size, f64 );
+    };
+}
+
+
+#[doc(hidden)]
+#[macro_export(local_inner_macros)]
+macro_rules! impl_operator {
+    ( $struct: ident { $($field: ident), + }, $trait: ident, $method: ident, $output: ty ) => {
+        impl<T: core::ops::$trait<Output = T>> core::ops::$trait<Self> for $struct<T> {
+            type Output = $output;
+
+            fn $method(self, other: Self) -> Self::Output {
+                Self {
+                    $( $field: self.$field.$method(other.$field) ), +
+                }
+            }
+        }
+
+        impl<T: core::ops::$trait<Output = T> + Copy> core::ops::$trait<T> for $struct<T> {
+            type Output = $output;
+
+            fn $method(self, other: T) -> Self::Output {
+                Self {
+                    $( $field: self.$field.$method(other) ), +
+                }
+            }
+        }
+    };
+
+    ( $struct: ident { $($field: ident), + }, $trait: ident, $method: ident ) => {
+        impl<T: core::ops::$trait> core::ops::$trait for $struct<T> {
+            fn $method(&mut self, other: Self)  {
+                $( self.$field.$method(other.$field) ); +
+            }
+        }
+
+        impl<T: core::ops::$trait + Copy> core::ops::$trait<T> for $struct<T> {
+            fn $method(&mut self, other: T)  {
+                $( self.$field.$method(other) ); +
+            }
+        }
     };
 }
