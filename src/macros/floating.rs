@@ -248,6 +248,34 @@ macro_rules! impl_floating_point_operations {
                     $( $field: self.$field / length ), +
                 }
             }
+
+            /// Normalizes the vector through mutation.
+            /// 
+            /// # Example
+            /// 
+            /// ```
+            /// use fixed_vectors::Vector2;
+            /// 
+            /// let mut vec2 = Vector2::new(14.3, 7.9);
+            /// vec2.normalize();
+            /// 
+            /// assert!(vec2.x < 1.0);
+            /// assert!(vec2.y < 1.0);
+            /// ```
+            pub fn normalize(&mut self) {
+                let length_squared = self.length_squared();
+
+                if length_squared == T::zero() {
+                    *self = Self { $( $field: T::zero() ), + };
+                    return;
+                }
+
+                let length = length_squared.sqrt();
+
+                *self = Self {
+                    $( $field: self.$field / length ), +
+                }
+            }
         }
     };
 }
