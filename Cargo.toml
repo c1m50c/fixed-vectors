@@ -1,13 +1,13 @@
 [package]
 name = "fixed-vectors"
 readme = "README.MD"
-version = "3.2.1"
+version = "3.2.2"
 edition = "2021"
 license = "MIT"
 
-description = "Library implementing fixed-length Vectors meant for representing dimensional values."
+description = "Lightweight library implementing fixed-length vectors for Rust applications not compiled with the standard library."
 categories = [ "data-structures", "game-development", "mathematics" ]
-keywords = [ "math", "vector", "vector2", "vector3", "gamedev" ]
+keywords = [ "math", "vector", "vector2", "vector3", "no_std" ]
 repository = "https://github.com/c1m50c/fixed-vectors"
 
 

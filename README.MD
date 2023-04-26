@@ -5,4 +5,4 @@
 [![Crates.io - License](https://img.shields.io/crates/l/fixed-vectors?style=for-the-badge)](https://crates.io/crates/fixed-vectors/)
 
 Library implementing fixed-length vectors for `#![no_std]` Rust applications.
-The vector data-structures from this library implement various mathematical functions for use in game development related things.
+The vector data-structures from this library implement various mathematical functions for use in game development related ventures.
