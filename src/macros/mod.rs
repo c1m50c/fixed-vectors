@@ -155,6 +155,8 @@ macro_rules! impl_vector {
             }
         }
 
+        impl<T: Copy> Copy for $struct<T> {  }
+
         impl<T: Default> Default for $struct<T> {
             fn default() -> Self {
                 Self {
